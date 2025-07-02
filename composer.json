@@ -1,0 +1,79 @@
+{
+    "name": "epsi/projetweblivrable",
+    "description": "Site d'hôtel open-source, construit avec PHP, PHPMailer, Twig, TailwindCSS.",
+    "type": "project",
+    "require": {
+        "php": "^8.0",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "composer/composer": "^2.0",
+        "phpmailer/phpmailer": "^6.9",
+        "symfony/error-handler": "^7.2",
+        "symfony/twig-bundle": "^7.2",
+        "twig/twig": "3.*",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1.1",
+        "squizlabs/php_codesniffer": "3.*"
+    },
+    "scripts": {
+        "start": "php -S localhost:80 -t public",
+        "cs": "phpcs --standard=PSR12 src",
+        "cs-fix": "phpcbf --standard=PSR12 src",
+        "phpstan": "phpstan analyse src",
+        "optimize": "composer dump-autoload -o",
+        "check-platform": "composer check-platform-reqs",
+        "update-deps": "composer update",
+        "security-check": "composer audit",
+        "cache-rm": "composer dump-autoload -o",
+        "maintenance": "php maintenance.php",
+        "prepare-dev": [
+            "composer install",
+            "npm install"
+        ],
+        "setup-prod": [
+            "composer install",
+            "clear-cache",
+            "optimize",
+            "security-check",
+            "check-platform-reqs",
+            "cs",
+            "phpstan"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kaelian Baudelet",
+            "email": "contact@kaelian.dev",
+            "homepage": "https://github.com/kaelianbaudelet",
+            "role": "Lead Developer"
+        },
+        {
+            "name": "Noa Rodrigues",
+            "role": "Developer"
+        },
+        {
+            "name": "Arnaud",
+            "role": "Developer"
+        },
+        {
+            "name": "Vianney Hague",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

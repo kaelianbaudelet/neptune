@@ -1,0 +1,77 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Code de réduction
+{% endblock %}
+{% block content %}
+	{% do clear_session_alert() %}
+
+	{% include 'components/dashboard/header.html.twig' with {'title': 'Modifier le code de réduction ' ~ coupon.code} %}
+	<div class="flex-1 p-6 bg-gray-50 h-[calc(100vh-5.1rem)] w-full overflow-y-auto overflow-x-scroll">
+		{% if session.alert and session.alert.context == 'global' %}
+			<div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+				{{ session.alert.message }}
+			</div>
+		{% endif %}
+		<form action="/dashboard/coupons/edit/{{ coupon.id }}" method="POST">
+			<h2 class="text-xl font-medium mb-6">
+				Modifier le code de réduction
+			</h2>
+			<div class="grid grid-cols-1 gap-6">
+				<div class="flex flex-col gap-2 relative">
+					<label for="code" class="font-medium text-sm">Code</label>
+					<input minlength="1" maxlength="50" oninput="this.classList.remove('invalid')" type="text" id="code" name="code" placeholder="CODEPROMO" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.code %} invalid {% endif %}" value="{{ coupon.code }}" required>
+					{% if session.alert.errors.code %}
+						<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+							{{ session.alert.errors.code }}
+						</span>
+					{% endif %}
+				</div>
+				<div class="flex flex-col gap-2 relative">
+					<label for="discount" class="font-medium text-sm">Réduction</label>
+					<input oninput="this.classList.remove('invalid')" type="number" id="discount" name="discount" placeholder="10" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.discount %} invalid {% endif %}" value="{{ coupon.discount }}" required>
+					{% if session.alert.errors.discount %}
+						<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+							{{ session.alert.errors.discount }}
+						</span>
+					{% endif %}
+				</div>
+				<div class="flex flex-col gap-2 relative">
+					<label for="max_use" class="font-medium text-sm">Nombre d'utilisation maximum</label>
+					<input oninput="this.classList.remove('invalid')" type="number" id="max_use" name="max_use" placeholder="1" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.max_use %} invalid {% endif %}" value="{{ coupon.maxUse }}" required>
+					{% if session.alert.errors.max_use %}
+						<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+							{{ session.alert.errors.max_use }}
+						</span>
+					{% endif %}
+				</div>
+				<div class="flex flex-col gap-2 relative">
+					<label for="user_id" class="font-medium text-sm">Attribuer ce code pour</label>
+					<select oninput="this.classList.remove('invalid')" id="user_id" name="user_id" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.user_id %} invalid {% endif %}">
+						<option value="">Tous les utilisateurs</option>
+						{% for user in users %}
+							<option value="{{ user.id }}" {% if coupon.user and coupon.user.id == user.id %} selected {% endif %}>{{ user.email }}
+								{{ user.name }}</option>
+						{% endfor %}
+					</select>
+					{% if session.alert.errors.user_id %}
+						<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+							{{ session.alert.errors.user_id }}
+						</span>
+					{% endif %}
+				</div>
+				<div class="flex flex-col gap-2 relative">
+					<label for="expires_at" class="font-medium text-sm">Date d'expiration</label>
+					<input oninput="this.classList.remove('invalid')" type="date" id="expires_at" name="expires_at" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.expires_at %} invalid {% endif %}" value="{{ coupon.expiresAt|date('Y-m-d') }}" required>
+					{% if session.alert.errors.expires_at %}
+						<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+							{{ session.alert.errors.expires_at }}
+						</span>
+					{% endif %}
+				</div>
+				<button class="group-[&:has(input.invalid)]:pointer-events-none group-[&:has(input.invalid)]:bg-primary/50 group-invalid:pointer-events-none group-invalid:bg-primary/50 h-14 inline-flex text-sm items-center justify-center py-4 px-6 text-white font-medium font-heading rounded-xl bg-primary w-full text-center focus:ring focus:ring-primary transition duration-200 hover:bg-primary/95" type="submit">Mettre à jour le code de réduction</button>
+			</div>
+
+		</form>
+	</div>
+{% endblock %}

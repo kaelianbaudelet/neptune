@@ -1,0 +1,1451 @@
+{% extends "base.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Préparation du séjour
+{% endblock %}
+{% block content %}
+	{% do clear_session_alert() %}
+	<div class="w-full mx-auto bg-white h-14 px-6 border-b">
+		<ul id="stepper-tabs" class="max-w-7xl w-full mx-auto flex items-center h-full gap-4">
+			<li class="flex items-center truncate">
+				<button type="button" data-step-btn="1" class="stepper-btn border-b-2 text-sm font-medium h-14 items-center flex gap-2 flex-shrink-0 truncate">
+					<span class="stepper-circle font-semibold h-5 w-5 rounded-full items-center justify-center flex text-xs text-center">
+						1
+					</span>
+					<span class="truncate">Préparation du séjour</span>
+				</button>
+			</li>
+			<li class="flex items-center truncate">
+				<button type="button" data-step-btn="2" class="stepper-btn border-b-2 text-sm font-medium h-14 items-center flex gap-2 flex-shrink-0 truncate" disabled>
+					<span class="stepper-circle font-semibold h-5 w-5 rounded-full items-center justify-center flex text-xs text-center">
+						2
+					</span>
+					<span class="truncate">Personnalisation du séjour</span>
+				</button>
+			</li>
+			<li class="flex items-center truncate">
+				<button type="button" data-step-btn="3" class="stepper-btn border-b-2 text-sm font-medium h-14 items-center flex gap-2 flex-shrink-0 truncate" disabled>
+					<span class="stepper-circle font-semibold h-5 w-5 rounded-full items-center justify-center flex text-xs text-center">
+						3
+					</span>
+					<span class="truncate">Paiement</span>
+				</button>
+			</li>
+		</ul>
+	</div>
+
+	<div class="px-6" data-step="1">
+		<div class="max-w-7xl w-full mx-auto grid-cols-1">
+			<div class="col-span-2">
+				<div class="py-6 gap-6 flex flex-col">
+
+
+					<h2 class="text-lg font-medium">Préparation du séjour</h2>
+
+					<div class="w-full h-full flex flex-col gap-6 py-6 border-t">
+						<h3 class="text-md font-medium">
+							Informations sur la réservation
+						</h3>
+
+						<div class="flex flex-col gap-6">
+							<div class="flex border border-gray-200 rounded-2xl focus:outline-hidden bg-white p-3 justify-between">
+								<div class="relative flex items-center overflow-hidden gap-3">
+									<img class="size-16 lg:size-full xl:size-16 max-w-20 max-h-20 aspect-square object-cover rounded-lg" src="{{ asset('upload/' ~ room.images[0].fileKey ~ '.' ~ room.images[0].extension) }}" alt="{{ room.name }}"/>
+
+									<div class="flex flex-col gap-y-0.5 truncate">
+										<span class="text-xs text-gray-500 truncate">
+											{{ room.type.name }}
+										</span>
+										<h3 class="font-medium xl:text-sm text-xs text-primary truncate">
+											{{ room.name }}
+										</h3>
+										<div class="flex flex-wrap gap-x-2 gap-y-1">
+											<div class="flex items-center gap-1.5 text-xs font-medium">
+												{{ room.bedDouble|default(0) }}
+												lit{{
+                      room.bedDouble|default(0) != 1 ? 's' : '' }}
+												double{{
+                      room.bedDouble|default(0) != 1 ? 's' : '' }}
+												<svg fill="#000000" class="w-4 h-4 flex-shrink-0" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+													<path d="M 5.2892 21.9935 L 10.9031 21.9935 L 10.9031 18.8154 C 10.9031 16.7507 12.0630 15.6372 14.1508 15.6372 L 22.3861 15.6372 C 24.4739 15.6372 25.6338 16.7507 25.6338 18.8154 L 25.6338 21.9935 L 30.6446 21.9935 L 30.6446 18.8154 C 30.6446 16.7507 31.8045 15.6372 34.0084 15.6372 L 41.7333 15.6372 C 43.9373 15.6372 45.0970 16.7507 45.0970 18.8154 L 45.0970 21.9935 L 50.7108 21.9935 L 50.7108 15.6604 C 50.7108 11.5544 48.5305 9.4665 44.5402 9.4665 L 11.4598 9.4665 C 7.4930 9.4665 5.2892 11.5544 5.2892 15.6604 Z M 0 44.8668 C 0 46.0035 .7423 46.7226 1.9022 46.7226 L 3.2013 46.7226 C 4.3380 46.7226 5.0803 46.0035 5.0803 44.8668 L 5.0803 41.5726 C 5.3355 41.6422 6.0779 41.6886 6.6114 41.6886 L 49.4118 41.6886 C 49.9454 41.6886 50.6647 41.6422 50.9198 41.5726 L 50.9198 44.8668 C 50.9198 46.0035 51.6619 46.7226 52.7988 46.7226 L 54.1210 46.7226 C 55.2579 46.7226 56 46.0035 56 44.8668 L 56 31.6670 C 56 27.4682 53.6573 25.1716 49.4118 25.1716 L 6.5883 25.1716 C 2.3430 25.1716 0 27.4682 0 31.6670 Z"/>
+												</svg>
+											</div>
+											<div class="flex items-center gap-1.5 text-xs font-medium">
+												{{ room.bedSingle|default(0) }}
+												lit{{
+                      room.bedSingle|default(0) != 1 ? 's' : '' }}
+												simple{{
+                      room.bedSingle|default(0) != 1 ? 's' : '' }}
+												<svg fill="#000000" class="w-4 h-4 flex-shrink-0" viewbox="0 -64 640 640" xmlns="http://www.w3.org/2000/svg">
+													<path d="M176 256c44.11 0 80-35.89 80-80s-35.89-80-80-80-80 35.89-80 80 35.89 80 80 80zm352-128H304c-8.84 0-16 7.16-16 16v144H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v352c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16v-48h512v48c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V240c0-61.86-50.14-112-112-112z"/>
+												</svg>
+											</div>
+											<div class="flex items-center gap-1.5 text-xs font-medium">
+												{{ room.capacity|default(0) }}
+												personne{{
+                      room.capacity|default(0) != 1 ? 's' : '' }}
+												<svg class="h-4 w-4 flex-shrink-0" fill="#000000" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+													<path d="M 38.7232 28.5490 C 43.1399 28.5490 46.9403 24.6047 46.9403 19.4690 C 46.9403 14.3949 43.1193 10.6356 38.7232 10.6356 C 34.3271 10.6356 30.5061 14.4771 30.5061 19.5101 C 30.5061 24.6047 34.3066 28.5490 38.7232 28.5490 Z M 15.0784 29.0215 C 18.8994 29.0215 22.2274 25.5703 22.2274 21.1125 C 22.2274 16.6958 18.8789 13.4294 15.0784 13.4294 C 11.2575 13.4294 7.8885 16.7779 7.9090 21.1536 C 7.9090 25.5703 11.2370 29.0215 15.0784 29.0215 Z M 3.6155 47.5717 L 19.2281 47.5717 C 17.0917 44.4697 19.7006 38.2247 24.1173 34.8146 C 21.8371 33.2944 18.8994 32.1645 15.0579 32.1645 C 5.7931 32.1645 0 39.0053 0 44.6957 C 0 46.5445 1.0271 47.5717 3.6155 47.5717 Z M 25.8018 47.5717 L 51.6241 47.5717 C 54.8493 47.5717 56 46.6472 56 44.8395 C 56 39.5394 49.3644 32.2261 38.7026 32.2261 C 28.0616 32.2261 21.4262 39.5394 21.4262 44.8395 C 21.4262 46.6472 22.5766 47.5717 25.8018 47.5717 Z"></path>
+												</svg>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="flex flex-col items-end my-auto">
+									<div class="flex items-center gap-1.5">
+										<div class="flex flex-col items-end truncate">
+											{% if room.discount > 0 %}
+												<span class="text-xs font-medium line-through decoration-2">{{ room.price|round(2) }}{{ env.CURRENCY }}</span>
+												<span class="lg:text-md text-lg font-medium text-primary -mt-1">
+													{{ (room.price * (1 - room.discount / 100))|round(2) }}{{
+                      env.CURRENCY }}
+													<span class="text-gray-500 text-xs">/ nuit</span>
+												</span>
+												<span class="text-[0.6rem] text-gray-500 text-end -mt-0.5">
+													Remise de
+													{{ room.discount }}% appliquée
+												</span>
+											{% else %}
+												<span class="lg:text-md text-lg font-medium text-primary">
+													{{ room.price|round(2) }}{{ env.CURRENCY }}
+													<span class="text-gray-500 text-xs">/ nuit</span>
+												</span>
+											{% endif %}
+										</div>
+									</div>
+									<span class="text-[0.6rem] text-gray-500 text-end -mt-0.5">
+										*prix par personnes
+									</span>
+								</div>
+							</div>
+							<div class="grid grid-cols-2 gap-x-5">
+								<div class="relative">
+									<div class="border peer p-4 block w-full border-gray-200 rounded-xl text-sm bg-gray-100 focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2">
+										{{ arrival_date|date('d/m/y', 'Europe/Paris', 'fr') }}
+									</div>
+									<label for="arrival-date" class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent origin-[0_0] peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:translate-x-0.5 peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:translate-x-0.5 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+										Arrivée
+									</label>
+								</div>
+								<div class="relative">
+									<div class="border peer p-4 block w-full border-gray-200 rounded-xl text-sm bg-gray-100 focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2">
+										{{ departure_date|date('d/m/y', 'Europe/Paris', 'fr') }}
+									</div>
+									<label for="departure-date" class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent origin-[0_0] peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:translate-x-0.5 peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:translate-x-0.5 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+										Départ
+									</label>
+								</div>
+							</div>
+							<div class="gap-x-2 items-center flex">
+								<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+								</svg>
+								<p class="text-xs text-gray-500">
+									Vous vous êtes trompé(e) dans les dates ? Pas de souci&nbsp;! Vous pouvez les corriger directement depuis la
+									<a href="/rooms/{{ room.id }}?arrival_date={{ arrival_date }}&departure_date={{ departure_date }}&number_of_guests={{ number_of_guests }}" class="text-primary hover:underline underline-offset-2 decoration-2" onclick="event.preventDefault(); if(confirm('Attention : les informations saisies jusqu’ici seront perdues et vous devrez recommencer la réservation. Voulez-vous vraiment quitter cette page ?')) { window.location.href = this.href; }">
+										page de la chambre
+									</a>.
+								</p>
+							</div>
+						</div>
+
+						<h3 class="text-md font-medium">
+							Informations sur les invités ({{ number_of_guests }}
+							personnes)
+						</h3>
+
+						<form id="booking-guests-form" novalidate method="post" class="flex flex-col gap-6 group">
+							<div class="text-sm text-danger hidden group-[.invalid]:block">
+								Certaines informations sont incorrectes. Veuillez vérifier les champs invalides.
+							</div>
+							<div class="flex flex-col gap-6">
+								{% for i in 1..number_of_guests %}
+									<div class="grid grid-cols-2 gap-x-5">
+										<div class="relative w-full">
+											<input minlength="3" maxlength="50" pattern="([A-Za-zÀ-ÖØ-öø-ÿ'-]+ [A-Za-zÀ-ÖØ-öø-ÿ'-]+(?: [A-Za-zÀ-ÖØ-öø-ÿ'-]+)*)" oninput="this.classList.remove('invalid')" type="text" id="guest-name-{{ i }}" name="guests[{{ i }}][name]" class="peer p-4 block w-full rounded-xl text-sm focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 not-focus:placeholder-transparent focus:pb-2 not-peer-placeholder-shown:pt-6 not-peer-placeholder-shown:pb-2 autofill:pt-6 autofill:pb-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 border-gray-200" placeholder="Jean Dupont" required autocomplete="off" autocorrect="off" autocapitalize="off"/>
+											<label for="guest-name-{{ i }}" class="absolute top-0 left-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:-translate-y-1.5 peer-focus:-translate-x-2.5 not-peer-placeholder-shown:-translate-x-2.5 peer-focus:text-gray-500 not-peer-placeholder-shown:scale-90 not-peer-placeholder-shown:-translate-y-1.5 not-peer-placeholder-shown:text-gray-500">
+												Nom et prénom de l'invité
+												{{ i }}
+											</label>
+											<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:hidden peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+												Veuillez saisir un nom et un prénom valides (ex : Jean Dupont).
+											</span>
+											<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+												Le nom et le prénom sont obligatoires.
+											</span>
+										</div>
+										<div class="relative w-full">
+											<select oninput="this.classList.remove('invalid')" id="guest-type-{{ i }}" name="guests[{{ i }}][type]" class="peer p-4 block w-full rounded-xl text-sm focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 not-focus:placeholder-transparent focus:pb-2 not-peer-placeholder-shown:pt-6 not-peer-placeholder-shown:pb-2 autofill:pt-6 autofill:pb-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 border-gray-200" required>
+												<option value="adult" selected>Adulte</option>
+												<option value="child">Enfant</option>
+											</select>
+											<label for="guest-type-{{ i }}" class="absolute top-0 left-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:-translate-y-1.5 peer-focus:-translate-x-1.5 not-peer-placeholder-shown:-translate-x-1.5 peer-focus:text-gray-500 not-peer-placeholder-shown:scale-90 not-peer-placeholder-shown:-translate-y-1.5 not-peer-placeholder-shown:text-gray-500">
+												Type de d'invité
+											</label>
+											<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:hidden peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+												Type d'invité invalide.
+											</span>
+											<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+												Le type d'invité est obligatoire.
+											</span>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+							<div class="flex flex-wrap gap-4">
+								<button type="button" id="step1-next" class="group-[&:has(input.invalid)]:pointer-events-none group-[&:has(input.invalid)]:bg-primary/50 group-invalid:pointer-events-none group-invalid:bg-primary/50 py-3.5 px-5 inline-flex justify-center items-center gap-2 rounded-xl border border-transparent font-medium bg-primary hover:bg-primary/90 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 text-sm transition duration-300">
+									Continuer
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="px-6" data-step="2" style="display:none;">
+		<div class="max-w-7xl w-full mx-auto py-6 gap-6 flex flex-col">
+			<form id="booking-options-form" class="w-full h-full flex flex-col gap-6">
+				<h2 class="text-lg font-medium">Agrémenter votre séjour</h2>
+				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+					{% for option in options %}
+						<label for="option_{{option.id}}" class="overflow-hidden cursor-pointer h-72 w-full border bg-white rounded-2xl border-gray-200 border-solid flex flex-col relative has-checked:ring-primary has-checked:ring-offset-3 has-checked:ring-3" data-option-id="{{ option.id }}" data-option-name="{{ option.name|e('js') }}" data-option-price="{{ option.price }}" data-option-per-adult="{{ option.perAdult ? '1' : '0' }}" data-option-per-child="{{ option.perChild ? '1' : '0' }}" data-option-per-night="{{ option.perNight ? '1' : '0' }}" data-option-per-quantity="{{ option.perQuantity ? '1' : '0' }}" data-option-tva="{{ option.tva|default(20) }}" data-option-quantity="{{ option.quantity|default(1) }}" data-option-description="{{ option.description|e('js') }}">
+							<div class="flex flex-col gap-4 p-4 items-start">
+								<div class="flex justify-between w-full items-center">
+									<h3 class="text-sm font-semibold flex items-center gap-2">
+										{{ option.name }}
+									</h3>
+									<input type="checkbox" class="focus:ring-primary checked:border-0 focus:outline-hidden inline-block flex-shrink-0 p-0 m-0 w-5 h-5 text-primary align-middle rounded-md border border-gray-300 border-solid appearance-none bg-origin-border focus:outline-offset-2" name="option_{{option.id}}" id="option_{{option.id}}"/>
+								</div>
+								<p class="text-xs text-gray-500 line-clamp-3">
+									{{ option.description }}
+								</p>
+								<div class="flex justify-between w-full items-center">
+									<div class="text-sm leading-5 font-medium">
+										{{ option.price }}{{ env.CURRENCY }}
+										<span class="text-sm text-gray-400">HT</span>
+										<span class="text-xs text-gray-500">
+											{% if option.perAdult and option.perChild %}
+												/personnes
+											{% else %}
+												{% if option.perAdult %}
+													/adultes
+												{% endif %}
+												{% if option.perChild %}
+													/enfants
+												{% endif %}
+											{% endif %}
+											{% if option.perNight %}
+												/nuits
+											{% endif %}
+											{% if option.perQuantity %}
+												×
+											{% endif %}
+											<input name="option_quantity_{{option.id}}" type="number" aria-roledescription="Quantité" aria-label="Quantité" aria-valuemin="1" aria-valuemax="{{ option.maxQuantity is defined and option.maxQuantity ? option.maxQuantity : 99 }}" inputmode="numeric" value="{{ option.quantity|default(1) }}" min="1" max="{{ option.maxQuantity is defined and option.maxQuantity ? option.maxQuantity : 99 }}" class="w-4 h-full p-0 bg-transparent text-xs border-0 text-end focus:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none js-option-qty" style="-webkit-appearance: none; -moz-appearance: textfield; appearance: textfield;" {% if not option.perQuantity %} disabled {% endif %} onblur="let maxQ = {{ option.maxQuantity is defined and option.maxQuantity ? option.maxQuantity : 99 }}; if(this.value === '' || isNaN(this.value) || parseInt(this.value) < 1){ this.value=1; this.dispatchEvent(new Event('input')); } else if(parseInt(this.value) > maxQ) { this.value = maxQ; this.dispatchEvent(new Event('input')); }" oninput="let maxQ = {{ option.maxQuantity is defined and option.maxQuantity ? option.maxQuantity : 99 }}; if(this.value === '' || isNaN(this.value) || parseInt(this.value) < 1){ this.value=1; this.dispatchEvent(new Event('input')); } else if(parseInt(this.value) > maxQ) { this.value = maxQ; this.dispatchEvent(new Event('input')); }"/>
+										</span>
+									</div>
+									{% if option.perQuantity %}
+										<div class="flex items-center gap-x-1.5">
+											<button type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white hover:bg-gray-50 focus:outline-none disabled:opacity-50 disabled:pointer-events-none js-btn-decrease" tabindex="-1" aria-label="Diminuer" onclick="const input = this.parentNode.parentNode.querySelector('input[type=number]'); if (input && !input.disabled) { input.stepDown(); if (parseInt(input.value) < 1) input.value = 1;input.dispatchEvent(new Event('input'));}">
+												-
+											</button>
+											<button type="button" class="size-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white hover:bg-gray-50 focus:outline-none disabled:opacity-50 disabled:pointer-events-none js-btn-increase" tabindex="-1" aria-label="Augmenter" onclick="const input = this.parentNode.parentNode.querySelector('input[type=number]'); if (input && !input.disabled) { input.stepUp(); if (parseInt(input.value) > 99) input.value = 99; input.dispatchEvent(new Event('input')); } ">
+												+
+											</button>
+										</div>
+									{% endif %}
+								</div>
+							</div>
+
+							<img src="{{ asset('upload/' ~ option.image.fileKey) }}.{{ option.image.extension }}" alt="{{ option.name }}" class="mt-auto h-full w-full object-cover border-t border-gray-200"/>
+
+						</label>
+					{% endfor %}
+				</div>
+				<div class="flex flex-wrap gap-4">
+					<button type="button" id="step2-next" class="py-3.5 px-5 inline-flex justify-center items-center gap-2 rounded-xl border border-transparent font-medium bg-primary hover:bg-primary/90 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 text-sm transition duration-300">
+						Continuer
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="px-6" data-step="3" style="display:none;">
+		<div class="max-w-7xl w-full mx-auto grid lg:grid-cols-3 grid-cols-1">
+
+			<form class="col-span-2 mb-6" id="booking-payment-form" method="post">
+				<div class="py-6 gap-6 flex flex-col">
+					<h2 class="text-lg font-medium">
+						Confirmation et règlement de votre séjour
+					</h2>
+				</div>
+				<div class="py-6 gap-6 flex flex-col border-t">
+					<h2 class="text-lg font-medium">Informations de contact</h2>
+					<div class="relative w-full flex flex-col gap-2">
+
+
+						<label for="booking_name" class="font-medium text-sm">
+							Nom complet du réservataire ou de l'entreprise
+						</label>
+						<input name="booking_name" id="booking_name" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="George Martin" value="{{ session.user.name|default('') }}" required oninput="if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('booking_name_error').style.display = 'block'; } else { this.classList.remove('invalid'); document.getElementById('booking_name_error').style.display = 'none'; }" onblur="this.dataset.touched = '1'; if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('booking_name_error').style.display = 'block'; }"/>
+						<span id="booking_name_error" class="mt-2 hidden text-xs text-danger">
+							Champ requis.
+						</span>
+
+						<div class="gap-x-2 items-center flex mt-2">
+							<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+							<p class="text-xs text-gray-500">
+								Le nom complet du réservataire ou de l'entreprise ainsi que le numéro de réservation sont requis pour l'enregistrement. Ces informations seront demandées à l'arrivée.
+							</p>
+						</div>
+					</div>
+					<div class="grid grid-cols-2 gap-x-5">
+						<div class="flex flex-col gap-2">
+							<label for="booking_email" class="font-medium text-sm">Email</label>
+							<input name="booking_email" id="booking_email" type="email" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="exemple@gmail.com" value="{{ session.user.email|default('') }}" required minlength="1" maxlength="50" autocomplete="on" autocorrect="off" autocapitalize="off" oninput="const emailInput = this; const errorSpan = document.getElementById('booking_email_error'); const emailValue = emailInput.value.trim(); const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; if(emailValue === '' || !emailRegex.test(emailValue)){ emailInput.classList.add('invalid'); errorSpan.style.display = 'block'; } else { emailInput.classList.remove('invalid'); errorSpan.style.display = 'none'; }" onblur="const emailInput = this; const errorSpan = document.getElementById('booking_email_error'); const emailValue = emailInput.value.trim(); const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; if(emailValue === '' || !emailRegex.test(emailValue)){ emailInput.classList.add('invalid'); errorSpan.style.display = 'block'; } else { emailInput.classList.remove('invalid'); errorSpan.style.display = 'none'; }"/>
+							<span id="booking_email_error" class="mt-2 hidden text-xs text-danger">Email invalide.</span>
+						</div>
+						<div class="flex flex-col gap-2">
+							<label for="booking_phone" class="font-medium text-sm">Téléphone</label>
+							<input name="booking_phone" id="booking_phone" maxlength="25" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="06 12 34 56 78 ou +33 6 12 34 56 78" required autocomplete="tel" pattern="(^0[1-9](?: ?\d{2}){4}$)|(^\+\d{1,3}(?: ?\d{1,2}){4,6}$)" oninput="let input = this; let val = input.value.trim(); let formatted = ''; if(val.startsWith('+')) { let match = val.match(/^\+(\d{1,3})/); if(match) { let indicatif = match[1]; let reste = val.replace('+'+indicatif, '').replace(/\D/g, ''); formatted = '+' + indicatif; if(reste.length > 0) { formatted += ' '; for(let i = 0; i < reste.length; i += 2){ if(i > 0) formatted += ' '; formatted += reste.substring(i, i+2); } } input.value = formatted.trim(); } else { input.value = val; } } else if(val.startsWith('0')) { let value = val.replace(/\D/g, ''); for(let i = 0; i < value.length; i += 2){ if(i > 0) formatted += ' '; formatted += value.substring(i, i+2); } input.value = formatted.trim(); } else { input.value = val; } const errorSpan = document.getElementById('booking_phone_error'); const regexFr = /^0[1-9](?: ?\d{2}){4}$/; const regexIntl = /^\+\d{1,3}(?: ?\d{1,2}){4,6}$/; if(input.value.trim() === '' || (!regexFr.test(input.value.trim()) && !regexIntl.test(input.value.trim()))){ input.classList.add('invalid'); errorSpan.style.display = 'block'; } else { input.classList.remove('invalid'); errorSpan.style.display = 'none'; }"/>
+							<span id="booking_phone_error" class="mt-2 hidden text-xs text-danger">
+								Numéro de téléphone invalide. Format attendu : 06 12 34 56 78 ou +033 6 12 34 56 78
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="py-6 border-t gap-6 flex flex-col">
+					<h2 class="text-lg font-medium">Adresse de facturation</h2>
+
+					{% if session.user %}
+						<div class="leading-6 text-black flex gap-6 flex-col">
+							<label for="address-1" class="block p-4 rounded-xl cursor-pointer ring ring-transparent text-sm leading-5 bg-white border has-checked:border-primary has-checked:ring-primary">
+								<span class="grid grid-cols-[24px_1fr_auto] items-center gap-6">
+									<input name="address" type="radio" id="address-1" class="box-content checked:bg-primary appearance-none rounded-full border border-gray-200 bg-gray-50 bg-clip-padding ring-1 ring-transparent outline-hidden checked:border-primary checked:ring-primary" value="1"/>
+									<span class="flex-grow">
+										<span class="block font-medium">George Martin</span>
+										<span class="block mt-2 text-gray-500">
+											38 Rue Paul Eluard, Sallaumines, 62430, Hauts-de-France, France
+										</span>
+									</span>
+									<a href="dashboard/" class="text-primary font-medium hover:underline underline-offset-2 decoration-2">
+										Modifier
+									</a>
+								</span>
+							</label>
+							<label for="newaddress" class="block p-4 rounded-xl cursor-pointer ring ring-transparent text-sm leading-5 bg-white border has-checked:border-primary has-checked:ring-primary">
+								<span class="grid grid-cols-[24px_1fr_auto] items-center gap-6">
+									<input name="address" type="radio" id="newaddress" class="box-content checked:bg-primary appearance-none rounded-full border border-gray-200 bg-gray-50 bg-clip-padding ring-1 ring-transparent outline-hidden checked:border-primary checked:ring-primary" value="new" checked/>
+									<span class="block">
+										Ajouter une nouvelle adresse
+									</span>
+								</span>
+							</label>
+						</div>
+					{% endif %}
+					<div class="gap-6 flex flex-col">
+						<div class="flex flex-col gap-2">
+							<label for="address_recipient" class="font-medium text-sm">
+								Nom complet
+							</label>
+							<input name="address_recipient" id="address_recipient" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="George Martin" required minlength="1" maxlength="50" autocomplete="off" autocorrect="off" autocapitalize="off" oninput="if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('address_recipient_error').style.display = 'block'; } else { this.classList.remove('invalid'); document.getElementById('address_recipient_error').style.display = 'none'; }" onblur="this.dataset.touched = '1'; if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('address_recipient_error').style.display = 'block'; }"/>
+							<span id="address_recipient_error" class="mt-2 hidden text-xs text-danger">
+								Champ requis.
+							</span>
+						</div>
+						<div class="flex flex-col gap-2">
+							<label for="country" class="font-medium text-sm">
+								Pays
+							</label>
+							<select name="country" id="country" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2">
+								<option value="france" selected>France</option>
+								<option value="afghanistan">Afghanistan</option>
+								<option value="afrique_du_sud">Afrique du Sud</option>
+								<option value="albanie">Albanie</option>
+								<option value="algerie">Algérie</option>
+								<option value="allemagne">Allemagne</option>
+								<option value="andorre">Andorre</option>
+								<option value="angola">Angola</option>
+								<option value="arabie_saoudite">Arabie Saoudite</option>
+								<option value="argentine">Argentine</option>
+								<option value="armenie">Arménie</option>
+								<option value="australie">Australie</option>
+								<option value="autriche">Autriche</option>
+								<option value="azerbaidjan">Azerbaïdjan</option>
+								<option value="bahamas">Bahamas</option>
+								<option value="bahrein">Bahreïn</option>
+								<option value="bangladesh">Bangladesh</option>
+								<option value="belgique">Belgique</option>
+								<option value="belize">Belize</option>
+								<option value="benin">Bénin</option>
+								<option value="bhoutan">Bhoutan</option>
+								<option value="bielorussie">Biélorussie</option>
+								<option value="birmanie">Birmanie</option>
+								<option value="bolivie">Bolivie</option>
+								<option value="bosnie">Bosnie-Herzégovine</option>
+								<option value="botswana">Botswana</option>
+								<option value="bresil">Brésil</option>
+								<option value="brunei">Brunei</option>
+								<option value="bulgarie">Bulgarie</option>
+								<option value="burkina_faso">Burkina Faso</option>
+								<option value="burundi">Burundi</option>
+								<option value="cambodge">Cambodge</option>
+								<option value="cameroun">Cameroun</option>
+								<option value="canada">Canada</option>
+								<option value="cap_vert">Cap-Vert</option>
+								<option value="chili">Chili</option>
+								<option value="chine">Chine</option>
+								<option value="chypre">Chypre</option>
+								<option value="colombie">Colombie</option>
+								<option value="comores">Comores</option>
+								<option value="congo">Congo</option>
+								<option value="coree_du_nord">Corée du Nord</option>
+								<option value="coree_du_sud">Corée du Sud</option>
+								<option value="costa_rica">Costa Rica</option>
+								<option value="cote_ivoire">Côte d'Ivoire</option>
+								<option value="croatie">Croatie</option>
+								<option value="cuba">Cuba</option>
+								<option value="danemark">Danemark</option>
+								<option value="djibouti">Djibouti</option>
+								<option value="dominique">Dominique</option>
+								<option value="egypte">Égypte</option>
+								<option value="emirats_arabes_unis">Émirats arabes unis</option>
+								<option value="equateur">Équateur</option>
+								<option value="erythree">Érythrée</option>
+								<option value="espagne">Espagne</option>
+								<option value="estonie">Estonie</option>
+								<option value="eswatini">Eswatini</option>
+								<option value="etats_unis">États-Unis</option>
+								<option value="ethiopie">Éthiopie</option>
+								<option value="fidji">Fidji</option>
+								<option value="finlande">Finlande</option>
+								<option value="gabon">Gabon</option>
+								<option value="gambie">Gambie</option>
+								<option value="georgie">Géorgie</option>
+								<option value="ghana">Ghana</option>
+								<option value="grece">Grèce</option>
+								<option value="guatemala">Guatemala</option>
+								<option value="guinee">Guinée</option>
+								<option value="guinee_bissau">Guinée-Bissau</option>
+								<option value="guinee_equatoriale">Guinée équatoriale</option>
+								<option value="guyana">Guyana</option>
+								<option value="haiti">Haïti</option>
+								<option value="honduras">Honduras</option>
+								<option value="hongrie">Hongrie</option>
+								<option value="inde">Inde</option>
+								<option value="indonesie">Indonésie</option>
+								<option value="irak">Irak</option>
+								<option value="iran">Iran</option>
+								<option value="irlande">Irlande</option>
+								<option value="islande">Islande</option>
+								<option value="israel">Israël</option>
+								<option value="italie">Italie</option>
+								<option value="jamaique">Jamaïque</option>
+								<option value="japon">Japon</option>
+								<option value="jordanie">Jordanie</option>
+								<option value="kazakhstan">Kazakhstan</option>
+								<option value="kenya">Kenya</option>
+								<option value="kirghizistan">Kirghizistan</option>
+								<option value="kiribati">Kiribati</option>
+								<option value="kosovo">Kosovo</option>
+								<option value="koweit">Koweït</option>
+								<option value="laos">Laos</option>
+								<option value="lesotho">Lesotho</option>
+								<option value="lettonie">Lettonie</option>
+								<option value="liban">Liban</option>
+								<option value="liberia">Libéria</option>
+								<option value="libye">Libye</option>
+								<option value="liechtenstein">Liechtenstein</option>
+								<option value="lituanie">Lituanie</option>
+								<option value="luxembourg">Luxembourg</option>
+								<option value="macedoine">Macédoine du Nord</option>
+								<option value="madagascar">Madagascar</option>
+								<option value="malaisie">Malaisie</option>
+								<option value="malawi">Malawi</option>
+								<option value="maldives">Maldives</option>
+								<option value="mali">Mali</option>
+								<option value="malte">Malte</option>
+								<option value="maroc">Maroc</option>
+								<option value="marshall">Îles Marshall</option>
+								<option value="maurice">Maurice</option>
+								<option value="mauritanie">Mauritanie</option>
+								<option value="mexique">Mexique</option>
+								<option value="micronesie">Micronésie</option>
+								<option value="moldavie">Moldavie</option>
+								<option value="monaco">Monaco</option>
+								<option value="mongolie">Mongolie</option>
+								<option value="montenegro">Monténégro</option>
+								<option value="mozambique">Mozambique</option>
+								<option value="namibie">Namibie</option>
+								<option value="nauru">Nauru</option>
+								<option value="nepal">Népal</option>
+								<option value="nicaragua">Nicaragua</option>
+								<option value="niger">Niger</option>
+								<option value="nigeria">Nigéria</option>
+								<option value="norvege">Norvège</option>
+								<option value="nouvelle_zelande">Nouvelle-Zélande</option>
+								<option value="oman">Oman</option>
+								<option value="ouganda">Ouganda</option>
+								<option value="ouzbekistan">Ouzbékistan</option>
+								<option value="pakistan">Pakistan</option>
+								<option value="palaos">Palaos</option>
+								<option value="palestine">Palestine</option>
+								<option value="panama">Panama</option>
+								<option value="papouasie_nouvelle_guinee">Papouasie-Nouvelle-Guinée</option>
+								<option value="paraguay">Paraguay</option>
+								<option value="pays_bas">Pays-Bas</option>
+								<option value="perou">Pérou</option>
+								<option value="philippines">Philippines</option>
+								<option value="pologne">Pologne</option>
+								<option value="portugal">Portugal</option>
+								<option value="qatar">Qatar</option>
+								<option value="republique_centrafricaine">République centrafricaine</option>
+								<option value="republique_dominicaine">République dominicaine</option>
+								<option value="republique_tcheque">République tchèque</option>
+								<option value="roumanie">Roumanie</option>
+								<option value="royaume_uni">Royaume-Uni</option>
+								<option value="russie">Russie</option>
+								<option value="rwanda">Rwanda</option>
+								<option value="saint_kitts_et_nevis">Saint-Kitts-et-Nevis</option>
+								<option value="saint_marin">Saint-Marin</option>
+								<option value="saint_vincent_et_les_grenadines">Saint-Vincent-et-les-Grenadines</option>
+								<option value="sainte_lucie">Sainte-Lucie</option>
+								<option value="salomon">Îles Salomon</option>
+								<option value="salvador">Salvador</option>
+								<option value="samoa">Samoa</option>
+								<option value="sao_tome_et_principe">Sao Tomé-et-Principe</option>
+								<option value="senegal">Sénégal</option>
+								<option value="serbie">Serbie</option>
+								<option value="seychelles">Seychelles</option>
+								<option value="singapour">Singapour</option>
+								<option value="slovaquie">Slovaquie</option>
+								<option value="slovenie">Slovénie</option>
+								<option value="somalie">Somalie</option>
+								<option value="soudan">Soudan</option>
+								<option value="soudan_du_sud">Soudan du Sud</option>
+								<option value="sri_lanka">Sri Lanka</option>
+								<option value="suede">Suède</option>
+								<option value="suisse">Suisse</option>
+								<option value="suriname">Suriname</option>
+								<option value="syrie">Syrie</option>
+								<option value="tadjikistan">Tadjikistan</option>
+								<option value="tanzanie">Tanzanie</option>
+								<option value="tchad">Tchad</option>
+								<option value="thailande">Thaïlande</option>
+								<option value="timor_oriental">Timor oriental</option>
+								<option value="togo">Togo</option>
+								<option value="tonga">Tonga</option>
+								<option value="trinite_et_tobago">Trinité-et-Tobago</option>
+								<option value="tunisie">Tunisie</option>
+								<option value="turkmenistan">Turkménistan</option>
+								<option value="turquie">Turquie</option>
+								<option value="tuvalu">Tuvalu</option>
+								<option value="ukraine">Ukraine</option>
+								<option value="uruguay">Uruguay</option>
+								<option value="vanuatu">Vanuatu</option>
+								<option value="vatican">Vatican</option>
+								<option value="venezuela">Venezuela</option>
+								<option value="vietnam">Vietnam</option>
+								<option value="yemen">Yémen</option>
+								<option value="zambie">Zambie</option>
+								<option value="zimbabwe">Zimbabwe</option>
+							</select>
+						</div>
+						<div class="flex flex-col gap-2">
+							<label for="address_line_1" class="font-medium text-sm">
+								Ligne d'adresse 1
+							</label>
+							<input name="address_line_1" id="address_line_1" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="16 rue de la paix" required minlength="1" maxlength="100" autocomplete="off" autocorrect="off" autocapitalize="off" oninput="if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('address_line_1_error').style.display = 'block'; } else { this.classList.remove('invalid'); document.getElementById('address_line_1_error').style.display = 'none'; }" onblur="this.dataset.touched = '1'; if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('address_line_1_error').style.display = 'block'; }"/>
+							<span id="address_line_1_error" class="mt-2 hidden text-xs text-danger">
+								Champ requis.
+							</span>
+						</div>
+						<div class="flex flex-col gap-2">
+							<label for="address_line_2" class="font-medium text-sm">
+								Ligne d'adresse 2 (optionnel)
+							</label>
+							<input name="address_line_2" id="address_line_2" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2" placeholder=""/>
+						</div>
+						<div class="flex flex-col gap-2">
+							<label for="city" class="font-medium text-sm">Ville</label>
+							<input name="city" id="city" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="Arras" required minlength="1" maxlength="50" autocomplete="off" autocorrect="off" autocapitalize="off" oninput="if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('city_error').style.display = 'block'; } else { this.classList.remove('invalid'); document.getElementById('city_error').style.display = 'none'; }" onblur="this.dataset.touched = '1'; if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('city_error').style.display = 'block'; }"/>
+							<span id="city_error" class="mt-2 hidden text-xs text-danger">
+								Champ requis.
+							</span>
+						</div>
+						<div class="grid grid-cols-2 gap-x-5">
+							<div class="flex flex-col gap-2">
+								<label for="state" class="font-medium text-sm">Province/Région</label>
+								<input name="state" id="state" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="Hauts-de-France" maxlength="28" required minlength="1" autocomplete="off" autocorrect="off" autocapitalize="off" oninput="if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('state_error').style.display = 'block'; } else { this.classList.remove('invalid'); document.getElementById('state_error').style.display = 'none'; }" onblur="this.dataset.touched = '1'; if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('state_error').style.display = 'block'; }"/>
+								<span id="state_error" class="mt-2 hidden text-xs text-danger">
+									Champ requis.
+								</span>
+							</div>
+
+							<div class="flex flex-col gap-2">
+								<label for="postal_code" class="font-medium text-sm">
+									Code postal
+								</label>
+								<div class="relative">
+									<input maxlength="9" name="postal_code" id="postal_code" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="62000" required minlength="1" maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="off" oninput="if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('postal_code_error').style.display = 'block'; } else { this.classList.remove('invalid'); document.getElementById('postal_code_error').style.display = 'none'; }" onblur="this.dataset.touched = '1'; if(this.value.trim() === ''){ this.classList.add('invalid'); document.getElementById('postal_code_error').style.display = 'block'; }"/>
+									<span id="postal_code_error" class="mt-2 hidden text-xs text-danger">
+										Champ requis.
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% if session.user %}
+						<div class="gap-x-1.5 flex items-center">
+							<input name="save_address" type="checkbox" class="inline-block flex-shrink-0 p-0 mx-0 mt-px mb-0 w-4 h-4 text-primary align-middle rounded border border-gray-300 border-solid appearance-none bg-origin-border focus:outline-offset-2 focus:ring-primary" id="save_address"/>
+							<label for="save_address" class="text-sm leading-5 text-gray-500 cursor-default items-center flex">
+								Enregistrer cette adresse pour les prochaines réservations
+							</label>
+						</div>
+					{% endif %}
+				</div>
+
+				<div class="py-6 border-t gap-6 flex flex-col">
+					<h2 class="text-lg font-medium">Méthode de paiement</h2>
+					<div class="grid grid-cols-3 gap-5">
+						<label for="card" class="flex relative gap-x-3 justify-center items-center py-4 px-4 text-sm leading-5 rounded-xl ring-1 ring-gray-200 has-[:checked]:ring-2 border-solid cursor-pointer has-[:checked]:ring-primary bg-white">
+							<input type="radio" id="card" class="hidden flex-shrink-0 p-0 mx-0 mt-1 mb-0 w-4 h-4 text-primary align-middle bg-no-repeat border border-transparent border-solid appearance-none bg-origin-border focus:outline-offset-2" value="card" name="payment_type" checked="" oninput="document.getElementById('card_info').style.display = 'flex'; document.getElementById('card_info').style.opacity = 1;"/>
+							<span class="block">
+								<svg class="block flex-shrink-0 w-4 h-4 align-middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<rect width="20" height="14" x="2" y="5" rx="2" class=""></rect>
+									<line x1="2" x2="22" y1="10" y2="10" class=""></line>
+								</svg>
+							</span>
+							<span class="block text-xs font-medium leading-4 sm:text-sm sm:leading-5">
+								Carte
+							</span>
+						</label>
+
+						<label for="paypal" class="flex relative gap-x-3 justify-center items-center py-4 px-4 text-sm leading-5 rounded-xl ring-1 ring-gray-200 has-[:checked]:ring-2 border-solid cursor-pointer has-[:checked]:ring-primary bg-white">
+							<input type="radio" id="paypal" class="hidden flex-shrink-0 p-0 mx-0 mt-1 mb-0 w-4 h-4 text-primary align-middle bg-transparent border border-gray-200 border-solid appearance-none bg-origin-border focus:outline-offset-2" value="paypal" name="payment_type" oninput="document.getElementById('card_info').style.display = 'none'; document.getElementById('card_info').style.opacity = 0;"/>
+							<span class="block">
+								<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="33" height="32" viewbox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M10.6424 30.9152L11.197 27.3925L9.96162 27.3639H4.06256L8.16211 1.37005C8.17431 1.29063 8.21465 1.21823 8.27577 1.16607C8.33689 1.1139 8.41472 1.08543 8.49508 1.08586H18.4417C21.7438 1.08586 24.0227 1.773 25.2124 3.12927C25.7702 3.76551 26.1255 4.43039 26.2972 5.16208C26.4775 5.92981 26.4807 6.84707 26.3047 7.9658L26.2919 8.04745V8.76429L26.8497 9.08029C27.2755 9.29602 27.6583 9.58784 27.979 9.94134C28.4562 10.4853 28.7648 11.1767 28.8952 11.9964C29.0299 12.8394 28.9854 13.8426 28.7648 14.9783C28.5103 16.2847 28.0989 17.4225 27.5432 18.3536C27.053 19.1876 26.3938 19.91 25.608 20.4744C24.8699 20.9982 23.993 21.3959 23.0015 21.6504C22.0408 21.9007 20.9454 22.0268 19.7439 22.0268H18.9698C18.4163 22.0268 17.8786 22.2262 17.4566 22.5836C17.0352 22.9447 16.7556 23.4438 16.6677 23.9918L16.6093 24.3088L15.6295 30.5175L15.585 30.7455C15.5733 30.8176 15.5532 30.8537 15.5235 30.8781C15.4947 30.9016 15.4588 30.9147 15.4217 30.9152H10.6424Z" fill="#253B80" class=""></path>
+									<path d="M27.3778 8.13017C27.3481 8.31998 27.3142 8.51403 27.276 8.71339C25.9643 15.4481 21.4766 17.7746 15.7451 17.7746H12.8268C12.1259 17.7746 11.5352 18.2836 11.426 18.975L9.93191 28.4508L9.5088 31.1368C9.49195 31.2434 9.49838 31.3523 9.52767 31.4561C9.55695 31.5599 9.60838 31.6562 9.67842 31.7382C9.74846 31.8202 9.83545 31.8861 9.9334 31.9313C10.0313 31.9765 10.1379 31.9999 10.2458 32H15.4217C16.0346 32 16.5552 31.5546 16.6517 30.9502L16.7026 30.6872L17.6771 24.5029L17.7397 24.1636C17.8351 23.557 18.3569 23.1116 18.9698 23.1116H19.7439C24.7586 23.1116 28.6842 21.0757 29.8316 15.184C30.3109 12.7228 30.0627 10.6677 28.7945 9.22239C28.3925 8.77528 27.9124 8.40516 27.3778 8.13017Z" fill="#179BD7" class=""></path>
+									<path d="M26.0056 7.58299C25.5868 7.46183 25.1607 7.36727 24.7299 7.29986C23.8788 7.16905 23.0185 7.10629 22.1574 7.11217H14.3612C14.0645 7.11194 13.7776 7.21787 13.5521 7.41079C13.3267 7.60372 13.1778 7.87092 13.1322 8.1641L11.4737 18.6685L11.426 18.975C11.4777 18.6406 11.6473 18.3357 11.9043 18.1155C12.1612 17.8954 12.4885 17.7744 12.8268 17.7746H15.7451C21.4766 17.7746 25.9642 15.447 27.276 8.71339C27.3152 8.51403 27.3481 8.31998 27.3778 8.13017C27.0316 7.94865 26.6709 7.79648 26.2993 7.67525C26.2019 7.64293 26.104 7.61217 26.0056 7.58299Z" fill="#222D65" class=""></path>
+									<path d="M13.1321 8.1641C13.1773 7.87084 13.3262 7.60351 13.5517 7.41068C13.7772 7.21785 14.0644 7.11231 14.3611 7.11323H22.1573C23.0809 7.11323 23.943 7.17368 24.7298 7.30092C25.2623 7.3846 25.7874 7.50976 26.3003 7.67525C26.6874 7.80356 27.0468 7.9552 27.3787 8.13017C27.769 5.64138 27.3756 3.94685 26.0299 2.41243C24.5464 0.7232 21.8688 0 18.4427 0H8.49601C7.79614 0 7.19913 0.508997 7.09097 1.20144L2.94795 27.4625C2.92865 27.5844 2.93599 27.7091 2.96947 27.8279C3.00294 27.9467 3.06176 28.0569 3.14187 28.1508C3.22198 28.2447 3.32149 28.3202 3.43354 28.3719C3.54559 28.4237 3.66753 28.4506 3.79097 28.4508H9.93181L11.4736 18.6685L13.1321 8.1641Z" fill="#253B80" class=""></path>
+								</svg>
+							</span>
+							<span class="block text-xs font-medium leading-4 sm:text-sm sm:leading-5">
+								PayPal
+							</span>
+						</label>
+
+						<label for="stripe" class="flex relative gap-x-3 justify-center items-center py-4 px-4 text-sm leading-5 rounded-xl ring-1 ring-gray-200 has-[:checked]:ring-2 border-solid cursor-pointer has-[:checked]:ring-primary bg-white">
+							<input type="radio" id="stripe" class="hidden flex-shrink-0 p-0 mx-0 mt-1 mb-0 w-4 h-4 text-primary align-middle bg-transparent border border-gray-200 border-solid appearance-none bg-origin-border focus:outline-offset-2" value="stripe" name="payment_type" oninput="document.getElementById('card_info').style.display = 'none'; document.getElementById('card_info').style.opacity = 0;"/>
+							<span class="block">
+								<svg class="block flex-shrink-0 w-4 h-4 align-middle" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 28.87 28.87">
+									<rect width="28.87" height="28.87" rx="6.48" ry="6.48" style="fill: #6772e5"></rect>
+									<path d="M13.3 11.2c0-.69.57-1 1.49-1a9.84 9.84 0 0 1 4.37 1.13V7.24a11.6 11.6 0 0 0-4.36-.8c-3.56 0-5.94 1.86-5.94 5 0 4.86 6.68 4.07 6.68 6.17 0 .81-.71 1.07-1.68 1.07A11.06 11.06 0 0 1 9 17.25v4.19a12.19 12.19 0 0 0 4.8 1c3.65 0 6.17-1.8 6.17-5 .03-5.21-6.67-4.27-6.67-6.24z" fill="#fff" fill-rule="evenodd"></path>
+								</svg>
+							</span>
+							<span class="block text-xs font-medium leading-4 sm:text-sm sm:leading-5">
+								Stripe
+							</span>
+						</label>
+					</div>
+
+					<div id="card_info" class="gap-6 flex flex-col" style="display: flex; transition: opacity 0.3s ease">
+						<div class="flex flex-col gap-2">
+							<label for="card_number" class="font-medium text-sm">
+								Numéro de carte bancaire
+							</label>
+							<div class="relative">
+								<input id="card_number" name="card_number" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="1234 5678 9012 3456" maxlength="19" pattern="[0-9 ]{13,23}" autocomplete="cc-number" autocorrect="off" autocapitalize="off" oninput="
+																			this.value = this.value.replace(/[^0-9]/g, '').replace(/(.{4})/g, '$1 ').trim();
+																			const val = this.value.replace(/\s/g, '');
+																			const errorSpan = document.getElementById('card_number_error');
+																			if(this.dataset.touched === '1') {
+																				if(val.length < 13 || val.length > 19 || !/^[0-9]+$/.test(val)) {
+																					this.classList.add('invalid');
+																					errorSpan.textContent = 'Numéro de carte invalide (13 à 19 chiffres)';
+																				} else {
+																					this.classList.remove('invalid');
+																					errorSpan.textContent = '';
+																				}
+																			}
+																		" onblur="
+																			this.dataset.touched = '1';
+																			const val = this.value.replace(/\s/g, '');
+																			const errorSpan = document.getElementById('card_number_error');
+																			if(val.length < 13 || val.length > 19 || !/^[0-9]+$/.test(val)) {
+																				this.classList.add('invalid');
+																				errorSpan.textContent = 'Numéro de carte invalide (13 à 19 chiffres)';
+																			} else {
+																				this.classList.remove('invalid');
+																				errorSpan.textContent = '';
+																			}
+																		"/>
+								<div class="flex absolute right-4 inset-y-0 z-20 items-center pointer-events-none">
+									<div class="flex gap-x-1 bg-white">
+										<svg class="block flex-shrink-0 py-0.5 w-9 h-auto align-middle" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 56 32" width="56" height="32" fill="none">
+											<path d="M34.482 9a8.17 8.17 0 0 1 3.052.577l-.463 2.926-.308-.143a5.638 5.638 0 0 0-2.534-.52c-1.343 0-1.946.591-1.96 1.168 0 .635.73 1.053 1.92 1.673 1.96.966 2.868 2.148 2.855 3.69C37.016 21.184 34.692 23 31.122 23c-1.526-.015-2.996-.347-3.794-.721l.476-3.043.448.217c1.106.505 1.834.72 3.192.72.98 0 2.03-.418 2.043-1.325 0-.592-.447-1.024-1.763-1.688-1.288-.649-3.01-1.73-2.982-3.676.014-2.639 2.38-4.484 5.74-4.484ZM21.798 22.798H25.2l2.128-13.552h-3.402l-2.128 13.552Z" fill="#00579F" class=""></path>
+											<path clip-rule="evenodd" d="M46.255 9.246h-2.631c-.812 0-1.428.245-1.779 1.124l-5.053 12.428h3.57l.714-2.033h4.368c.098.476.406 2.033.406 2.033H49L46.255 9.246Zm-4.2 8.75 1.36-3.79c-.007.01.038-.116.104-.305.098-.28.243-.693.343-.993l.237 1.167s.645 3.244.785 3.922h-2.828Z" fill="#00579F" fill-rule="evenodd" class=""></path>
+											<path d="m15.624 18.487 3.332-9.241h3.598l-5.348 13.538h-3.598l-3.052-11.852c2.156 1.168 4.088 3.518 4.704 5.68l.364 1.875Z" fill="#00579F" class=""></path>
+											<path d="M12.53 9.246H7.056L7 9.519c4.27 1.125 7.098 3.836 8.26 7.094l-1.19-6.228c-.196-.866-.798-1.11-1.54-1.14Z" fill="#FAA61A" class=""></path>
+											<rect height="31" rx="5.5" stroke="currentColor" class="stroke-zinc-300" width="55" x=".5" y=".5"></rect>
+										</svg>
+										<svg class="block flex-shrink-0 py-0.5 w-9 h-auto align-middle" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 56 32" width="56" height="32" fill="none">
+											<path d="M28.017 22.85A9.137 9.137 0 0 1 22.108 25C17.078 25 13 20.97 13 16s4.078-9 9.108-9c2.255 0 4.318.81 5.909 2.15A9.137 9.137 0 0 1 33.925 7c5.03 0 9.108 4.03 9.108 9s-4.078 9-9.108 9a9.137 9.137 0 0 1-5.908-2.15Z" fill="#ED0006" class=""></path>
+											<path d="M28.017 22.85a8.937 8.937 0 0 0 3.2-6.85c0-2.743-1.242-5.2-3.2-6.85A9.137 9.137 0 0 1 33.925 7c5.03 0 9.108 4.03 9.108 9s-4.078 9-9.108 9a9.137 9.137 0 0 1-5.908-2.15Z" fill="#F9A000" class=""></path>
+											<path d="M28.017 22.85c1.958-1.65 3.2-4.107 3.2-6.85 0-2.743-1.242-5.2-3.2-6.85a8.937 8.937 0 0 0-3.2 6.85c0 2.743 1.241 5.2 3.2 6.85Z" fill="#FF5E00" class=""></path>
+											<rect height="31" rx="5.5" stroke="currentColor" class="stroke-zinc-300" class="" width="55" x=".5" y=".5"></rect>
+										</svg>
+									</div>
+								</div>
+							</div>
+							<span id="card_number_error" class="block mt-1 text-xs text-danger"></span>
+						</div>
+
+						<div class="grid grid-cols-2 gap-x-5">
+							<div class="flex flex-col gap-2">
+								<label for="card_expiry" class="font-medium text-sm">
+									Date d'expiration
+								</label>
+								<input id="card_expiry" name="card_expiry" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="MM/AA" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" maxlength="5" autocomplete="cc-exp" oninput="let val = this.value.replace(/[^0-9]/g, ''); if(val.length > 2) { val = val.slice(0,2) + '/' + val.slice(2,4); } this.value = val.slice(0,5); const errorSpan = document.getElementById('card_expiry_error'); const match = this.value.match(/^(0[1-9]|1[0-2])\/([0-9]{2})$/); if(this.value.length === 5){ this.dataset.touched = '1'; } if(this.dataset.touched === '1'){ if(!match){ this.classList.add('invalid'); errorSpan.textContent = 'Date invalide (MM/AA)'; }else{ const now = new Date(); const inputMonth = parseInt(match[1],10); const inputYear = 2000+parseInt(match[2],10); const expiry = new Date(inputYear, inputMonth-1, 1); const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1); if(expiry < thisMonth){ this.classList.add('invalid'); errorSpan.textContent = 'Carte expirée'; }else{ this.classList.remove('invalid'); errorSpan.textContent = ''; } } }" onblur="this.dataset.touched = '1'; let val = this.value.replace(/[^0-9]/g, ''); if(val.length > 2) { val = val.slice(0,2) + '/' + val.slice(2,4); } this.value = val.slice(0,5); const errorSpan = document.getElementById('card_expiry_error'); const match = this.value.match(/^(0[1-9]|1[0-2])\/([0-9]{2})$/); if(!match){ this.classList.add('invalid'); errorSpan.textContent = 'Date invalide (MM/AA)'; }else{ const now = new Date(); const inputMonth = parseInt(match[1],10); const inputYear = 2000+parseInt(match[2],10); const expiry = new Date(inputYear, inputMonth-1, 1); const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1); if(expiry < thisMonth){ this.classList.add('invalid'); errorSpan.textContent = 'Carte expirée'; }else{ this.classList.remove('invalid'); errorSpan.textContent = ''; } }" onpaste="event.preventDefault(); let paste = (event.clipboardData || window.clipboardData).getData('text'); paste = paste.replace(/[^0-9]/g, ''); if(paste.length > 2) { paste = paste.slice(0,2) + '/' + paste.slice(2,4); } this.value = paste.slice(0,5); const errorSpan = document.getElementById('card_expiry_error'); const match = this.value.match(/^(0[1-9]|1[0-2])\/([0-9]{2})$/); if(this.value.length === 5){ this.dataset.touched = '1'; } if(this.dataset.touched === '1'){ if(!match){ this.classList.add('invalid'); errorSpan.textContent = 'Date invalide (MM/AA)'; }else{ const now = new Date(); const inputMonth = parseInt(match[1],10); const inputYear = 2000+parseInt(match[2],10); const expiry = new Date(inputYear, inputMonth-1, 1); const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1); if(expiry < thisMonth){ this.classList.add('invalid'); errorSpan.textContent = 'Carte expirée'; }else{ this.classList.remove('invalid'); errorSpan.textContent = ''; } } }"/>
+								<span id="card_expiry_error" class="block mt-1 text-xs text-danger"></span>
+							</div>
+
+							<div class="flex flex-col gap-2">
+								<label for="card_cvc" class="font-medium text-sm">CCV</label>
+								<div class="relative flex items-center">
+									<input id="card_cvc" name="card_cvc" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="CCV" maxlength="3" pattern="[0-9]{3}" autocomplete="cc-csc" oninput="this.value=this.value.replace(/[^0-9]/g,'').substr(0,3);const errorSpan=document.getElementById('card_cvc_error');if(this.value.length===3){this.dataset.touched='1';}if(this.dataset.touched==='1'){if(this.value.length!==3){this.classList.add('invalid');errorSpan.textContent='CCV invalide (3 chiffres)';}else{this.classList.remove('invalid');errorSpan.textContent='';}}" onblur="this.dataset.touched='1';const errorSpan=document.getElementById('card_cvc_error');if(this.value.length!==3){this.classList.add('invalid');errorSpan.textContent='CCV invalide (3 chiffres)';}else{this.classList.remove('invalid');errorSpan.textContent='';}"/>
+									<span class="absolute right-4 inset-y-0 z-20 flex items-center pointer-events-none">
+										<svg class="block flex-shrink-0 w-6 h-6 align-middle" width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<rect x="1" y="4" width="22" height="16" rx="2" fill="#e5e7eb" class="leading-6 text-black"></rect>
+											<rect x="1" y="6" width="22" height="3" fill="#9ca3af" class=""></rect>
+											<rect x="3" y="12" width="18" height="3" rx="1.5" fill="#fff" class=""></rect>
+											<path d="M14 6C14 3.23858 16.2386 1 19 1V1C21.7614 1 24 3.23858 24 6V6C24 8.76142 21.7614 11 19 11V11C16.2386 11 14 8.76142 14 6V6Z" fill="#6b7280" class=""></path>
+											<path d="M16.9359 4.59091V7.5H16.4089V5.10369H16.3919L15.7115 5.53835V5.0554L16.4345 4.59091H16.9359ZM17.6745 7.5V7.11932L18.6845 6.12926C18.7811 6.03172 18.8616 5.94508 18.926 5.86932C18.9904 5.79356 19.0386 5.72017 19.0708 5.64915C19.103 5.57812 19.1191 5.50237 19.1191 5.42188C19.1191 5.33002 19.0983 5.25142 19.0566 5.18608C19.015 5.11979 18.9577 5.06866 18.8848 5.03267C18.8118 4.99669 18.729 4.97869 18.6362 4.97869C18.5405 4.97869 18.4567 4.99858 18.3848 5.03835C18.3128 5.07718 18.2569 5.13258 18.2172 5.20455C18.1783 5.27652 18.1589 5.36222 18.1589 5.46165H17.6575C17.6575 5.27699 17.6996 5.11648 17.7839 4.98011C17.8682 4.84375 17.9842 4.73816 18.1319 4.66335C18.2806 4.58854 18.4511 4.55114 18.6433 4.55114C18.8384 4.55114 19.0098 4.58759 19.1575 4.66051C19.3052 4.73343 19.4198 4.83333 19.5012 4.96023C19.5836 5.08712 19.6248 5.23201 19.6248 5.39489C19.6248 5.50379 19.604 5.6108 19.5623 5.71591C19.5207 5.82102 19.4473 5.9375 19.3422 6.06534C19.238 6.19318 19.0917 6.34801 18.9032 6.52983L18.4018 7.03977V7.05966H19.6689V7.5H17.6745ZM21.2029 7.53977C20.9984 7.53977 20.8166 7.50473 20.6575 7.43466C20.4993 7.36458 20.3743 7.26705 20.2825 7.14205C20.1906 7.01705 20.1419 6.87263 20.1362 6.70881H20.6703C20.675 6.78741 20.7011 6.85606 20.7484 6.91477C20.7958 6.97254 20.8587 7.01752 20.9373 7.04972C21.0159 7.08191 21.104 7.09801 21.2015 7.09801C21.3057 7.09801 21.398 7.08002 21.4785 7.04403C21.559 7.0071 21.622 6.95597 21.6674 6.89062C21.7129 6.82528 21.7351 6.75 21.7342 6.66477C21.7351 6.5767 21.7124 6.49905 21.666 6.43182C21.6196 6.36458 21.5524 6.31203 21.4643 6.27415C21.3772 6.23627 21.2721 6.21733 21.149 6.21733H20.8919V5.81108H21.149C21.2503 5.81108 21.3388 5.79356 21.4146 5.75852C21.4913 5.72348 21.5514 5.67424 21.595 5.6108C21.6386 5.5464 21.6599 5.47206 21.6589 5.38778C21.6599 5.3054 21.6414 5.2339 21.6035 5.1733C21.5666 5.11174 21.514 5.06392 21.4458 5.02983C21.3786 4.99574 21.2995 4.97869 21.2086 4.97869C21.1196 4.97869 21.0372 4.99479 20.9615 5.02699C20.8857 5.05919 20.8246 5.10511 20.7782 5.16477C20.7318 5.22348 20.7072 5.29356 20.7044 5.375H20.1973C20.2011 5.21212 20.2479 5.06913 20.3379 4.94602C20.4288 4.82197 20.55 4.72538 20.7015 4.65625C20.853 4.58617 21.023 4.55114 21.2115 4.55114C21.4056 4.55114 21.5742 4.58759 21.7172 4.66051C21.8611 4.73248 21.9724 4.82955 22.051 4.9517C22.1296 5.07386 22.1689 5.20881 22.1689 5.35653C22.1698 5.52036 22.1215 5.65767 22.024 5.76847C21.9274 5.87926 21.8005 5.9517 21.6433 5.9858V6.00852C21.8478 6.03693 22.0046 6.11269 22.1135 6.2358C22.2233 6.35795 22.2778 6.50994 22.2768 6.69176C22.2768 6.85464 22.2304 7.00047 22.1376 7.12926C22.0458 7.2571 21.9189 7.35748 21.7569 7.4304C21.5959 7.50331 21.4113 7.53977 21.2029 7.53977Z" fill="#fff" class=""></path>
+										</svg>
+									</span>
+									<!-- error message always below input, not beside icon -->
+								</div>
+								<span id="card_cvc_error" class="block mt-1 text-xs text-danger"></span>
+							</div>
+						</div>
+
+						<div class="flex flex-col gap-2">
+							<label for="card_holder" class="font-medium text-sm">
+								Titulaire de la carte
+							</label>
+							<input id="card_holder" name="card_holder" type="text" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1" placeholder="M. Jean Dupont" pattern="[a-zA-ZÀ-ÿ '-]{2,}" maxlength="28" oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ '-]/g, '').replace(/(\..*?)\..*/g, '$1'); const errorSpan = document.getElementById('card_holder_error'); if(this.value.length >= 2){ this.dataset.touched = '1'; } if(this.dataset.touched === '1'){ if(this.value.length < 2){ this.classList.add('invalid'); errorSpan.textContent = 'Nom du titulaire invalide (au moins 2 caractères)'; }else{ this.classList.remove('invalid'); errorSpan.textContent = ''; } }" onblur="this.dataset.touched = '1'; const errorSpan = document.getElementById('card_holder_error'); if(this.value.length < 2){ this.classList.add('invalid'); errorSpan.textContent = 'Nom du titulaire invalide (au moins 2 caractères)'; }else{ this.classList.remove('invalid'); errorSpan.textContent = ''; }"/>
+							<span id="card_holder_error" class="block mt-1 text-xs text-danger"></span>
+						</div>
+					</div>
+
+					<div class="gap-x-1.5 flex items-center">
+						<input type="checkbox" name="cgv" class="inline-block flex-shrink-0 p-0 mx-0 mt-px mb-0 w-4 h-4 text-primary align-middle rounded border border-gray-300 border-solid appearance-none bg-origin-border focus:outline-offset-2 focus:ring-primary" id="cgv" checked/>
+						<label for="cgv" class="text-sm leading-5 text-gray-500 cursor-default inline-flex items-center">
+							Accepter les&nbsp;
+							<a href="#" class="underline decoration-dashed underline-offset-4">Conditions générales de vente</a>
+						</label>
+					</div>
+
+					<div class="gap-x-1.5 flex items-center">
+						<svg class="h-5 w-5" width="30px" height="30px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M13 14C13 13.4477 12.5523 13 12 13C11.4477 13 11 13.4477 11 14V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V14Z" fill="#000000"/>
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M7 8.12037C5.3161 8.53217 4 9.95979 4 11.7692V17.3077C4 19.973 6.31545 22 9 22H15C17.6846 22 20 19.973 20 17.3077V11.7692C20 9.95979 18.6839 8.53217 17 8.12037V7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7V8.12037ZM15 7V8H9V7C9 6.64936 9.06015 6.31278 9.17071 6C9.58254 4.83481 10.6938 4 12 4C13.3062 4 14.4175 4.83481 14.8293 6C14.9398 6.31278 15 6.64936 15 7ZM6 11.7692C6 10.866 6.81856 10 8 10H16C17.1814 10 18 10.866 18 11.7692V17.3077C18 18.7208 16.7337 20 15 20H9C7.26627 20 6 18.7208 6 17.3077V11.7692Z" fill="#000000"/>
+						</svg>
+						<p class="text-semibold text-sm">
+							Ce formulaire est sécurisé, vos données sont protégées.
+						</p>
+					</div>
+				</div>
+
+				<button type="button" id="step3-submit" class="inline-flex gap-x-2 justify-center items-center py-4 px-4 m-0 w-full text-sm font-medium leading-5 text-center text-white normal-case bg-primary hover:bg-primary/90 transition duration-300 bg-none rounded-xl border border-transparent border-solid cursor-pointer bg-origin-border">
+					Payer
+				</button>
+			</form>
+			<div class="col-span-1 lg:pl-8 lg:py-8">
+				<div class="flex flex-col">
+					<div class="flex flex-col justify-between h-full">
+						<div class="pt-0 mt-0 border-0 border-solid border-stone-200">
+							<div class="flex gap-x-3 items-center mb-6 pb-6 border-b border-solid border-stone-200">
+								<h4 class="m-0 text-lg font-medium leading-5">
+									Détails de la réservation
+								</h4>
+							</div>
+						</div>
+						<div>
+							<div class="flex gap-x-3 justify-between items-center mb-6">
+								<h4 class="m-0 text-sm font-semibold leading-5">Réservation</h4>
+							</div>
+							<ul class="flex flex-col gap-4" id="js-recap-reservation">
+								<li class="flex justify-between items-center">
+									<div class="inline-flex gap-x-2 items-center text-gray-500">
+										<svg class="block flex-shrink-0 w-4 h-4 align-middle" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path id="Vector" d="M21 19.9999C21 18.2583 19.3304 16.7767 17 16.2275M15 20C15 17.7909 12.3137 16 9 16C5.68629 16 3 17.7909 3 20M15 13C17.2091 13 19 11.2091 19 9C19 6.79086 17.2091 5 15 5M9 13C6.79086 13 5 11.2091 5 9C5 6.79086 6.79086 5 9 5C11.2091 5 13 6.79086 13 9C13 11.2091 11.2091 13 9 13Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+										</svg>
+										<span class="text-sm leading-5">Nombre de personnes</span>
+									</div>
+									<span class="text-sm leading-5 text-end">
+										{{ number_of_guests|default(1) }}
+									</span>
+								</li>
+								<li class="flex justify-between items-center">
+									<div class="inline-flex gap-x-2 items-center text-gray-500">
+										<svg class="block flex-shrink-0 w-4 h-4 align-middle" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path id="Vector" d="M4 8H20M4 8V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V8M4 8V7.2002C4 6.08009 4 5.51962 4.21799 5.0918C4.40973 4.71547 4.71547 4.40973 5.0918 4.21799C5.51962 4 6.08009 4 7.2002 4H8M20 8V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H16M8 4H16M8 4V2M16 4V2M11.75 16C11.8881 16 12 15.8881 12 15.75V12.25C12 12.1119 11.8881 12 11.75 12H8.25C8.11193 12 8 12.1119 8 12.25V15.75C8 15.8881 8.11193 16 8.25 16H11.75Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+										</svg>
+										<span class="text-sm leading-5">Check-in</span>
+									</div>
+									<span class="text-sm leading-5 text-end">
+										{{ arrival_date|date('d/m/Y') }}
+										—
+										{{ env.CHECK_IN }}
+									</span>
+								</li>
+								<li class="flex justify-between items-center">
+									<div class="inline-flex gap-x-2 items-center text-gray-500">
+										<svg class="block flex-shrink-0 w-4 h-4 align-middle" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path d="M4 8H20M4 8V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8036C17.9215 20 18.4805 20 18.9079 19.7822C19.2842 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V8M4 8V7.2002C4 6.08009 4 5.51962 4.21799 5.0918C4.40973 4.71547 4.71547 4.40973 5.0918 4.21799C5.51962 4 6.08009 4 7.2002 4H8M20 8V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9079 4.21799C18.4801 4 17.9203 4 16.8002 4H16M8 4H16M8 4V2M16 4V2M14 16L12 14M12 14L10 12M12 14L14 12M12 14L10 16" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+										</svg>
+										<span class="text-sm leading-5">Check-out</span>
+									</div>
+									<span class="text-sm leading-5 text-end">
+										{{ departure_date|date('d/m/Y') }}
+										—
+										{{ env.CHECK_OUT }}
+									</span>
+								</li>
+								<li class="flex justify-between items-center">
+									<div class="inline-flex gap-x-2 items-center text-gray-500">
+										<svg class="block flex-shrink-0 w-4 h-4 align-middle" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path d="M3.32031 11.6835C3.32031 16.6541 7.34975 20.6835 12.3203 20.6835C16.1075 20.6835 19.3483 18.3443 20.6768 15.032C19.6402 15.4486 18.5059 15.6834 17.3203 15.6834C12.3497 15.6834 8.32031 11.654 8.32031 6.68342C8.32031 5.50338 8.55165 4.36259 8.96453 3.32996C5.65605 4.66028 3.32031 7.89912 3.32031 11.6835Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+										</svg>
+										<span class="text-sm leading-5">Nuités</span>
+									</div>
+									<span class="text-sm leading-5 text-end">
+										{{ nights }}
+									</span>
+								</li>
+							</ul>
+						</div>
+
+						<div class="pt-6 mt-6 border-b-0 border-t border-solid border-stone-200">
+							<div class="flex gap-x-3 justify-between items-center mb-6">
+								<h4 class="m-0 text-sm font-semibold leading-5">Chambre</h4>
+							</div>
+							<div class="flex gap-3 border border-gray-200 rounded-2xl focus:outline-hidden bg-white p-3 justify-between">
+								<div class="relative flex items-center overflow-hidden gap-3">
+									<img class="size-20 lg:size-20 xl:size-20 w-full max-w-28 max-h-28 aspect-square object-cover rounded-lg" src="{{ asset('upload/' ~ room.images[0].fileKey ~ '.' ~ room.images[0].extension) }}" alt="{{ room.name }}"/>
+
+									<div class="flex flex-col gap-y-0.5 truncate">
+										<span class="text-xs text-gray-500 truncate">
+											{{ room.type.name }}
+										</span>
+										<h3 class="font-medium xl:text-sm text-xs text-primary truncate">
+											{{ room.name }}
+										</h3>
+										<div class="flex flex-wrap gap-x-2 gap-y-1">
+											{% if room.bedDouble|default(0) > 0 %}
+												<div class="flex items-center gap-1.5 text-[9px] font-medium">
+													{{ room.bedDouble|default(0) }}
+													lit{{ room.bedDouble|default(0) != 1 ? 's' : '' }}
+													double{{ room.bedDouble|default(0) != 1 ? 's' : '' }}
+													<svg fill="#000000" class="w-3 h-3 flex-shrink-0" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+														<path d="M 5.2892 21.9935 L 10.9031 21.9935 L 10.9031 18.8154 C 10.9031 16.7507 12.0630 15.6372 14.1508 15.6372 L 22.3861 15.6372 C 24.4739 15.6372 25.6338 16.7507 25.6338 18.8154 L 25.6338 21.9935 L 30.6446 21.9935 L 30.6446 18.8154 C 30.6446 16.7507 31.8045 15.6372 34.0084 15.6372 L 41.7333 15.6372 C 43.9373 15.6372 45.0970 16.7507 45.0970 18.8154 L 45.0970 21.9935 L 50.7108 21.9935 L 50.7108 15.6604 C 50.7108 11.5544 48.5305 9.4665 44.5402 9.4665 L 11.4598 9.4665 C 7.4930 9.4665 5.2892 11.5544 5.2892 15.6604 Z M 0 44.8668 C 0 46.0035 .7423 46.7226 1.9022 46.7226 L 3.2013 46.7226 C 4.3380 46.7226 5.0803 46.0035 5.0803 44.8668 L 5.0803 41.5726 C 5.3355 41.6422 6.0779 41.6886 6.6114 41.6886 L 49.4118 41.6886 C 49.9454 41.6886 50.6647 41.6422 50.9198 41.5726 L 50.9198 44.8668 C 50.9198 46.0035 51.6619 46.7226 52.7988 46.7226 L 54.1210 46.7226 C 55.2579 46.7226 56 46.0035 56 44.8668 L 56 31.6670 C 56 27.4682 53.6573 25.1716 49.4118 25.1716 L 6.5883 25.1716 C 2.3430 25.1716 0 27.4682 0 31.6670 Z"/>
+													</svg>
+												</div>
+											{% endif %}
+											{% if room.bedSingle|default(0) > 0 %}
+												<div class="flex items-center gap-1.5 text-[9px] font-medium">
+													{{ room.bedSingle|default(0) }}
+													lit{{ room.bedSingle|default(0) != 1 ? 's' : '' }}
+													simple{{ room.bedSingle|default(0) != 1 ? 's' : '' }}
+													<svg fill="#000000" class="w-3 h-3 flex-shrink-0" viewbox="0 -64 640 640" xmlns="http://www.w3.org/2000/svg">
+														<path d="M176 256c44.11 0 80-35.89 80-80s-35.89-80-80-80-80 35.89-80 80 35.89 80 80 80zm352-128H304c-8.84 0-16 7.16-16 16v144H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v352c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16v-48h512v48c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V240c0-61.86-50.14-112-112-112z"/>
+													</svg>
+												</div>
+											{% endif %}
+											<div class="flex items-center gap-1.5 text-[9px] font-medium">
+												{{ room.capacity|default(0) }}
+												personne{{ room.capacity|default(0) != 1 ? 's' : '' }}
+												<svg class="h-3 w-3 flex-shrink-0" fill="#000000" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+													<path d="M 38.7232 28.5490 C 43.1399 28.5490 46.9403 24.6047 46.9403 19.4690 C 46.9403 14.3949 43.1193 10.6356 38.7232 10.6356 C 34.3271 10.6356 30.5061 14.4771 30.5061 19.5101 C 30.5061 24.6047 34.3066 28.5490 38.7232 28.5490 Z M 15.0784 29.0215 C 18.8994 29.0215 22.2274 25.5703 22.2274 21.1125 C 22.2274 16.6958 18.8789 13.4294 15.0784 13.4294 C 11.2575 13.4294 7.8885 16.7779 7.9090 21.1536 C 7.9090 25.5703 11.2370 29.0215 15.0784 29.0215 Z M 3.6155 47.5717 L 19.2281 47.5717 C 17.0917 44.4697 19.7006 38.2247 24.1173 34.8146 C 21.8371 33.2944 18.8994 32.1645 15.0579 32.1645 C 5.7931 32.1645 0 39.0053 0 44.6957 C 0 46.5445 1.0271 47.5717 3.6155 47.5717 Z M 25.8018 47.5717 L 51.6241 47.5717 C 54.8493 47.5717 56 46.6472 56 44.8395 C 56 39.5394 49.3644 32.2261 38.7026 32.2261 C 28.0616 32.2261 21.4262 39.5394 21.4262 44.8395 C 21.4262 46.6472 22.5766 47.5717 25.8018 47.5717 Z"></path>
+												</svg>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="flex flex-col items-end my-auto">
+									<div class="flex items-center gap-1.5">
+										<div class="flex flex-col items-end truncate">
+											{% if room.discount > 0 %}
+												<span class="text-xs font-medium line-through decoration-2">{{ room.price|round(2) }}{{ env.CURRENCY }}</span>
+												<span class="lg:text-md text-lg font-medium text-primary -mt-1">
+													<span id="js-room-price-discounted">{{ (room.price * (1 - room.discount / 100))|round(2) }}</span>
+													{{ env.CURRENCY }}
+													<span class="text-gray-400 text-xs">HT</span>
+													<span class="text-gray-500 text-xs">/ nuit</span>
+												</span>
+												<span class="text-[0.6rem] text-gray-500 text-end -mt-0.5">
+													Remise de
+													{{ room.discount }}% appliquée
+												</span>
+											{% else %}
+												<span class="lg:text-md text-lg font-medium text-primary">
+													<span id="js-room-price-discounted">{{ room.price|round(2) }}</span>
+													{{ env.CURRENCY }}
+													<span class="text-gray-500 text-xs">/ nuit</span>
+												</span>
+											{% endif %}
+										</div>
+									</div>
+									<span class="text-[0.6rem] text-gray-500 text-end -mt-0.5">
+										*prix par personne
+									</span>
+								</div>
+							</div>
+							<span class="hidden" id="js-room-data" data-room-price="{{ room.price|replace({',':'.'}) }}" data-room-discount="{{ room.discount|default(0)|replace({',':'.'}) }}" data-room-capacity="{{ room.capacity|default(1) }}" data-room-nights="{{ nights|default(1) }}"></span>
+							<span class="hidden" id="js-arrival-data" data-arrival-date="{{ arrival_date|date('Y-m-d H:i') }}" data-check-in="{{ env.CHECK_IN }}" data-check-out="{{ env.CHECK_OUT }}"></span>
+							{% if room.discount > 0 %}
+								<div class="gap-x-2 mt-6 items-center flex">
+									<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+									</svg>
+									<p class="text-xs text-gray-500">
+										Cette chambre possède une remise de -{{ room.discount }}%, cette remise à automatiquement été appliquée au prix de la chambre.
+									</p>
+								</div>
+							{% endif %}
+						</div>
+
+						<div class="pt-6 mt-6 border-b-0 border-t border-solid border-stone-200" id="js-recap-options-container">
+							<div class="flex gap-x-3 justify-between items-center mb-6">
+								<h4 class="m-0 text-sm font-semibold leading-5">Supléments</h4>
+							</div>
+							<ul class="flex flex-col gap-4" id="js-recap-options"></ul>
+						</div>
+
+						<div class="pt-6 mt-6 border-b-0 border-t border-solid border-stone-200">
+							<div class="flex gap-x-3 justify-between items-center mb-6">
+								<h4 class="m-0 text-sm font-semibold leading-5">Réduction</h4>
+							</div>
+							<div class="gap-6 flex flex-col mb-6">
+								<form id="coupon-form" class="gap-6 flex flex-col" autocomplete="off" onsubmit="return false;">
+									<div class="flex flex-col gap-2">
+										<label for="coupon" class="font-medium text-sm">
+											Code de réduction (optionnel)
+										</label>
+										<input id="coupon" name="coupon_code" type="text" class="uppercase block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2" placeholder="XXXX-XXXX-XXXX" maxlength="28" oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').replace(/(\..*?)\..*/g,'$1').toUpperCase();" autocomplete="off" autocorrect="off" autocapitalize="off"/>
+									</div>
+									<button id="apply-coupon-btn" type="button" class="inline-flex gap-x-2 justify-center items-center py-4 px-4 m-0 w-full text-sm font-medium leading-5 text-center text-white normal-case bg-primary hover:bg-primary/90 transition duration-300 bg-none rounded-xl border border-transparent border-solid cursor-pointer bg-origin-border">
+										Appliquer le code de réduction
+									</button>
+									<p id="coupon-message" class="text-sm" style="display: none;"></p>
+								</form>
+								<ul class="flex flex-col gap-4" id="coupon-info-list">
+									<li class="flex justify-between items-center">
+										<span class="inline-flex text-sm leading-5 items-center text-gray-500 text-start" id="coupon-code-label">
+											Réduction
+										</span>
+										<span class="text-sm leading-5 text-end">
+											<span id="js-coupon-discount">0</span>%
+										</span>
+									</li>
+								</ul>
+							</div>
+							<div class="pt-6 mt-6 border-b-0 border-t border-solid border-stone-200">
+								<div class="flex gap-x-3 justify-between items-center mb-6">
+									<h4 class="m-0 text-sm font-semibold leading-5">Taxe & Frais de séjour</h4>
+								</div>
+								<ul class="flex flex-col gap-4">
+									<li class="flex justify-between items-center">
+										<span class="inline-flex text-sm leading-5 items-center text-gray-500 text-start">
+											Taxe de séjour
+										</span>
+										<span class="text-sm leading-5">
+											<span id="js-tourist-tax">{{ env.TOURIST_TAX|replace({',':'.'}) }}</span>
+											{{ env.CURRENCY }}
+											<span class="text-xs text-gray-500 text-end">par nuité, par personne</span>
+										</span>
+									</li>
+									<li class="flex justify-between items-center">
+										<span class="inline-flex text-sm leading-5 items-center text-gray-500 text-start">
+											TVA
+										</span>
+										<span class="text-sm leading-5 text-end" id="js-tva-rate">{{ env.TVA_RATE|replace({',':'.'}) }}%</span>
+									</li>
+								</ul>
+								<span class="hidden" id="js-tax-data" data-tourist-tax="{{ env.TOURIST_TAX|replace({',':'.'}) }}" data-tva-rate="{{ env.TVA_RATE|replace({'%':'', ',':'.'}) }}" data-currency="{{ env.CURRENCY }}"></span>
+							</div>
+							<div class="pt-5 mt-5 border-b-0 border-t border-solid border-x-0 border-stone-200">
+								<div class="flex gap-x-3 justify-between items-center mb-5">
+									<h4 class="text-xl font-medium leading-5 text-stone-800">
+										Total TTC
+									</h4>
+									<h4 class="text-xl font-medium leading-5 text-primary focus:outline-offset-2" id="js-recap-total">
+										0,00
+										{{ env.CURRENCY }}
+									</h4>
+								</div>
+								<div class="gap-x-2 items-center flex mb-6">
+									<svg class="block flex-shrink-0 w-4 h-4 align-middle" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<g id="Environment / Leaf">
+											<path id="Vector" d="M6.8291 17.0806C13.9002 21.3232 19.557 15.6663 18.8499 5.0598C8.24352 4.35269 2.58692 10.0097 6.8291 17.0806ZM6.8291 17.0806C6.82902 17.0805 6.82918 17.0807 6.8291 17.0806ZM6.8291 17.0806L5 18.909M6.8291 17.0806L10.6569 13.2522" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+										</g>
+									</svg>
+									<p class="text-xs text-gray-500">
+										1% de votre réservation sera reversé à
+										<span class="font-semibold">Reforest'Action</span>
+										pour planter des arbres.
+										<a href="#" class="hover:underline underline-offset-4 text-primary">En savoir plus</a>
+									</p>
+								</div>
+								<div class="gap-x-2 items-center flex mb-6">
+									<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<g id="Warning / Info">
+											<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+										</g>
+									</svg>
+									<p class="text-xs text-gray-500">
+										L’annulation est gratuite jusqu’à
+										<span class="font-semibold">6</span>
+										heures après réservation, avec un remboursement intégral de votre réservation en cas de désistement. Passé ce délai, des frais de
+										<span class="font-semibold">95 €</span>
+										(soit 10% de votre réservation) seront appliqués, et le reste du montant vous sera remboursé.
+										<a href="#" class="hover:underline underline-offset-4 text-primary">En savoir plus</a>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endblock %}
+	{% block js %}
+		{{ parent() }}
+		<script src="{{ asset('/js/coupon.js') }}?v={{ random() }}"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+const btns = document.querySelectorAll('[data-step-btn]');
+const tabs = document.querySelectorAll('[data-step]');
+const step1Form = document.getElementById('booking-guests-form');
+const step2Form = document.getElementById('booking-options-form');
+const step3Form = document.getElementById('booking-payment-form');
+const step1Next = document.getElementById('step1-next');
+const step2Next = document.getElementById('step2-next');
+const step3Submit = document.getElementById('step3-submit');
+
+let completedSteps = [true, false, false];
+let currentStep = 1;
+
+function setStepperState() {
+btns.forEach((btn, idx) => {
+const step = parseInt(btn.getAttribute('data-step-btn'), 10);
+btn.disabled = ! completedSteps[step - 1];
+});
+}
+
+function showStep(step) {
+tabs.forEach(tab => {
+tab.style.display = (parseInt(tab.getAttribute('data-step'), 10) === step) ? '' : 'none';
+});
+btns.forEach(btn => {
+const isActive = parseInt(btn.getAttribute('data-step-btn'), 10) === step;
+btn.classList.toggle('text-primary', isActive);
+btn.classList.toggle('border-primary', isActive);
+btn.classList.toggle('border-transparent', ! isActive);
+btn.classList.toggle('group', ! isActive);
+const circle = btn.querySelector('.stepper-circle');
+if (circle) {
+if (isActive) {
+circle.classList.add('bg-primary', 'text-white');
+circle.classList.remove('border', 'group-hover:bg-primary', 'group-hover:text-white');
+} else {
+circle.classList.remove('bg-primary', 'text-white');
+circle.classList.add('border');
+}
+}
+});
+currentStep = step;
+}
+
+function goToStep(step) {
+showStep(step);
+}
+
+btns.forEach(btn => {
+btn.addEventListener('click', function () {
+const step = parseInt(this.getAttribute('data-step-btn'), 10);
+if (!this.disabled) {
+goToStep(step);
+}
+});
+});
+
+// Récupération des données PHP utiles via data-*
+const roomData = document.getElementById('js-room-data');
+const taxData = document.getElementById('js-tax-data');
+const optionsLabels = step2Form.querySelectorAll('label[data-option-id]');
+const arrivalData = document.getElementById('js-arrival-data');
+const recapOptionsContainer = document.getElementById('js-recap-options-container'); // Ajout pour le container
+
+const envCurrency = taxData ? taxData.dataset.currency : '€';
+
+// Helper pour parser un nombre venant d'un data-* (remplace virgule par point)
+function parseDataNumber(val) {
+if (typeof val === 'string') {
+return parseFloat(val.replace(',', '.'));
+}
+return Number(val);
+}
+
+// Helper pour formater le prix
+function formatPrice(val) {
+return Number(val).toLocaleString('fr-FR', {
+minimumFractionDigits: 2,
+maximumFractionDigits: 2
+}) + ' ' + envCurrency;
+}
+
+// Récupération des options PHP pour JS (pour le calcul)
+const optionsPhp = [];
+optionsLabels.forEach(label => {
+optionsPhp.push({
+id: label.dataset.optionId,
+name: label.dataset.optionName,
+price: parseDataNumber(label.dataset.optionPrice),
+perAdult: label.dataset.optionPerAdult === '1',
+perChild: label.dataset.optionPerChild === '1',
+perNight: label.dataset.optionPerNight === '1',
+perQuantity: label.dataset.optionPerQuantity === '1',
+tva: parseDataNumber(label.dataset.optionTva) || 0,
+quantity: parseInt(label.dataset.optionQuantity, 10) || 1,
+description: label.dataset.optionDescription
+});
+});
+
+// Recap update function
+function updateRecap() { // Guests
+const guestsTypes = step1Form.querySelectorAll('select[name^="guests"][name$="[type]"]');
+let nbGuests = 0,
+nbAdults = 0,
+nbChildren = 0;
+guestsTypes.forEach(select => {
+const type = select.value;
+if (type === 'adult') 
+nbAdults += 1;
+
+
+
+if (type === 'child') 
+nbChildren += 1;
+
+
+
+});
+nbGuests = nbAdults + nbChildren;
+
+console.log('Invités:', {nbAdults, nbChildren, nbGuests});
+// Pour déboguer
+
+// Dates (récupérées via data-*)
+let checkin = '',
+checkout = '';
+if (arrivalData) {
+const arrivalDate = arrivalData.dataset.arrivalDate;
+const checkInTime = arrivalData.dataset.checkIn;
+const checkOutTime = arrivalData.dataset.checkOut;
+// Formatage de l'heure d'arrivée
+if (arrivalDate) {
+const dateObj = new Date(arrivalDate);
+const hours = dateObj.getHours().toString().padStart(2, '0');
+const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+checkin = `${hours}:${minutes} —  ${checkInTime}`;
+checkout = `${hours}:${minutes} —  ${checkOutTime}`;
+}
+}
+// Suppléments sélectionnés
+const recapOptions = document.getElementById('js-recap-options');
+recapOptions.innerHTML = '';
+let optionsTotal = 0;
+let selectedOptionsCount = 0; // Compteur d'options sélectionnées
+
+optionsLabels.forEach(label => {
+const checkbox = label.querySelector('input[type=checkbox]');
+if (checkbox && checkbox.checked) {
+selectedOptionsCount++; // On compte l'option sélectionnée
+const option = optionsPhp.find(o => o.id === label.dataset.optionId);
+let quantity = 1;
+if (option.perQuantity) {
+const qtyInput = label.querySelector('input[type=number]');
+if (qtyInput) 
+quantity = parseInt(qtyInput.value) || 1;
+
+
+
+}
+let base = option.price;
+let tvaRateOption = option.tva;
+let baseTTC = base * (1 + tvaRateOption / 100);
+
+let details = [];
+let roomNights = parseInt(roomData.dataset.roomNights, 10) || 1;
+let multiplicateur = 1;
+let detailText = '';
+
+if (option.perAdult && option.perChild) {
+multiplicateur = nbGuests * (option.perNight ? roomNights : 1) * (option.perQuantity ? quantity : 1);
+if (option.perNight && option.perQuantity) {
+detailText = `/personnes /nuits × ${quantity}`;
+} else if (option.perNight) {
+detailText = `/personnes /nuits`;
+} else if (option.perQuantity) {
+detailText = `/personnes × ${quantity}`;
+} else {
+detailText = `/personnes`;
+}
+} else if (option.perAdult) {
+multiplicateur = nbAdults * (option.perNight ? roomNights : 1) * (option.perQuantity ? quantity : 1);
+if (option.perNight && option.perQuantity) {
+detailText = `/adultes /nuits × ${quantity}`;
+} else if (option.perNight) {
+detailText = `/adultes /nuits`;
+} else if (option.perQuantity) {
+detailText = `/adultes × ${quantity}`;
+} else {
+detailText = `/adultes`;
+}
+} else if (option.perChild) {
+multiplicateur = nbChildren * (option.perNight ? roomNights : 1) * (option.perQuantity ? quantity : 1);
+if (option.perNight && option.perQuantity) {
+detailText = `/enfants /nuits × ${quantity}`;
+} else if (option.perNight) {
+detailText = `/enfants /nuits`;
+} else if (option.perQuantity) {
+detailText = `/enfants × ${quantity}`;
+} else {
+detailText = `/enfants`;
+}
+} else {
+multiplicateur = (option.perNight ? roomNights : 1) * (option.perQuantity ? quantity : 1);
+if (option.perNight && option.perQuantity) {
+detailText = `/nuits × ${quantity}`;
+} else if (option.perNight) {
+detailText = `/nuits`;
+} else if (option.perQuantity) {
+detailText = `× ${quantity}`;
+} else {
+detailText = ``;
+}
+}
+
+// Calcul du total pour cette option (HT)
+let totalHT = base * multiplicateur;
+// Calcul du total TTC pour cette option
+let totalTTC = baseTTC * multiplicateur;
+
+// On ajoute le total HT au total des options (pour le calcul global)
+optionsTotal += totalHT;
+
+// Affichage du détail : prix unitaire HT (+ TVA), TTC, et le détail de la quantité
+const li = document.createElement('li');
+li.className = 'flex justify-between items-center';
+
+// Affichage demandé : (HT + option.tva)
+li.innerHTML = `
+				<span class="inline-flex text-sm leading-5 items-center text-gray-500 text-start">
+					${
+option.name
+}
+				</span>
+				<span class="leading-5 text-end">
+					${
+formatPrice(baseTTC)
+}
+					<span class="text-xs text-gray-400">(TTC ${tvaRateOption}%)</span>
+					<span class="text-xs text-gray-500">${detailText}</span>
+				</span>
+			`;
+recapOptions.appendChild(li);
+}
+});
+
+// Affichage/masquage du container des options selon le nombre d'options sélectionnées
+if (recapOptionsContainer) {
+if (selectedOptionsCount === 0) {
+recapOptionsContainer.style.display = 'none';
+} else {
+recapOptionsContainer.style.display = '';
+}
+}
+
+// Prix chambre (par personne, par nuit)
+const roomPrice = parseDataNumber(roomData.dataset.roomPrice);
+const roomDiscount = parseDataNumber(roomData.dataset.roomDiscount) || 0;
+const roomNights = parseInt(roomData.dataset.roomNights, 10) || 1;
+const roomCapacity = parseInt(roomData.dataset.roomCapacity, 10) || 1;
+
+let pricePerPersonPerNight = roomPrice * (1 - roomDiscount / 100);
+document.getElementById('js-room-price-discounted').textContent = pricePerPersonPerNight.toFixed(2);
+
+let roomTotal = pricePerPersonPerNight * nbGuests * roomNights;
+
+// Taxe de séjour
+const touristTax = parseDataNumber(taxData.dataset.touristTax) || 0;
+const touristTaxTotal = touristTax * nbGuests * roomNights;
+
+// TVA
+const tvaRate = parseDataNumber(taxData.dataset.tvaRate) || 0;
+
+// Coupon (réduction)
+let couponDiscount = 0;
+const couponSpan = document.getElementById('js-coupon-discount');
+if (couponSpan) {
+couponDiscount = parseDataNumber(couponSpan.textContent) || 0;
+}
+
+// Total HT (hors TVA)
+let totalHT = roomTotal + optionsTotal + touristTaxTotal;
+
+// Application du coupon
+let totalAfterCoupon = totalHT * (1 - couponDiscount / 100);
+
+// Application TVA
+let totalTTC = totalAfterCoupon * (1 + tvaRate / 100);
+
+// Affichage du total
+document.getElementById('js-recap-total').textContent = formatPrice(totalTTC);
+
+// (optionnel) tu peux stocker le total dans un input hidden si tu veux l'envoyer au backend
+}
+
+// Listeners pour MAJ le recap
+function addRecapListeners() { // Step 1
+const guestsInputs = step1Form.querySelectorAll('input[name^="guests"], input[name="adults"], input[name="children"]');
+guestsInputs.forEach(input => {
+input.addEventListener('input', updateRecap);
+});
+// Step 2
+optionsLabels.forEach(label => {
+const checkbox = label.querySelector('input[type=checkbox]');
+if (checkbox) {
+checkbox.addEventListener('change', function () {
+const qtyInput = label.querySelector('input[type=number]');
+if (qtyInput) 
+qtyInput.disabled = ! checkbox.checked;
+
+
+
+updateRecap();
+});
+}
+const qtyInput = label.querySelector('input[type=number]');
+if (qtyInput) {
+qtyInput.addEventListener('input', updateRecap);
+}
+});
+// Coupon
+const couponBtn = document.getElementById('apply-coupon-btn');
+if (couponBtn) {
+couponBtn.addEventListener('click', function () {
+setTimeout(updateRecap, 300);
+});
+}
+}
+
+// Stepper navigation
+step1Next.addEventListener('click', function (e) {
+e.preventDefault();
+if (step1Form.checkValidity()) {
+completedSteps[1] = true;
+setStepperState();
+goToStep(2);
+updateRecap();
+} else {
+step1Form.reportValidity();
+}
+});
+
+step2Next.addEventListener('click', function (e) {
+e.preventDefault();
+completedSteps[2] = true;
+setStepperState();
+goToStep(3);
+updateRecap();
+});
+
+step3Submit.addEventListener('click', function (e) {
+e.preventDefault();
+if (! step3Form.checkValidity()) {
+step3Form.reportValidity();
+return;
+}
+const formData = new FormData();
+const guestsInputs = step1Form.querySelectorAll('input, select');
+guestsInputs.forEach(input => {
+if (input.name && (input.type !== 'checkbox' || input.checked)) {
+formData.append(input.name, input.value);
+}
+});
+const optionsInputs = step2Form.querySelectorAll('input, select');
+optionsInputs.forEach(input => {
+if (input.type === 'checkbox') {
+if (input.checked) {
+formData.append(input.name, 'on');
+const quantityInput = input.closest('label') ? input.closest('label').querySelector('input[type=number]') : null;
+if (quantityInput) {
+formData.append(input.name + '_quantity', quantityInput.value);
+}
+}
+} else if (input.type === 'number') { // rien ici, la quantité est déjà gérée ci-dessus
+} else if (input.name) {
+formData.append(input.name, input.value);
+}
+});
+const paymentInputs = step3Form.querySelectorAll('input, select');
+paymentInputs.forEach(input => {
+if (input.type === 'radio' || input.type === 'checkbox') {
+if (input.checked) {
+formData.append(input.name, input.value);
+}
+} else if (input.name) {
+formData.append(input.name, input.value);
+}
+});
+fetch(step3Form.getAttribute('action') || window.location.pathname, {
+method: 'POST',
+body: formData
+}).then(response => {
+if (response.redirected) {
+window.location.href = response.url;
+} else {
+return response.text().then(html => {
+document.open();
+document.write(html);
+document.close();
+});
+}
+}).catch(err => {
+alert("Erreur lors de la soumission du formulaire. Veuillez réessayer.");
+});
+});
+
+// Initialisation
+setStepperState();
+showStep(1);
+addRecapListeners();
+updateRecap();
+
+btns.forEach((btn, idx) => {
+btn.disabled = ! completedSteps[idx];
+});
+});
+		</script>
+	{% endblock %}

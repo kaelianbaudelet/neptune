@@ -1,0 +1,659 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Factures
+{% endblock %}
+{% block content %}
+	{% do clear_session_alert() %}
+	{% include 'components/dashboard/header.html.twig' with {'title': 'Factures'} %}
+	<div class="flex-1 p-6 bg-gray-50 h-[calc(100vh-5.1rem)] w-full overflow-y-auto overflow-x-scroll">
+		{% if session.alert and session.alert.context == 'global' %}
+			<div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+				{{ session.alert.message }}
+			</div>
+		{% endif %}
+		<div class="flex flex-col gap-6 overflow-x-scroll h-full">
+			<div class="overflow-x-auto overflow-y-visible h-full">
+				<div class="inline-block min-w-full align-middle">
+					<div class="bg-white border border-gray-200 rounded-xl">
+						<div class="px-4 py-3 grid gap-4 sm:flex sm:justify-between sm:items-center border-b border-gray-200">
+							<div>
+								<h2 class="text-xl font-medium">
+									Factures
+								</h2>
+								<p class="text-sm text-gray-500">
+									Consultez et gérez vos factures.
+								</p>
+							</div>
+							{% if session.user.role == 'Admin' %}
+								<div>
+									<div class="inline-flex gap-x-2">
+										<button class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-white bg-primary hover:bg-primary/90 focus:outline-hidden focus:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none transition duration-300 open-modal" data-modal-target="create-invoice">
+											Créer une facture
+										</button>
+									</div>
+								</div>
+							{% endif %}
+						</div>
+
+						<div class="w-full">
+							<table class="w-full divide-y divide-gray-200">
+								<thead class="bg-gray-50">
+									<tr>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												ID
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												Type
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												Client
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												Montant
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												Statut
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												Date
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-3 text-end"></th>
+									</tr>
+								</thead>
+
+								<tbody class="divide-y divide-gray-200">
+									{% if invoices is empty %}
+										<tr class="bg-white hover:bg-gray-50">
+											<td colspan="7" class="px-3 py-3 whitespace-nowrap text-center">
+												<span class="text-sm text-gray-500 truncate block">Aucune facture</span>
+											</td>
+										</tr>
+									{% endif %}
+									{% for invoice in invoices %}
+										<tr class="bg-white hover:bg-gray-50">
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ invoice.id }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">
+													{% if invoice.type == 'invoice' %}
+														Facture
+													{% else %}
+														Avoir
+													{% endif %}
+												</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ invoice.billingName }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ invoice.totalTtc|number_format(2, ',', ' ') }}
+													€</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="px-2 py-1 text-xs font-semibold rounded-full {% if invoice.status == 'paid' %}bg-success/10 text-success{% elseif invoice.status == 'pending_payment' %}bg-warning/10 text-warning{% elseif invoice.status == 'pending_refund' %}bg-warning/10 text-warning{% elseif invoice.status == 'refunded' %}bg-danger/10 text-danger{% else %}bg-gray-100 text-black{% endif %}">
+													{% if invoice.status == 'paid' %}
+														PAYÉ
+													{% elseif invoice.status == 'pending_payment' %}
+														EN ATTENTE DE PAIEMENT
+													{% elseif invoice.status == 'pending_refund' %}
+														EN ATTENTE DE REMBOURSEMENT
+													{% elseif invoice.status == 'refunded' %}
+														REMBOURSÉ
+													{% else %}
+														{{ invoice.status }}
+													{% endif %}
+												</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ invoice.createdAt|date('d/m/Y') }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap text-end">
+												<div class="relative inline-flex">
+													<button type="button" class="py-1.5 px-1.5 border text-xs rounded-lg font-medium bg-gray-50 hover:bg-white focus:outline-hidden transition-all" data-dropdown-trigger data-target="invoice-actions-{{ invoice.id }}" aria-expanded="false">
+														<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+															<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+														</svg>
+													</button>
+													<div data-dropdown="invoice-actions-{{ invoice.id }}" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 opacity-0 invisible translate-y-2 transition-all duration-300 z-20">
+														<div class="p-2">
+															<a href="/dashboard/invoices/{{ invoice.id }}" class="px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 rounded-lg transition-all flex items-center gap-2">
+																<svg class="h-4 w-4 flex-shrink-0 fill-gray-500" width="800px" height="800px" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+																	<path d="M17.5,12 C20.5375661,12 23,14.4624339 23,17.5 C23,20.5375661 20.5375661,23 17.5,23 C14.4624339,23 12,20.5375661 12,17.5 C12,14.4624339 14.4624339,12 17.5,12 Z M17.5112209,14.0001234 L17.427,14.005 L17.3718609,14.0166108 L17.2886043,14.0467435 L17.2153398,14.0888427 L17.1588667,14.1344405 L14.6464466,16.6464466 L14.5885912,16.7156945 C14.4704696,16.8862041 14.4704696,17.1137959 14.5885912,17.2843055 L14.6464466,17.3535534 L14.7156945,17.4114088 C14.8862041,17.5295304 15.1137959,17.5295304 15.2843055,17.4114088 L15.3535534,17.3535534 L16.999,15.708 L17,21 L17.0080557,21.0898756 C17.0450996,21.2939687 17.2060313,21.4549004 17.4101244,21.4919443 L17.5,21.5 L17.5898756,21.4919443 C17.7939687,21.4549004 17.9549004,21.2939687 17.9919443,21.0898756 L18,21 L17.999,15.706 L19.6464466,17.3535534 L19.7156945,17.4114088 C19.9105626,17.5464049 20.179987,17.5271197 20.3535534,17.3535534 C20.5271197,17.179987 20.5464049,16.9105626 20.4114088,16.7156945 L20.3535534,16.6464466 L17.806,14.104 L17.7584513,14.0718913 L17.6910366,14.0377922 L17.6281458,14.0166083 L17.5739178,14.0054619 C17.5529058,14.0023382 17.531733,14.0005544 17.5112209,14.0001234 Z M6.25,3 L17.75,3 C19.4830315,3 20.8992459,4.35645477 20.9948552,6.06557609 L21,6.25 L21.0012092,12.0225923 C20.5377831,11.7257502 20.0341997,11.4861106 19.5004209,11.3136354 L19.5,8 L4.5,8 L4.5,17.75 C4.5,18.6681734 5.20711027,19.4211923 6.10647279,19.4941988 L6.25,19.5 L11.3136354,19.5004209 C11.4861106,20.0341997 11.7257502,20.5377831 12.0225923,21.0012092 L6.25,21 C4.51696854,21 3.10075407,19.6435452 3.00514479,17.9344239 L3,17.75 L3,6.25 C3,4.51696854 4.35645477,3.10075407 6.06557609,3.00514479 L6.25,3 Z"/>
+																</svg>
+																<span class="overflow-hidden whitespace-nowrap truncate">Voir la facture</span>
+															</a>
+															<button class="w-full px-4 py-2 text-sm text-danger hover:bg-danger/10 rounded-lg transition-all flex items-center gap-2 open-modal" data-modal-target="delete-invoice-{{ invoice.id }}">
+																<svg class="h-4 w-4 flex-shrink-0 fill-danger" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M 11.6406 14.6641 L 13.1406 48.9062 C 13.2578 51.8359 15.0156 53.4297 17.8984 53.4297 L 38.125 53.4297 C 41.0078 53.4297 42.7656 51.8359 42.8828 48.9062 L 44.3828 14.6641 L 47.0781 14.6641 C 48.0391 14.6641 48.8125 13.8672 48.8125 12.9063 C 48.8125 11.9453 48.0391 11.1250 47.0781 11.1250 L 37.4453 11.1250 L 37.4453 7.7734 C 37.4453 4.5625 35.3125 2.5703 32.2891 2.5703 L 23.6640 2.5703 C 20.6406 2.5703 18.5313 4.5625 18.5313 7.7734 L 18.5313 11.1250 L 8.9453 11.1250 C 8.0078 11.1250 7.1875 11.9453 7.1875 12.9063 C 7.1875 13.8672 8.0078 14.6641 8.9453 14.6641 Z M 21.7187 7.7734 C 21.7187 6.4375 22.7031 5.5000 24.1094 5.5000 L 31.8672 5.5000 C 33.2969 5.5000 34.2813 6.4375 34.2813 7.7734 L 34.2813 11.1250 L 21.7187 11.1250 Z M 35.6172 48.6484 C 34.7031 48.6484 34.0703 47.8516 34.0938 46.8906 L 35.0547 19.7031 C 35.1016 18.7656 35.7813 17.9922 36.625 17.9922 C 37.4922 17.9922 38.1953 18.7422 38.1719 19.7031 L 37.1172 46.9141 C 37.0938 47.9219 36.4844 48.6484 35.6172 48.6484 Z M 20.4062 48.6484 C 19.5391 48.6484 18.9297 47.9219 18.9062 46.9141 L 17.8516 19.7031 C 17.8281 18.7187 18.5313 17.9922 19.3984 17.9922 C 20.2422 17.9922 20.9453 18.7656 20.9687 19.7031 L 21.9297 46.8906 C 21.9531 47.8516 21.3203 48.6484 20.4062 48.6484 Z M 29.6172 46.8906 C 29.6172 47.8516 28.8672 48.6484 28.0234 48.6484 C 27.1797 48.6484 26.4297 47.8516 26.4297 46.8906 L 26.4297 19.7031 C 26.4297 18.7656 27.1797 17.9922 28.0234 17.9922 C 28.8672 17.9922 29.6406 18.7656 29.6406 19.7031 Z"/></svg>
+																<span class="overflow-hidden whitespace-nowrap truncate">Supprimer</span>
+															</button>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+										<div data-modal="delete-invoice-{{ invoice.id }}" class="fixed inset-0 z-50 hidden modal">
+											<div class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300 modal-backdrop"></div>
+											<div class="relative z-10 h-full w-full flex items-center justify-center pointer-events-none opacity-0 transform scale-95 transition-all duration-300 modal-content">
+												<div class="max-h-[75vh] max-w-7xl w-full mx-6 bg-white rounded-2xl overflow-y-scroll pointer-events-auto p-6 flex flex-col gap-6">
+													<h2 class="text-xl font-medium">
+														Supprimer la facture #{{ invoice.id }}
+													</h2>
+													<p class="text-sm text-gray-500">
+														Êtes-vous sûr de vouloir supprimer cette facture ? Cette action est irréversible.
+													</p>
+													<div class="flex justify-end gap-x-2">
+														<button type="button" class="border py-2 px-4 text-sm font-medium text-gray-500 bg-white hover:bg-gray-50 focus:outline-hidden transition-all rounded-lg modal-close">Annuler</button>
+														<form action="/dashboard/invoices/delete/{{ invoice.id }}" method="post">
+															<button type="submit" class="py-2 px-4 text-sm bg-danger hover:bg-danger/90 font-medium text-white focus:outline-hidden transition-all rounded-lg">Supprimer</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="px-4 py-3 grid gap-2 md:flex md:justify-between md:items-center border-t border-gray-200">
+							<div>
+								<p class="text-sm text-gray-500">
+									<span class="font-medium">{{ invoices|length }}</span>
+									facture(s)
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div data-modal="create-invoice" class="fixed inset-0 z-50 hidden modal">
+			<div class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300 modal-backdrop"></div>
+			<div class="relative z-10 h-full w-full flex items-center justify-center pointer-events-none opacity-0 transform scale-95 transition-all duration-300 modal-content">
+				<form action="/dashboard/invoices/add" method="post" class="group max-w-7xl w-full max-h-[75vh] mx-6 bg-gray-50 rounded-2xl overflow-y-scroll pointer-events-auto p-6 flex flex-col gap-6">
+					<h2 class="text-xl font-medium">
+						Créer une facture
+					</h2>
+					{% if session.alert and session.alert.context == 'modal' %}
+						<div class="text-sm {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+							{{ session.alert.message }}
+						</div>
+					{% endif %}
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="type" class="font-medium text-sm">Type de facture</label>
+							<select id="type" name="type" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.type %} invalid {% endif %}" required>
+								<option value="invoice">Facture</option>
+								<option value="credit">Avoir</option>
+							</select>
+							{% if session.alert.errors.type %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.type }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="status" class="font-medium text-sm">Statut</label>
+							<select id="status" name="status" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.status %} invalid {% endif %}" required>
+								<option value="pending">En attente</option>
+								<option value="paid">Payée</option>
+								<option value="canceled">Annulée</option>
+							</select>
+							{% if session.alert.errors.status %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.status }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="user_id" class="font-medium text-sm">Client</label>
+							<select id="user_id" name="user_id" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.user_id %} invalid {% endif %}">
+								<option value="">Aucun client associé</option>
+								{% for user in users %}
+									<option value="{{ user.id }}">{{ user.name }}</option>
+								{% endfor %}
+							</select>
+							{% if session.alert.errors.user_id %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.user_id }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="checkin" class="font-medium text-sm">Date d'arrivée</label>
+							<input type="date" id="checkin" name="checkin" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.checkin %} invalid {% endif %}" required>
+							{% if session.alert.errors.checkin %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.checkin }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="checkout" class="font-medium text-sm">Date de départ</label>
+							<input type="date" id="checkout" name="checkout" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.checkout %} invalid {% endif %}" required>
+							{% if session.alert.errors.checkout %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.checkout }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="adults" class="font-medium text-sm">Adultes</label>
+							<input type="number" min="1" id="adults" name="adults" value="1" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.adults %} invalid {% endif %}" required>
+							{% if session.alert.errors.adults %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.adults }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="children" class="font-medium text-sm">Enfants</label>
+							<input type="number" min="0" id="children" name="children" value="0" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.children %} invalid {% endif %}" required>
+							{% if session.alert.errors.children %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.children }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="room_name" class="font-medium text-sm">Chambre</label>
+							<select id="room_name" name="room_name" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.room_name %} invalid {% endif %}" required>
+								{% for room in rooms %}
+									<option value="{{ room.name }}" data-price="{{ room.price }}">{{ room.name }}</option>
+								{% endfor %}
+							</select>
+							{% if session.alert.errors.room_name %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.room_name }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="room_price" class="font-medium text-sm">Prix de la chambre</label>
+							<input type="number" min="0" step="0.01" id="room_price" name="room_price" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.room_price %} invalid {% endif %}" required>
+							{% if session.alert.errors.room_price %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.room_price }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="coupon_code" class="font-medium text-sm">Code coupon</label>
+							<select id="coupon_code" name="coupon_code" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.coupon_code %} invalid {% endif %}">
+								<option value="">Aucun coupon</option>
+								{% for coupon in coupons %}
+									<option value="{{ coupon.code }}" data-discount="{{ coupon.discount }}">{{ coupon.code }}
+										({{ coupon.discount }}%)</option>
+								{% endfor %}
+							</select>
+							{% if session.alert.errors.coupon_code %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.coupon_code }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="coupon_discount" class="font-medium text-sm">Réduction coupon (%)</label>
+							<input type="number" min="0" max="100" step="0.01" id="coupon_discount" name="coupon_discount" value="0" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.coupon_discount %} invalid {% endif %}">
+							{% if session.alert.errors.coupon_discount %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.coupon_discount }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="discount" class="font-medium text-sm">Remise supplémentaire (%)</label>
+							<input type="number" min="0" max="100" step="0.01" id="discount" name="discount" value="0" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.discount %} invalid {% endif %}">
+							{% if session.alert.errors.discount %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.discount }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="tva" class="font-medium text-sm">Taux de TVA (%)</label>
+							<input type="number" min="0" max="100" step="0.01" id="tva" name="tva" value="20" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.tva %} invalid {% endif %}" required>
+							{% if session.alert.errors.tva %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.tva }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="tourist_tax" class="font-medium text-sm">Taxe de séjour (par personne/nuit)</label>
+							<input type="number" min="0" step="0.01" id="tourist_tax" name="tourist_tax" value="2.50" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.tourist_tax %} invalid {% endif %}" required>
+							{% if session.alert.errors.tourist_tax %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.tourist_tax }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="total_ht" class="font-medium text-sm">Total HT</label>
+							<input type="number" min="0" step="0.01" id="total_ht" name="total_ht" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.total_ht %} invalid {% endif %}" required>
+							{% if session.alert.errors.total_ht %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.total_ht }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="total_tva" class="font-medium text-sm">Total TVA</label>
+							<input type="number" min="0" step="0.01" id="total_tva" name="total_tva" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.total_tva %} invalid {% endif %}" required>
+							{% if session.alert.errors.total_tva %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.total_tva }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="total_ttc" class="font-medium text-sm">Total TTC</label>
+							<input type="number" min="0" step="0.01" id="total_ttc" name="total_ttc" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.total_ttc %} invalid {% endif %}" required>
+							{% if session.alert.errors.total_ttc %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.total_ttc }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="flex flex-col gap-2 relative">
+						<label class="font-medium text-sm">Options</label>
+						{% if options is empty %}
+							<div class="gap-x-2 items-center flex">
+								<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+								</svg>
+								<p class="text-xs text-gray-500">
+									Il n'y a aucune option disponible.
+								</p>
+							</div>
+						{% else %}
+							<div id="options-container" class="grid grid-cols-1 gap-4">
+								{% for option in options %}
+									<div class="bg-white p-4 border rounded-xl">
+										<div class="flex justify-between items-center mb-2">
+											<label class="flex items-center">
+												<input type="checkbox" class="option-checkbox mr-2" data-id="{{ option.id }}" data-name="{{ option.name }}" data-price="{{ option.price }}" data-tva="{{ option.tva }}">
+												<span class="font-medium">{{ option.name }}</span>
+											</label>
+											<span class="text-sm">{{ option.price|number_format(2, ',', ' ') }}
+												€</span>
+										</div>
+										<div class="option-details hidden grid grid-cols-1 md:grid-cols-4 gap-4 mt-3">
+											<input type="hidden" name="options[{{ loop.index0 }}][name]" value="{{ option.name }}">
+											<input type="hidden" name="options[{{ loop.index0 }}][price]" value="{{ option.price }}">
+											<input type="hidden" name="options[{{ loop.index0 }}][tva]" value="{{ option.tva }}">
+
+											<div class="flex items-center">
+												<input type="checkbox" id="per_adult_{{ option.id }}" name="options[{{ loop.index0 }}][per_adult]" class="mr-2" value="1">
+												<label for="per_adult_{{ option.id }}" class="text-sm">Par adulte</label>
+											</div>
+
+											<div class="flex items-center">
+												<input type="checkbox" id="per_child_{{ option.id }}" name="options[{{ loop.index0 }}][per_child]" class="mr-2" value="1">
+												<label for="per_child_{{ option.id }}" class="text-sm">Par enfant</label>
+											</div>
+
+											<div class="flex items-center">
+												<input type="checkbox" id="per_night_{{ option.id }}" name="options[{{ loop.index0 }}][per_night]" class="mr-2" value="1">
+												<label for="per_night_{{ option.id }}" class="text-sm">Par nuit</label>
+											</div>
+
+											<div class="flex items-center">
+												<input type="checkbox" id="per_quantity_{{ option.id }}" name="options[{{ loop.index0 }}][per_quantity]" class="mr-2 quantity-trigger" value="1">
+												<label for="per_quantity_{{ option.id }}" class="text-sm">Par quantité</label>
+											</div>
+
+											<div class="quantity-fields hidden md:col-span-2">
+												<div class="flex gap-2">
+													<div class="flex-1">
+														<input type="text" name="options[{{ loop.index0 }}][quantity_identifier]" placeholder="Identifiant de quantité" class="w-full py-2 px-3 border rounded-lg text-sm">
+													</div>
+													<div class="w-24">
+														<input type="number" name="options[{{ loop.index0 }}][quantity]" value="1" min="1" class="w-full py-2 px-3 border rounded-lg text-sm">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						{% endif %}
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="payment_method" class="font-medium text-sm">Méthode de paiement</label>
+							<select id="payment_method" name="payment_method" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.payment_method %} invalid {% endif %}">
+								<option value="credit_card">Carte de crédit</option>
+								<option value="paypal">PayPal</option>
+								<option value="stripe">Stripe</option>
+								<option value="bank_transfer">Virement bancaire</option>
+								<option value="cash">Espèces</option>
+								<option value="check">Chèque</option>
+							</select>
+							{% if session.alert.errors.payment_method %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.payment_method }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="payment_id" class="font-medium text-sm">ID de paiement (optionnel)</label>
+							<input type="text" id="payment_id" name="payment_id" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.payment_id %} invalid {% endif %}">
+							{% if session.alert.errors.payment_id %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.payment_id }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<h3 class="text-lg font-medium">Informations de facturation</h3>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="billing_name" class="font-medium text-sm">Nom complet</label>
+							<input type="text" id="billing_name" name="billing_name" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.billing_name %} invalid {% endif %}" required>
+							{% if session.alert.errors.billing_name %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.billing_name }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="billing_email" class="font-medium text-sm">Email</label>
+							<input type="email" id="billing_email" name="billing_email" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.billing_email %} invalid {% endif %}" required>
+							{% if session.alert.errors.billing_email %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.billing_email }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="billing_phone" class="font-medium text-sm">Téléphone</label>
+							<input type="tel" id="billing_phone" name="billing_phone" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.billing_phone %} invalid {% endif %}" required>
+							{% if session.alert.errors.billing_phone %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.billing_phone }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="billing_address" class="font-medium text-sm">Adresse</label>
+							<input type="text" id="billing_address" name="billing_address" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.billing_address %} invalid {% endif %}" required>
+							{% if session.alert.errors.billing_address %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.billing_address }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+						<div class="flex flex-col gap-2 relative">
+							<label for="billing_address2" class="font-medium text-sm">Complément d'adresse (optionnel)</label>
+							<input type="text" id="billing_address2" name="billing_address2" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.billing_address2 %} invalid {% endif %}">
+							{% if session.alert.errors.billing_address2 %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.billing_address2 }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="billing_city" class="font-medium text-sm">Ville</label>
+							<input type="text" id="billing_city" name="billing_city" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.billing_city %} invalid {% endif %}" required>
+							{% if session.alert.errors.billing_city %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.billing_city }}
+								</span>
+							{% endif %}
+						</div>
+
+						<div class="flex flex-col gap-2 relative">
+							<label for="billing_postal_code" class="font-medium text-sm">Code postal</label>
+							<input type="text" id="billing_postal_code" name="billing_postal_code" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.billing_postal_code %} invalid {% endif %}" required>
+							{% if session.alert.errors.billing_postal_code %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.billing_postal_code }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="flex flex-col gap-2 relative">
+						<label for="billing_country" class="font-medium text-sm">Pays</label>
+						<input type="text" id="billing_country" name="billing_country" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.billing_country %} invalid {% endif %}" required>
+						{% if session.alert.errors.billing_country %}
+							<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+								{{ session.alert.errors.billing_country }}
+							</span>
+						{% endif %}
+					</div>
+
+					<div class="group-[&:has(input.invalid)]:cursor-not-allowed group-invalid:cursor-not-allowed flex justify-end gap-x-2">
+						<button type="button" class="border py-2 px-4 text-sm font-medium text-gray-500 bg-white hover:bg-gray-50 focus:outline-hidden transition-all rounded-lg modal-close">Annuler</button>
+						<button type="submit" class="group-[&:has(input.invalid)]:pointer-events-none group-[&:has(input.invalid)]:bg-primary/50 group-invalid:pointer-events-none group-invalid:bg-primary/50 py-2 px-4 text-sm bg-primary hover:bg-primary/90 font-medium text-white focus:outline-hidden transition-all rounded-lg">
+							Créer la facture
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function () { // Handle option checkboxes
+const optionCheckboxes = document.querySelectorAll('.option-checkbox');
+optionCheckboxes.forEach((checkbox, index) => {
+checkbox.addEventListener('change', function () {
+const detailsContainer = this.closest('.bg-white').querySelector('.option-details');
+if (this.checked) {
+detailsContainer.classList.remove('hidden');
+} else {
+detailsContainer.classList.add('hidden');
+}
+});
+});
+
+// Handle quantity triggers
+const quantityTriggers = document.querySelectorAll('.quantity-trigger');
+quantityTriggers.forEach(trigger => {
+trigger.addEventListener('change', function () {
+const quantityFields = this.closest('.option-details').querySelector('.quantity-fields');
+if (this.checked) {
+quantityFields.classList.remove('hidden');
+} else {
+quantityFields.classList.add('hidden');
+}
+});
+});
+
+// Auto-populate room price when a room is selected
+const roomSelect = document.getElementById('room_name');
+const roomPriceInput = document.getElementById('room_price');
+
+if (roomSelect && roomPriceInput) {
+roomSelect.addEventListener('change', function () {
+const selectedOption = this.options[this.selectedIndex];
+const price = selectedOption.getAttribute('data-price');
+roomPriceInput.value = price || '';
+});
+
+// Initial trigger
+if (roomSelect.selectedIndex >= 0) {
+const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+const price = selectedOption.getAttribute('data-price');
+roomPriceInput.value = price || '';
+}
+}
+
+// Auto-populate coupon discount when a coupon is selected
+const couponSelect = document.getElementById('coupon_code');
+const couponDiscountInput = document.getElementById('coupon_discount');
+
+if (couponSelect && couponDiscountInput) {
+couponSelect.addEventListener('change', function () {
+const selectedOption = this.options[this.selectedIndex];
+const discount = selectedOption.getAttribute('data-discount');
+couponDiscountInput.value = discount || '0';
+});
+}
+});
+		</script>
+	</div>
+
+{% endblock %}
+{% block js %}
+	{{ parent() }}
+	<script src="{{ asset('/js/modal.js') }}?v={{ random() }}"></script>
+{% endblock %}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="L'endroit idéal pour vos vacances. Profitez du luxe et du confort avec nos services de qualité.">
+		<meta name="keywords" content="Hotel, Neptune, Confort, Luxe, Vacances, Voyage, Plage, Piscine, Restaurant, Bar, Chambre, Suite, Service, Client, Satisfaction">
+		<meta name="author" content="Hotel Neptune">
+
+		<meta name="robots" content="index, follow">
+		<meta name="googlebot" content="index, follow">
+		<meta name="bingbot" content="index, follow">
+
+		<meta property="og:title" content="Hotel Neptune - L'endroit idéal pour vos vacances">
+		<meta property="og:description" content="L'endroit idéal pour vos vacances. Profitez du luxe et du confort avec nos services de qualité.">
+		<meta property="og:image" content="{{ asset('/images/bg.jpg') }}">
+		<meta property="og:url" content="https://www.hotelneptune.com">
+
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:title" content="Hotel Neptune - L'endroit idéal pour vos vacances">
+		<meta name="twitter:description" content="L'endroit idéal pour vos vacances. Profitez du luxe et du confort avec nos services de qualité.">
+		<meta name="twitter:image" content="{{ asset('/images/bg.jpg') }}">
+		{% block css %}
+			<link rel="stylesheet" href="{{ asset('/css/main.css') }}?v={{ random() }}"/>
+		{% endblock %}
+		<title>
+			Hotel Neptune -
+			{% block title %}{% endblock %}
+		</title>
+	</head>
+	<body class="bg-gray-50 flex h-screen">
+		<main class="flex-1 w-full h-screen"> {% block content %}{% endblock %}
+			</main>
+		</body>
+	</html>

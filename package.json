@@ -1,0 +1,52 @@
+{
+    "name": "hotel-neptune",
+    "version": "1.0.0",
+    "description": "Site d'hôtel open-source, construit avec PHP, PHPMailer, Twig, TailwindCSS.",
+    "contributors": [
+        {
+            "name": "Kaelian Baudelet",
+            "email": "contact@kaelian.dev",
+            "url": "https://github.com/kaelianbaudelet"
+        },
+        {
+            "name": "Noa Rodrigues",
+            "role": "Developer"
+        },
+        {
+            "name": "Arnaud",
+            "role": "Developer"
+        },
+        {
+            "name": "Vianney Hague",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kaelianbaudelet/hotelneptune.git"
+    },
+    "homepage": "https://github.com/kaelianbaudelet/hotelneptune#readme",
+    "bugs": {
+        "url": "https://github.com/kaelianbaudelet/hotelneptune/issues"
+    },
+    "keywords": [
+        "hotel",
+        "booking",
+        "neptune"
+    ],
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "devDependencies": {
+        "@tailwindcss/forms": "^0.5.10",
+        "@tailwindcss/typography": "^0.5.16"
+    },
+    "dependencies": {
+        "@tailwindcss/cli": "^4.0.17",
+        "tailwindcss": "^4.0.17"
+    }
+}

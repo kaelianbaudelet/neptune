@@ -1,0 +1,44 @@
+{% extends "base.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Réservation réussie
+{% endblock %}
+
+{% block content %}
+	<section class="py-16 bg-gray-50 border-b px-4">
+		<div class="mx-auto max-w-3xl px-4">
+			<div class="flex flex-col items-center">
+				<div class="mb-8">
+					<svg class="h-20 w-20 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 48 48">
+						<circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="3" fill="#e6f9ed"/>
+						<path d="M15 25l7 7 11-13" stroke="#2ABBC0" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</div>
+				<h1 class="text-4xl font-bold text-primary mb-4">Félicitations !</h1>
+				<div class="flex flex-col gap-6">
+					<p class="text-md text-gray-500">Votre réservation a été effectuée avec succès.</p>
+					<p class="text-md text-gray-500">Nous avons bien reçu votre demande et vous recevrez un e-mail de confirmation dans les prochaines minutes.</p>
+					<p class="text-md text-gray-500">Toute l’équipe de l’Hôtel Neptune se réjouit de vous accueillir prochainement.</p>
+				</div>
+				<div class="flex flex-col md:flex-row gap-4 justify-center mt-6">
+					<a href="/" class="px-6 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition">Retour à l'accueil</a>
+					<a href="/about" class="px-6 py-3 bg-white border border-primary text-primary rounded-xl font-medium hover:bg-primary/10 transition">Découvrir l'hôtel</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<section class="py-12 bg-white border-t px-4">
+		<div class="mx-auto max-w-7xl px-4 text-center">
+			<h2 class="text-2xl font-semibold mb-4">Une question ?</h2>
+			<p class="text-lg mb-8">Notre équipe reste à votre disposition pour toute information complémentaire.</p>
+			<a href="mailto:{{ env.CONTACT_EMAIL }}" class="text-black px-6 py-3 rounded-full font-medium hover:bg-gray-50 border transition duration-300">Nous contacter</a>
+		</div>
+	</section>
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+	<script src="{{ asset('/js/loader.js') }}?v={{ random() }}"></script>
+{% endblock %}

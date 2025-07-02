@@ -1,0 +1,116 @@
+<aside id="sidebar" class="h-full md:relative min-w-[280px] border-r px-6 pb-6 overflow-x-visible overflow-y-scroll translate-x-0 bg-white fixed z-50 transition-transform duration-300 ease-in-out" data-state="open">
+	<div class="flex flex-col items-center gap-4 justify-between h-full">
+		<div class="w-full flex flex-col gap-6">
+			<div class="flex items-center justify-between w-full h-20">
+				<a href="/" class="block">
+					<img class="h-10 mx-auto" src="{{ asset('images/logo.svg') }}" alt="Logo"/>
+				</a>
+				<button data-toggle="close" class="inline-flex items-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 p-2 rounded-md bg-gray-50 border" type="button">
+					<svg class="h-4 w-4 flex-shrink-0" width="800px" height="800px" viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+						<path fill="#000000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"/>
+					</svg>
+				</button>
+			</div>
+			<div class="space-y-1">
+				<a href="/dashboard" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+					{% if session.user.role == 'Admin' %}
+						<svg class="h-4 w-4 flex-shrink-0" fill="{% if current_route() == 'dashboard' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+							<path d="M 29.0899 25.9375 L 47.5118 15.3672 C 43.5742 9.2266 36.8008 5.0547 29.0899 4.7031 Z M 27.9883 51.2969 C 33.6836 51.2969 38.9102 49.2110 42.9883 45.7891 L 26.5118 29.6641 C 26.0664 29.2422 25.9492 28.8438 25.9492 28.2109 L 25.9492 4.7734 C 14.1133 5.8047 4.7383 15.8360 4.7383 27.9766 C 4.7383 40.7969 15.2149 51.2969 27.9883 51.2969 Z M 45.3086 43.5156 C 48.9884 39.3907 51.2617 33.9297 51.2617 27.9766 C 51.2617 24.4609 50.4649 21.1094 49.0585 18.0860 L 30.4258 28.8203 Z"/>
+						</svg>
+						Vue d'ensemble
+					{% else %}
+						<svg class="h-4 w-4 flex-shrink-0" fill="{% if current_route() == 'dashboard' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M 28.0000 26.6406 L 50.0783 14.1016 C 49.7264 13.75 49.3045 13.4688 48.7890 13.1875 L 32.2657 3.7657 C 30.8126 2.9453 29.4063 2.5000 28.0000 2.5000 C 26.5938 2.5000 25.1875 2.9453 23.7344 3.7657 L 7.2110 13.1875 C 6.6954 13.4688 6.2735 13.75 5.9219 14.1016 Z M 26.4063 53.5 L 26.4063 29.4532 L 4.3985 16.8906 C 4.2813 17.4063 4.2110 17.9688 4.2110 18.6719 L 4.2110 36.9297 C 4.2110 40.3281 5.4063 41.5938 7.5860 42.8360 L 25.9375 53.2891 C 26.1016 53.3828 26.2422 53.4532 26.4063 53.5 Z M 29.5938 53.5 C 29.7579 53.4532 29.8985 53.3828 30.0626 53.2891 L 48.4141 42.8360 C 50.5938 41.5938 51.7890 40.3281 51.7890 36.9297 L 51.7890 18.6719 C 51.7890 17.9688 51.7189 17.4063 51.6018 16.8906 L 29.5938 29.4532 Z"/></svg>
+						Mon espace
+					{% endif %}
+				</a>
+
+				<a href="/dashboard/bookings" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard/bookings' or current_route() starts with 'dashboard/bookings' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+					<svg class="h-4 w-4 flex-shrink-0" fill="{% if current_route() == 'dashboard/bookings' or current_route() starts with 'dashboard/bookings' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+						<path d="M 8.5585 16.9492 L 47.4414 16.9492 C 50.0896 16.9492 51.4259 15.3789 51.4259 12.7539 L 51.4259 10.6211 C 51.4259 7.9961 50.0896 6.4258 47.4414 6.4258 L 8.5585 6.4258 C 6.0507 6.4258 4.5741 7.9961 4.5741 10.6211 L 4.5741 12.7539 C 4.5741 15.3789 5.9101 16.9492 8.5585 16.9492 Z M 15.1444 49.5742 L 40.8788 49.5742 C 45.4725 49.5742 47.9334 47.1836 47.9334 42.5899 L 47.9334 20.1602 L 8.0663 20.1602 L 8.0663 42.5899 C 8.0663 47.2070 10.5507 49.5742 15.1444 49.5742 Z M 20.2772 28.6211 C 19.2928 28.6211 18.6132 27.9414 18.6132 26.9102 L 18.6132 26.1836 C 18.6132 25.1523 19.2928 24.4961 20.2772 24.4961 L 35.7694 24.4961 C 36.7304 24.4961 37.4335 25.1523 37.4335 26.1836 L 37.4335 26.9102 C 37.4335 27.9414 36.7304 28.6211 35.7694 28.6211 Z"></path>
+					</svg>
+					{% if session.user.role == 'Admin' %}
+						Réservations
+					{% else %}
+						Mes réservations
+					{% endif %}
+				</a>
+				<a href="/dashboard/invoices" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard/invoices' or current_route() starts with 'dashboard/invoices' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+					<svg class="h-4 w-4 flex-shrink-0" fill="{% if current_route() == 'dashboard/invoices' or current_route() starts with 'dashboard/invoices' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+						<path d="M 42.6235 45.0027 L 43.9237 45.0027 C 48.4638 45.0027 50.7337 42.6887 50.7337 38.0826 L 50.7337 16.8375 L 37.6648 16.8375 C 35.3728 16.8375 34.0725 15.5372 34.0725 13.2452 L 34.0725 0 L 22.6345 0 C 18.0945 0 15.8025 2.3141 15.8025 6.9201 L 15.8025 8.0000 L 18.6675 8.0000 C 21.7750 8.0000 24.2653 8.8815 26.7336 11.3499 L 39.2295 23.8898 C 41.7199 26.3802 42.6235 28.9366 42.6235 31.9339 Z M 38.1055 14.0827 L 49.6757 14.0827 C 49.5435 13.3774 49.0808 12.7603 48.3095 11.9890 L 38.9210 2.4242 C 38.1717 1.6529 37.5105 1.1680 36.8273 1.0579 L 36.8493 12.8044 C 36.8493 13.7080 37.2020 14.0827 38.1055 14.0827 Z M 11.5050 56 L 32.7943 56 C 37.3342 56 39.6262 53.6859 39.6262 49.0799 L 39.6262 31.3388 L 23.6703 31.3388 C 20.8273 31.3388 19.5050 29.9945 19.5050 27.1736 L 19.5050 10.9972 L 11.5050 10.9972 C 6.9651 10.9972 4.6731 13.3113 4.6731 17.9174 L 4.6731 49.0799 C 4.6731 53.7080 6.9651 56 11.5050 56 Z M 23.6483 28.3195 L 38.4582 28.3195 C 38.2378 27.4600 37.6427 26.6666 36.6510 25.6529 L 25.1910 13.9945 C 24.2213 13.0028 23.3617 12.4077 22.5243 12.1653 L 22.5243 27.1956 C 22.5243 27.9449 22.8989 28.3195 23.6483 28.3195 Z"/>
+					</svg>
+					{% if session.user.role == 'Admin' %}
+						Factures
+					{% else %}
+						Mes factures
+					{% endif %}
+				</a>
+				{% if session.user.role == 'User' %}
+					<a href="{{env.SUPPORT_URL}}" target="_blank" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start hover:bg-gray-50 duration-300">
+						<svg class="h-4 w-4 flex-shrink-0" fill="#000000" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M 39.0391 51.9297 C 40.3750 51.9297 41.1250 50.9687 41.1250 49.5156 L 41.1250 42.6953 L 43.7500 42.6953 C 49.1641 42.6953 52.8203 38.9922 52.8203 33.3672 L 52.8203 13.0469 C 52.8203 7.3984 49.1641 4.0703 43.7500 4.0703 L 12.2500 4.0703 C 6.6250 4.0703 3.1797 7.4219 3.1797 13.0469 L 3.1797 33.3672 C 3.1797 38.9688 6.6250 42.6953 12.2500 42.6953 L 27.8828 42.6953 L 36.3438 50.4297 C 37.4453 51.4609 38.1016 51.9297 39.0391 51.9297 Z"/></svg>
+						Support
+					</a>
+				{% endif %}
+
+				{% if session.user.role == 'Admin' %}
+					<a href="/dashboard/users" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard/users' or current_route() starts with 'dashboard/users' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+						<svg class="h-4 w-4 flex-shrink-0" fill="{% if current_route() == 'dashboard/users' or current_route() starts with 'dashboard/users' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+							<path d="M 38.7232 28.5490 C 43.1399 28.5490 46.9403 24.6047 46.9403 19.4690 C 46.9403 14.3949 43.1193 10.6356 38.7232 10.6356 C 34.3271 10.6356 30.5061 14.4771 30.5061 19.5101 C 30.5061 24.6047 34.3066 28.5490 38.7232 28.5490 Z M 15.0784 29.0215 C 18.8994 29.0215 22.2274 25.5703 22.2274 21.1125 C 22.2274 16.6958 18.8789 13.4294 15.0784 13.4294 C 11.2575 13.4294 7.8885 16.7779 7.9090 21.1536 C 7.9090 25.5703 11.2370 29.0215 15.0784 29.0215 Z M 3.6155 47.5717 L 19.2281 47.5717 C 17.0917 44.4697 19.7006 38.2247 24.1173 34.8146 C 21.8371 33.2944 18.8994 32.1645 15.0579 32.1645 C 5.7931 32.1645 0 39.0053 0 44.6957 C 0 46.5445 1.0271 47.5717 3.6155 47.5717 Z M 25.8018 47.5717 L 51.6241 47.5717 C 54.8493 47.5717 56 46.6472 56 44.8395 C 56 39.5394 49.3644 32.2261 38.7026 32.2261 C 28.0616 32.2261 21.4262 39.5394 21.4262 44.8395 C 21.4262 46.6472 22.5766 47.5717 25.8018 47.5717 Z"></path>
+						</svg>
+						Utilisateurs
+					</a>
+					<a href="/dashboard/rooms" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard/rooms' or current_route() starts with 'dashboard/rooms' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+						<svg class="flex-shrink-0 h-4 w-4" fill="{% if current_route() == 'dashboard/rooms' or current_route() starts with 'dashboard/rooms' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+							<path d="M 5.2892 21.9935 L 10.9031 21.9935 L 10.9031 18.8154 C 10.9031 16.7507 12.0630 15.6372 14.1508 15.6372 L 22.3861 15.6372 C 24.4739 15.6372 25.6338 16.7507 25.6338 18.8154 L 25.6338 21.9935 L 30.6446 21.9935 L 30.6446 18.8154 C 30.6446 16.7507 31.8045 15.6372 34.0084 15.6372 L 41.7333 15.6372 C 43.9373 15.6372 45.0970 16.7507 45.0970 18.8154 L 45.0970 21.9935 L 50.7108 21.9935 L 50.7108 15.6604 C 50.7108 11.5544 48.5305 9.4665 44.5402 9.4665 L 11.4598 9.4665 C 7.4930 9.4665 5.2892 11.5544 5.2892 15.6604 Z M 0 44.8668 C 0 46.0035 .7423 46.7226 1.9022 46.7226 L 3.2013 46.7226 C 4.3380 46.7226 5.0803 46.0035 5.0803 44.8668 L 5.0803 41.5726 C 5.3355 41.6422 6.0779 41.6886 6.6114 41.6886 L 49.4118 41.6886 C 49.9454 41.6886 50.6647 41.6422 50.9198 41.5726 L 50.9198 44.8668 C 50.9198 46.0035 51.6619 46.7226 52.7988 46.7226 L 54.1210 46.7226 C 55.2579 46.7226 56 46.0035 56 44.8668 L 56 31.6670 C 56 27.4682 53.6573 25.1716 49.4118 25.1716 L 6.5883 25.1716 C 2.3430 25.1716 0 27.4682 0 31.6670 Z"></path>
+						</svg>
+						Chambres
+					</a>
+					<a href="/dashboard/equipments" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard/equipments' or current_route() starts with 'dashboard/equipments' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+						<svg class="flex-shrink-0 h-4 w-4" fill="{% if current_route() == 'dashboard/equipments' or current_route() starts with 'dashboard/equipments' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+							<path d="M336,336H32a16,16,0,0,1-14-23.81l152-272a16,16,0,0,1,27.94,0l152,272A16,16,0,0,1,336,336Z"/>
+							<path d="M336,160a161.07,161.07,0,0,0-32.57,3.32L377.9,296.59A48,48,0,0,1,336,368H183.33A160,160,0,1,0,336,160Z"/>
+						</svg>
+						Equipements
+					</a>
+					<a href="/dashboard/employees" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard/employees' or current_route() starts with 'dashboard/employees' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+						<svg class="flex-shrink-0 h-4 w-4" fill="{% if current_route() == 'dashboard/employees' or current_route() starts with 'dashboard/employees' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+							<circle cx="256" cy="56" r="56"/><path d="M304,128H208a64.19,64.19,0,0,0-64,64V299.52c0,10.85,8.43,20.08,19.27,20.47A20,20,0,0,0,184,300V200.27a8.18,8.18,0,0,1,7.47-8.25,8,8,0,0,1,8.53,8V489a23,23,0,0,0,23,23h0a23,23,0,0,0,23-23V346.34A10.24,10.24,0,0,1,255.33,336,10,10,0,0,1,266,346V489a23,23,0,0,0,23,23h0a23,23,0,0,0,23-23V200.27a8.18,8.18,0,0,1,7.47-8.25,8,8,0,0,1,8.53,8v99.52c0,10.85,8.43,20.08,19.27,20.47A20,20,0,0,0,368,300V192A64.19,64.19,0,0,0,304,128Z"/></svg>
+						Employés
+					</a>
+					<a href="/dashboard/coupons" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard/coupons' or current_route() starts with 'dashboard/coupons' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+						<svg class="flex-shrink-0 h-4 w-4" fill="{% if current_route() == 'dashboard/coupons' or current_route() starts with 'dashboard/coupons' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M490.18,181.4l-44.13-44.13a20,20,0,0,0-27-1,30.81,30.81,0,0,1-41.68-1.6h0A30.81,30.81,0,0,1,375.77,93a20,20,0,0,0-1-27L330.6,21.82a19.91,19.91,0,0,0-28.13,0L232.12,92.16a39.87,39.87,0,0,0-9.57,15.5,7.71,7.71,0,0,1-4.83,4.83,39.78,39.78,0,0,0-15.5,9.58L21.82,302.47a19.91,19.91,0,0,0,0,28.13L66,374.73a20,20,0,0,0,27,1,30.69,30.69,0,0,1,43.28,43.28,20,20,0,0,0,1,27l44.13,44.13a19.91,19.91,0,0,0,28.13,0l180.4-180.4a39.82,39.82,0,0,0,9.58-15.49,7.69,7.69,0,0,1,4.84-4.84,39.84,39.84,0,0,0,15.49-9.57l70.34-70.35A19.91,19.91,0,0,0,490.18,181.4ZM261.81,151.75a16,16,0,0,1-22.63,0l-11.51-11.51a16,16,0,0,1,22.63-22.62l11.51,11.5A16,16,0,0,1,261.81,151.75Zm44,44a16,16,0,0,1-22.62,0l-11-11a16,16,0,1,1,22.63-22.63l11,11A16,16,0,0,1,305.83,195.78Zm44,44a16,16,0,0,1-22.63,0l-11-11a16,16,0,0,1,22.63-22.62l11,11A16,16,0,0,1,349.86,239.8Zm44.43,44.54a16,16,0,0,1-22.63,0l-11.44-11.5a16,16,0,1,1,22.68-22.57l11.45,11.49A16,16,0,0,1,394.29,284.34Z"/></svg>
+						Code de réduction
+					</a>
+					<a href="/dashboard/roomtypes" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard/roomtypes' or current_route() starts with 'dashboard/roomtypes' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+						<svg class="flex-shrink-0 h-4 w-4" fill="{% if current_route() == 'dashboard/roomtypes' or current_route() starts with 'dashboard/roomtypes' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M 26.1133 51.2148 C 29.4649 54.5664 32.9102 54.6133 36.3555 51.1914 L 51.1913 36.3789 C 54.6132 32.9570 54.5662 29.4883 51.2148 26.1367 L 28.2930 3.2617 C 26.5352 1.5039 25.5508 1.3867 23.0664 1.3867 L 14.1602 1.3867 C 11.6758 1.3867 10.9024 1.9961 9.1446 3.7539 L 3.7539 9.1445 C 1.9727 10.9258 1.3868 11.6992 1.3868 14.1836 L 1.3868 23.0899 C 1.3868 25.5508 1.4805 26.5586 3.2617 28.3164 Z M 18.0977 20.1367 C 16.2695 20.1367 14.8868 18.7070 14.8868 16.9258 C 14.8868 15.1211 16.2695 13.7148 18.0977 13.7148 C 19.9258 13.7148 21.3086 15.1211 21.3086 16.9258 C 21.3086 18.7070 19.9258 20.1367 18.0977 20.1367 Z"/></svg>
+						Types de chambre
+					</a>
+					<a href="/dashboard/options" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard/options' or current_route() starts with 'dashboard/options' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+						<svg class="h-4 w-4 flex-shrink-0" fill="{% if current_route() == 'dashboard/options' or current_route() starts with 'dashboard/options' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+							<path d="M 14.5586 51.9531 L 42.1445 51.9531 C 46.3633 51.9531 48.8008 49.5156 48.8008 44.6875 L 48.8008 20.4297 C 48.8008 15.6016 46.3398 13.1641 41.4414 13.1641 L 37.7148 13.1641 C 37.5742 8.2422 33.3086 4.0469 28.0117 4.0469 C 22.6914 4.0469 18.4258 8.2422 18.2852 13.1641 L 14.5586 13.1641 C 9.6836 13.1641 7.1992 15.5781 7.1992 20.4297 L 7.1992 44.6875 C 7.1992 49.5391 9.6836 51.9531 14.5586 51.9531 Z M 28.0117 7.6094 C 31.3164 7.6094 33.8242 10.0938 33.9414 13.1641 L 22.0820 13.1641 C 22.1758 10.0938 24.6836 7.6094 28.0117 7.6094 Z"/>
+						</svg>
+						Options
+					</a>
+					<a href="/dashboard/images" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start {% if current_route() == 'dashboard/images' or current_route() starts with 'dashboard/images' %}bg-primary hover:bg-primary/90 text-white fill-white{% else %}hover:bg-gray-50{% endif %} duration-300">
+						<svg class="h-4 w-4 flex-shrink-0" fill="{% if current_route() == 'dashboard/images' or current_route() starts with 'dashboard/images/' %}#ffffff{% else %}#000000{% endif %}" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+							<path d="M 7.6883 23.1104 C 7.6883 17.1164 10.8653 13.9818 16.9016 13.9818 L 45.4100 13.9818 L 45.4100 13.4523 C 45.4100 9.0892 43.1861 6.8865 38.7803 6.8865 L 6.6505 6.8865 C 2.2239 6.8865 0 9.0892 0 13.4523 L 0 35.7548 C 0 40.1179 2.2239 42.2994 6.6505 42.2994 L 7.6883 42.2994 Z M 17.2405 52.5082 L 49.3495 52.5082 C 53.7548 52.5082 56 50.3055 56 45.9424 L 56 23.4281 C 56 19.0861 53.7548 16.8834 49.3495 16.8834 L 17.2405 16.8834 C 12.7927 16.8834 10.5900 19.0650 10.5900 23.4281 L 10.5900 45.9424 C 10.5900 50.3055 12.7927 52.5082 17.2405 52.5082 Z M 25.3524 34.4628 C 22.6414 34.4628 20.4387 32.2601 20.4387 29.5491 C 20.4387 26.8592 22.6414 24.6353 25.3524 24.6353 C 28.0423 24.6353 30.2450 26.8592 30.2450 29.5491 C 30.2450 32.2601 28.0423 34.4628 25.3524 34.4628 Z M 16.9863 49.0982 C 15.0801 49.0982 14.0000 48.0180 14.0000 46.0906 L 14.0000 44.3539 L 17.6853 40.9863 C 19.5703 39.2918 20.6505 38.1270 22.1331 38.1270 C 23.6580 38.1270 24.8865 39.3342 26.8139 41.0074 L 28.8048 42.7866 L 35.7518 36.5385 C 38.0603 34.4416 39.6067 33.0226 41.4493 33.0226 C 43.3132 33.0226 44.9017 34.3993 47.1677 36.5385 L 52.5897 41.6852 L 52.5897 46.0906 C 52.5897 48.0180 51.4884 49.0982 49.5824 49.0982 Z"/>
+						</svg>
+						Images
+					</a>
+				{% endif %}
+			</div>
+		</div>
+		<div class="flex flex-col items-center gap-4 w-full">
+			<a href="/" class="border inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-9 px-3.5 py-5 w-full justify-start hover:bg-gray-50 duration-300">
+				<svg class="h-4 w-4 flex-shrink-0" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<rect width="24" height="24" fill="white"/>
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM11.7071 9.70711C12.0976 9.31658 12.0976 8.68342 11.7071 8.29289C11.3166 7.90237 10.6834 7.90237 10.2929 8.29289L7.37993 11.2059C7.36486 11.2209 7.35031 11.2363 7.33627 11.252C7.12998 11.4352 7 11.7024 7 12C7 12.2976 7.12998 12.5648 7.33627 12.748C7.3503 12.7637 7.36486 12.7791 7.37993 12.7941L10.2929 15.7071C10.6834 16.0976 11.3166 16.0976 11.7071 15.7071C12.0976 15.3166 12.0976 14.6834 11.7071 14.2929L10.4142 13L16 13C16.5523 13 17 12.5523 17 12C17 11.4477 16.5523 11 16 11L10.4142 11L11.7071 9.70711Z" fill="#000000"/>
+				</svg>
+				Retour au site
+			</a>
+			<p class="text-xs text-gray-500 text-center">
+				© 2025 Hôtel Neptune. Tous droits réservés.
+				<span class="text-primary font-medium">V1.0.0</span>
+			</p>
+		</div>
+	</div>
+</aside>

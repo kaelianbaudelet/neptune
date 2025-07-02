@@ -1,0 +1,46 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Employés
+{% endblock %}
+{% block content %}
+{% do clear_session_alert() %}
+
+{% include 'components/dashboard/header.html.twig' with {'title': 'Modifier l\'employé ' ~ employee.name} %}
+  <div class="flex-1 p-6 bg-gray-50 h-[calc(100vh-5.1rem)] w-full overflow-y-auto overflow-x-scroll">
+  {% if session.alert and session.alert.context == 'global' %}
+    <div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+    {{ session.alert.message }}
+    </div>
+  {% endif %}
+  <form action="/dashboard/employees/edit/{{ employee.id }}" method="POST">
+    <h2 class="text-xl font-medium mb-6">
+    Modifier l'employé
+    {{ employee.name }}
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="flex flex-col gap-2 relative">
+      <label for="name" class="font-medium text-sm">Nom</label>
+      <input oninput="this.classList.remove('invalid')" type="text" id="name" name="name" placeholder="Jean Dupont" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.name %} invalid {% endif %}" value="{{ employee.name }}" required>
+      {% if session.alert.errors.name %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.name }}
+</span>{% endif %}</div><div class="flex flex-col gap-2 relative"><label for="email" class="font-medium text-sm">Email</label><input oninput="this.classList.remove('invalid')" type="email" id="email" name="email" placeholder="exemple@domaine.com" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.email %} invalid {% endif %}" value="{{ employee.email }}" required>{% if session.alert.errors.email %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.email }}
+</span>{% endif %}</div><div class="flex flex-col gap-2 relative"><label for="phone" class="font-medium text-sm">Téléphone</label><input oninput="this.classList.remove('invalid')" type="text" id="phone" name="phone" placeholder="+33 1 23 45 67 89" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.phone %} invalid {% endif %}" value="{{ employee.phone }}" required>{% if session.alert.errors.phone %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.phone }}
+</span>{% endif %}</div><div class="flex flex-col gap-2 relative"><label for="position" class="font-medium text-sm">Poste</label><input oninput="this.classList.remove('invalid')" type="text" id="position" name="position" placeholder="Réceptionniste" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.position %} invalid {% endif %}" value="{{ employee.position }}" required>{% if session.alert.errors.position %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.position }}
+</span>{% endif %}</div><div class="flex flex-col gap-2 relative"><label for="salary" class="font-medium text-sm">Salaire</label><input oninput="this.classList.remove('invalid')" type="number" id="salary" name="salary" placeholder="2500.00" step="0.01" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.salary %} invalid {% endif %}" value="{{ employee.salary }}" required>{% if session.alert.errors.salary %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.salary }}
+</span>{% endif %}</div><div class="flex flex-col gap-2 relative"><label for="date_of_birth" class="font-medium text-sm">Date de naissance</label><input oninput="this.classList.remove('invalid')" type="date" id="date_of_birth" name="date_of_birth" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.date_of_birth %} invalid {% endif %}" value="{{ employee.dateOfBirth|date('Y-m-d', 'Europe/Paris') }}" required>{% if session.alert.errors.date_of_birth %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.date_of_birth }}
+</span>{% endif %}</div><div class="flex flex-col gap-2 relative"><label for="hired_date" class="font-medium text-sm">Date d'embauche</label><input oninput="this.classList.remove('invalid')" type="date" id="hired_at" name="hired_at" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.hired_at %} invalid {% endif %}" value="{{ employee.hiredAt|date('Y-m-d', 'Europe/Paris') }}" required>{% if session.alert.errors.hired_at %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.hired_date }}
+</span>{% endif %}</div></div><div class="mt-6"><button class="group-[&:has(input.invalid)]:pointer-events-none group-[&:has(input.invalid)]:bg-primary/50 group-invalid:pointer-events-none group-invalid:bg-primary/50 h-14 inline-flex text-sm items-center justify-center py-4 px-6 text-white font-medium font-heading rounded-xl bg-primary w-full text-center focus:ring focus:ring-primary transition duration-200 hover:bg-primary/95" type="submit">Mettre à jour l'employé</button></div></form></div>{% endblock %}

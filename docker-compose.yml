@@ -1,0 +1,56 @@
+services:
+
+  app:
+    build: .
+    container_name: projetphp_neptune_epsi_apache
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+      - ./logs:/var/log/apache2
+    environment:
+      PHP_DATE_TIMEZONE: ${PHP_DATE_TIMEZONE:-Europe/Paris}
+      PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT:-2G}
+      PHP_UPLOAD_MAX_FILESIZE: ${PHP_UPLOAD_MAX_FILESIZE:-2G}
+      PHP_POST_MAX_SIZE: ${PHP_POST_MAX_SIZE:-2G}
+    depends_on:
+      - db
+    restart: always
+    profiles:
+      - dev
+      - production
+
+  db:
+    image: mariadb:latest
+    container_name: projetphp_neptune_epsi_bdd
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MARIADB_DATABASE: ${DATABASE_NAME:-projetphp_neptune_epsi_bdd}
+      MARIADB_USER: ${DATABASE_USER:-projetphp_neptune_epsi}
+      MARIADB_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    profiles:
+      - dev
+      - production
+
+  adminer:
+    image: adminer:latest
+    container_name: projetphp_neptune_epsi_adminer
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      ADMINER_DEFAULT_DB_DRIVER: mysql
+      ADMINER_DEFAULT_DB_HOST: db
+      ADMINER_DEFAULT_DB_NAME: ${DATABASE_NAME:-projetphp_epsi_bdd}
+    ports:
+      - "9999:8080"
+    profiles:
+      - dev
+
+volumes:
+  db_data:
+    driver: local

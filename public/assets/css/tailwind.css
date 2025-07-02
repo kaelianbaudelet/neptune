@@ -1,0 +1,88 @@
+@import "tailwindcss";
+@import "./lucide.css";
+
+@source "../../../templates";
+
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/preflight" layer(base);
+@import "tailwindcss/utilities" layer(utilities);
+
+@theme {
+  --color-primary: #16c7cd;
+  --color-danger: #e8353c;
+  --color-warning: #fd9a00;
+  --color-success: #68d391;
+  --font-family-lexend: "Lexend", sans-serif;
+  --animate-spin: spin 0.3s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@layer base {
+  /* Cacher les barres de défilement sur tous les navigateurs tout en gardant la fonctionnalité */
+  * {
+    /* Chrome, Safari et Opera */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE et Edge */
+  }
+  *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari et Opera */
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+  button:disabled,
+  [role="button"]:disabled {
+    cursor: default;
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield !important;
+    appearance: textfield !important;
+  }
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  body {
+    font-family: var(--font-family-lexend);
+  }
+
+  @font-face {
+    font-family: "Lexend";
+    src: url("../fonts/Lexend.ttf") format("truetype");
+    font-weight: 100 900;
+    font-display: swap;
+  }
+}

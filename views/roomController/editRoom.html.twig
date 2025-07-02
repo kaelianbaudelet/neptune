@@ -1,0 +1,225 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Modifier la chambre
+{% endblock %}
+{% block content %}
+	{% do clear_session_alert() %}
+	{% include 'components/dashboard/header.html.twig' with {'title': 'Modifier la chambre ' ~ room.name} %}
+	<div class="flex-1 p-6 bg-gray-50 h-[calc(100vh-5.1rem)] w-full overflow-y-auto overflow-x-scroll">
+		{% if session.alert and session.alert.context == 'global' %}
+			<div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+				{{ session.alert.message }}
+			</div>
+		{% endif %}
+		<form action="/dashboard/rooms/edit/{{ room.id }}" method="POST" enctype="multipart/form-data" class="group max-w-7xl w-full">
+			<h2 class="text-xl font-medium mb-6">
+				Modifier la chambre
+				{{ room.name }}
+			</h2>
+			<div class="grid grid-cols-1 gap-6">
+				<div class="flex flex-col gap-2 relative">
+					<label for="type_id" class="font-medium text-sm">Type de chambre</label>
+					{% if types is empty %}
+						<div class="gap-x-2 items-center flex">
+							<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+							</svg>
+							<p class="text-xs text-gray-500">
+								Il n'y a aucun type de chambre disponible. Vous ne pouvez pas modifier de chambre tant que vous n'aurez pas ajouté au moins un type de chambre sur la page
+								<a href="/dashboard/roomtypes" class="text-primary hover:underline decoration-2 underline-offset-2">Type de chambres</a>.
+							</p>
+						</div>
+					{% else %}
+						<select id="type_id" name="type_id" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.type_id %} invalid {% endif %}" required>
+							{% for type in types %}
+								<option value="{{ type.id }}" {% if room.type_id == type.id %} selected {% endif %}>{{ type.name|capitalize }}</option>
+							{% endfor %}
+						</select>
+					{% endif %}
+					{% if session.alert.errors.type_id %}
+						<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+							{{ session.alert.errors.type_id }}
+						</span>
+					{% endif %}
+				</div>
+
+				<div class="flex flex-col gap-2 relative">
+					<label class="font-medium text-sm">Images</label>
+					{% if images is empty %}
+						<div class="gap-x-2 items-center flex">
+							<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+							</svg>
+							<p class="text-xs text-gray-500">
+								Il n'y a aucune image disponible. Vous ne pouvez pas modifier de chambre tant que vous n'aurez pas ajouté au moins une image sur la page
+								<a href="/dashboard/equipments" class="text-primary hover:underline decoration-2 underline-offset-2">Images</a>.
+							</p>
+						</div>
+					{% else %}
+						<div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 bg-white rounded-2xl border p-4 max-h-96 overflow-y-scroll">
+							{% for image in images %}
+								<label for="image-{{ image.id }}" class="overflow-hidden cursor-pointer h-32 w-full border bg-white rounded-xl border-gray-200 border-solid flex flex-col relative has-checked:ring-primary has-checked:ring-offset-3 has-checked:ring-3">
+									<div class="flex flex-col gap-2 p-2 items-start">
+										<div class="flex justify-between w-full items-center truncate gap-2">
+											<h3 class="text-xs font-medium flex items-center truncate">
+												<span class="truncate">{{ image.name }}</span>
+											</h3>
+											<input type="checkbox" name="images[]" value="{{ image.id }}" class="focus:ring-primary checked:border-0 focus:outline-hidden inline-block flex-shrink-0 p-0 m-0 w-5 h-5 text-primary align-middle rounded-md border border-gray-300 border-solid appearance-none bg-origin-border focus:outline-offset-2" id="image-{{ image.id }}" {% if image.id in room.images|map(img => img.id) %} checked {% endif %}>
+										</div>
+									</div>
+									<img src="{{ asset('/upload/' ~ image.fileKey ~ '.' ~ image.extension ) }}" alt="{{ image.name }}" class="mt-auto h-full w-full object-cover border-t border-gray-200">
+								</label>
+							{% endfor %}
+						</div>
+						<div class="gap-x-2 items-center flex">
+							<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+							</svg>
+							<p class="text-xs text-gray-500">
+								Une chambre doit avoir au minimum 4 images et au maximum 20 images.
+							</p>
+						</div>
+					{% endif %}
+					{% if session.alert.errors.images %}
+						<span class="mt-2 text-xs text-danger">
+							{{ session.alert.errors.images }}
+						</span>
+					{% endif %}
+				</div>
+
+				<div class="flex flex-col gap-2 relative">
+					<label class="font-medium text-sm">Équipements</label>
+					{% if equipments is empty %}
+						<div class="gap-x-2 items-center flex">
+							<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+							</svg>
+							<p class="text-xs text-gray-500">
+								Il n'y a aucun équipement disponible. Vous ne pouvez pas modifier de chambre tant que vous n'aurez pas ajouté au moins un équipement sur la page
+								<a href="/dashboard/equipments" class="text-primary hover:underline decoration-2 underline-offset-2">Équipements</a>.
+							</p>
+						</div>
+					{% else %}
+						<div class="flex flex-wrap gap-2">
+							{% for equipment in equipments %}
+								<label class="flex relative justify-center items-center px-2.5 py-2 text-xs leading-5 text-center text-gray-800 bg-white rounded-xl border border-gray-200 border-solid cursor-pointer peer-checked:bg-purple-100 peer-checked:border-primary peer-checked:ring-primary peer-checked:text-primary">
+									<input type="checkbox" class="hidden flex-shrink-0 p-0 m-0 w-4 h-4 text-primary align-middle rounded-none border border-solid appearance-none bg-origin-border focus:outline-offset-2 peer" name="equipments[]" value="{{ equipment.id }}" {% if equipment.id in room.equipments|map(e => e.id) %} checked {% endif %}>
+									<span class="flex flex-shrink-0 justify-center items-center w-0 h-0 text-transparent bg-primary rounded-full duration-200 ease-in-out peer-checked:w-4 peer-checked:h-4 peer-checked:mr-2 peer-checked:bg-primary peer-checked:text-white">
+										<svg class="block flex-shrink-0 w-2 h-2 text-white align-middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M20 6 9 17l-5-5"></path>
+										</svg>
+									</span>
+									<span class="flex items-center justify-center gap-1.5 peer-checked:text-primary">
+										<i class="icon-{{ equipment.icon }}"></i>
+										{{ equipment.name }}
+									</span>
+								</label>
+							{% endfor %}
+						</div>
+					{% endif %}
+					{% if session.alert.errors.equipments %}
+						<span class="mt-2 text-xs text-danger">
+							{{ session.alert.errors.equipments }}
+						</span>
+					{% endif %}
+				</div>
+
+				<div class="flex flex-col gap-2 relative">
+					<label for="name" class="font-medium text-sm">Nom</label>
+					<input minlength="1" maxlength="50" oninput="this.classList.remove('invalid')" type="text" id="name" name="name" placeholder="Nom de la chambre" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.name %} invalid {% endif %}" value="{{ room.name }}" required>
+					{% if session.alert.errors.name %}
+						<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+							{{ session.alert.errors.name }}
+						</span>
+					{% endif %}
+				</div>
+
+				<div class="flex flex-col gap-2 relative">
+					<label for="available" class="font-medium text-sm">Disponibilité</label>
+					<select id="available" name="available" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.available %} invalid {% endif %}">
+						<option value="1" {% if room.available == 1 %} selected {% endif %}>Disponible</option>
+						<option value="0" {% if room.available == 0 %} selected {% endif %}>Non disponible</option>
+					</select>
+					{% if session.alert.errors.available %}
+						<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+							{{ session.alert.errors.available }}
+						</span>
+					{% endif %}
+				</div>
+
+				<div class="flex flex-col gap-2 relative">
+					<label for="description" class="font-medium text-sm">Description</label>
+					<textarea id="description" name="description" placeholder="Description" rows="4" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.description %} invalid {% endif %}">{{ room.description }}</textarea>
+					{% if session.alert.errors.description %}
+						<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+							{{ session.alert.errors.description }}
+						</span>
+					{% endif %}
+				</div>
+
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div class="flex flex-col gap-2 relative">
+						<label for="price" class="font-medium text-sm">Prix</label>
+						<input oninput="this.classList.remove('invalid')" type="number" min="0" step="0.01" id="price" name="price" placeholder="Prix (/nuits)" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.price %} invalid {% endif %}" value="{{ room.price }}" required>
+						{% if session.alert.errors.price %}
+							<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+								{{ session.alert.errors.price }}
+							</span>
+						{% endif %}
+					</div>
+
+					<div class="flex flex-col gap-2 relative">
+						<label for="discount" class="font-medium text-sm">Remise</label>
+						<input oninput="this.classList.remove('invalid')" type="number" min="0" max="100" id="discount" name="discount" placeholder="Remise" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.discount %} invalid {% endif %}" value="{{ room.discount }}">
+						{% if session.alert.errors.discount %}
+							<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+								{{ session.alert.errors.discount }}
+							</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+					<div class="flex flex-col gap-2 relative">
+						<label for="capacity" class="font-medium text-sm">Capacité</label>
+						<input oninput="this.classList.remove('invalid')" type="number" min="1" id="capacity" name="capacity" placeholder="Capacité" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.capacity %} invalid {% endif %}" value="{{ room.capacity }}" required>
+						{% if session.alert.errors.capacity %}
+							<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+								{{ session.alert.errors.capacity }}
+							</span>
+						{% endif %}
+					</div>
+
+					<div class="flex flex-col gap-2 relative">
+						<label for="bed_double" class="font-medium text-sm">Lits doubles</label>
+						<input oninput="this.classList.remove('invalid')" type="number" min="0" id="bed_double" name="bed_double" placeholder="Nombre de lits doubles" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.bed_double %} invalid {% endif %}" value="{{ room.bedDouble }}" required>
+						{% if session.alert.errors.bed_double %}
+							<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+								{{ session.alert.errors.bed_double }}
+							</span>
+						{% endif %}
+					</div>
+
+					<div class="flex flex-col gap-2 relative">
+						<label for="bed_single" class="font-medium text-sm">Lits simples</label>
+						<input oninput="this.classList.remove('invalid')" type="number" min="0" id="bed_single" name="bed_single" placeholder="Nombre de lits simples" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.bed_single %} invalid {% endif %}" value="{{ room.bedSingle }}" required>
+						{% if session.alert.errors.bed_single %}
+							<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+								{{ session.alert.errors.bed_single }}
+							</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<button class="group-[&:has(input.invalid)]:pointer-events-none group-[&:has(input.invalid)]:bg-primary/50 group-invalid:pointer-events-none group-invalid:bg-primary/50 h-14 inline-flex text-sm items-center justify-center py-4 px-6 text-white font-medium font-heading rounded-xl bg-primary w-full text-center focus:ring focus:ring-primary transition duration-200 hover:bg-primary/95" type="submit">
+					Mettre à jour la chambre
+				</button>
+			</div>
+		</form>
+	</div>
+{% endblock %}
+{% block js %}
+	{{ parent() }}
+	<script src="{{ asset('/js/modal.js') }}?v={{ random() }}"></script>
+{% endblock %}

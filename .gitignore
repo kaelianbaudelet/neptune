@@ -1,0 +1,65 @@
+# IDE & Éditeurs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Dépendances PHP
+/vendor/
+composer.lock
+composer.phar
+
+# Dépendances NodeJS
+/node_modules/
+package-lock.json
+npm-debug.log
+yarn-error.log
+yarn.lock
+
+# Docker
+.env
+docker-compose.override.yml
+data/
+
+# Journaux
+/log/
+/logs/
+*.log
+
+# Fichiers de cache
+/var/cache/
+/var/logs/
+/cache/
+*.cache
+*.tmp
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Cache Twig
+/var/twig/
+/var/view_preprocessed/
+/templates/cache/
+
+# Fichiers de build
+/build/
+/dist/
+
+# Fichiers de configuration locale
+phpunit.xml
+phpunit.xml.dist
+config.local.php
+*.local.php
+
+# Divers
+/temp/
+/tmp/
+/backup/
+*.bak
+*.swp

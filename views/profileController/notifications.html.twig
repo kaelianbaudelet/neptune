@@ -1,0 +1,49 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Mot de passe
+{% endblock %}
+{% block content %}
+{% do clear_session_alert() %}
+{% include 'components/dashboard/header.html.twig' with {'title': 'Vue d\'enssemble'} %}
+<div class="flex-1 space-y-6 p-6 pt-6 0 bg-gray-50 overflow-y-scroll h-[calc(100vh-5.1rem)]">
+<div class="flex lg:flex-row flex-col">
+       {% include 'components/dashboard/profileSidebar.html.twig' %}
+        <div class="w-full lg:pt-0 mt-6 lg:mt-0 pt-6 lg:border-t-0 border-t">
+          <div>
+            <h3 class="text-xl font-medium">Notification</h3>
+            <p class="text-gray-500">
+             Modifiez vos préférences en matière de notification.
+            </p>
+          </div>
+          <form class="space-y-6 pt-6 border-t mt-6" method="POST" action="">
+              {% if session.alert %}
+                  <div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+                      {{ session.alert.message }}
+                  </div>
+              {% endif %}
+            <div class="flex flex-col gap-2">
+            <div class="border bg-white rounded-xl p-4 flex flex-col gap-2">
+             <div class="flex items-center">
+                  <input type="checkbox" id="essential" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary focus:ring-2 focus:ring-offset-2 cursor-not-allowed" checked disabled>
+                  <label for="essential" class="ml-2 block text-sm font-medium text-gray-700 cursor-not-allowed">
+                    Recevoir des notifications essentielles concernant l'activité et la sécurité de mon compte.
+                  </label>
+                </div>
+             <div class="gap-x-2 items-center flex">
+                <svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <p class="text-xs text-gray-500">
+                  Les notifications essentielles sont activées par défaut et ne peuvent pas être désactivées.
+                </p>
+              </div>
+
+            </div>
+
+
+
+<div class="border bg-white rounded-xl p-4 flex flex-col gap-2">
+              <div class="flex items-center">
+                  <input name="marketingConsent" type="checkbox" id="marketing-emails" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary focus:ring-2 focus:ring-offset-2 cursor-pointer" {% if user.commercialEmailConsent %}checked{% endif %}><label for="marketing-emails" class="ml-2 block text-sm font-medium text-gray-700 cursor-pointer">
+Recevoir des e-mails d'offres promotionnelles et marketing.</label></div></div></div><button type="submit" class="inline-flex gap-x-2 justify-center items-center py-4 px-4 m-0 w-full text-sm font-medium leading-5 text-center text-white normal-case bg-primary hover:bg-primary/90 transition duration-300 bg-none rounded-xl border border-transparent border-solid cursor-pointer bg-origin-border">Confirmer</button></form></div></div></div>{% endblock %}

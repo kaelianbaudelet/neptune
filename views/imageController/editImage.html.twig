@@ -1,0 +1,46 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Images
+{% endblock %}
+{% block content %}
+{% do clear_session_alert() %}
+{% include 'components/dashboard/header.html.twig' with {'title': 'Modifier l\'image ' ~ image.name} %}
+	<div class="flex-1 p-6 bg-gray-50 h-[calc(100vh-5.1rem)] w-full overflow-y-auto overflow-x-scroll">
+		{% if session.alert and session.alert.context == 'global' %}
+			<div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+				{{ session.alert.message }}
+			</div>
+		{% endif %}
+		<form action="/dashboard/images/edit/{{ image.id }}" method="POST">
+			<h2 class="text-xl font-medium mb-6">
+				Modifier l'image
+				{{ image.name }}
+			</h2>
+			<div class="grid grid-cols-1 gap-6">
+				<div class="flex flex-col gap-2 relative">
+					<label for="name" class="font-medium text-sm">Nom</label>
+					<input minlength="10" maxlength="50" oninput="this.classList.remove('invalid')" type="text" id="name" name="name" placeholder="Nom de l'image" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.name  %} invalid {% endif %}" value="{{ image.name }}" required>
+					<div class="gap-x-2 items-center flex">
+						<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+						</svg>
+						<p class="text-xs text-gray-500">
+							Le nom d'une image n'a rien à voir avec le vrai nom de fichier. Il s'agit d'un nom qui sera utilisé pour identifier l'image. Par exemple, si vous téléversez une image de la chambre 101, vous pouvez l'appeler "Chambre 101". Cela aidera à mieux organiser vos images et à les retrouver facilement plus tard.
+						</p>
+					</div>
+					<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:hidden peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+						Le nom de l'image doit contenir au moins 10 caractères.
+					</span>
+					{% if session.alert.errors.name %}
+						<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+							{{ session.alert.errors.name }}
+						</span>
+					{% endif %}
+				</div>
+
+				<div class="flex flex-col gap-2">
+					<label for="description" class="font-medium text-sm">Description (Facultatif)</label>
+					<textarea oninput="this.classList.remove('invalid')" maxlength="180" id="description" name="description" placeholder="Description de l'image" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 {% if session.alert.errors.description %}
+invalid{% endif %}" rows="4" required>{{ image.description }}</textarea>{% if session.alert.errors.description %}<span class="mt-2 hidden text-sm text-danger peer-[.invalid]:block">
+{{ session.alert.errors.description }}</span>{% endif %}</div><div class="group-[&:has(input.invalid)]:cursor-not-allowed group-invalid:cursor-not-allowed flex flex-col items-center gap-2"><button class="group-[&:has(input.invalid)]:pointer-events-none group-[&:has(input.invalid)]:bg-primary/50 group-invalid:pointer-events-none group-invalid:bg-primary/50 h-14 inline-flex text-sm items-center justify-center py-4 px-6 text-white font-medium font-heading rounded-xl bg-primary w-full text-center focus:ring focus:ring-primary transition duration-200 hover:bg-primary/95" type="submit">Mettre à jour l'image</button></div></div></form></div>{% endblock %}

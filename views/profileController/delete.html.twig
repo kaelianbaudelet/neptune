@@ -1,0 +1,86 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Supprimer le compte
+{% endblock %}
+{% block content %}
+{% do clear_session_alert() %}
+{% include 'components/dashboard/header.html.twig' with {'title': 'Vue d\'enssemble'} %}
+<div class="flex-1 space-y-6 p-6 pt-6 0 bg-gray-50 overflow-y-scroll h-[calc(100vh-5.1rem)]">
+  <div class="flex lg:flex-row flex-col">
+    {% include 'components/dashboard/profileSidebar.html.twig' %}
+    <div class="w-full lg:pt-0 mt-6 lg:mt-0 pt-6 lg:border-t-0 border-t">
+
+        <h3 class="text-xl font-medium mb-4">
+          Supprimer le compte
+        </h3>
+
+      {% if hasActiveBookings %}
+        <div class="gap-x-2 items-center flex">
+          <svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#E8353C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <p class="text-xs text-danger">
+            Vous ne pouvez pas supprimer votre compte pour le moment car vous avez des réservations en cours. Contactez le support pour annuler les réservations en cours.
+          </p>
+        </div>
+      {% else %}
+        <div class="gap-x-2 items-center flex mb-4">
+          <svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <p class="text-xs text-gray-500">
+            Pour confirmer la suppression de votre compte, cliquez sur le bouton ci-dessous. Un code de confirmation vous sera demandé.
+          </p>
+        </div>
+        <button type="button" class="inline-flex gap-x-2 justify-center items-center py-4 px-4 m-0 w-full text-sm font-medium leading-5 text-center text-white normal-case bg-danger hover:bg-danger/90 transition duration-300 bg-none rounded-xl border border-transparent border-solid cursor-pointer bg-origin-border open-modal" data-modal-target="delete-account-modal">
+          Supprimer mon compte
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{# Modal de confirmation de suppression de compte #}
+<div data-modal="delete-account-modal" class="fixed inset-0 z-50 hidden modal">
+  <div class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300 modal-backdrop"></div>
+  <div class="relative z-10 h-full w-full flex items-center justify-center pointer-events-none opacity-0 transform scale-95 transition-all duration-300 modal-content">
+    <div class="max-h-[75vh] max-w-7xl w-full mx-6 bg-white rounded-2xl overflow-y-scroll pointer-events-auto p-6 flex flex-col gap-6">
+      <form id="delete-account-form" method="POST" action="" class="flex flex-col gap-4">
+        <h2 class="text-xl font-semibold text-danger">Confirmation de suppression</h2>
+
+          {% if session.alert %}
+        <div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+          {{ session.alert.message }}
+        </div>
+      {% endif %}
+
+        <p class="text-sm font-semibold text-center">
+          Pour confirmer la suppression de votre compte, veuillez recopier le code ci-dessous dans le champ prévu à cet effet, puis saisir votre mot de passe.
+        </p>
+
+          <span class="font-mono text-4xl mx-auto font-bold px-3 py-2 bg-gray-100 rounded select-none" id="delete-code">{{ delete_code }}</span>
+
+        <div class="flex flex-col gap-2">
+          <label for="confirm_code" class="font-medium text-sm">Recopiez le code</label>
+          <input id="confirm_code" name="confirm_code" type="text" maxlength="6" required autocomplete="off" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 uppercase" placeholder="CODE">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="password" class="font-medium text-sm">Mot de passe actuel</label>
+          <input id="password" name="password" type="password" required class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2" placeholder="********">
+        </div>
+        <div class="flex justify-end gap-x-2">
+          <button type="button" class="modal-close py-2 px-4 text-sm font-medium text-gray-500 bg-white hover:bg-gray-50 focus:outline-hidden transition-all rounded-lg">Annuler</button>
+          <button type="submit" class="py-2 px-4 text-sm bg-danger hover:bg-danger/90 font-medium text-white focus:outline-hidden transition-all rounded-lg" id="delete-submit">Supprimer définitivement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+{{ parent() }}
+<script src="{{ asset('/js/modal.js') }}?v={{ random() }}"></script>
+{% endblock %}

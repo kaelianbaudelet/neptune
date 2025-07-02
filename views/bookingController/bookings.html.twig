@@ -1,0 +1,347 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Réservations
+{% endblock %}
+{% block content %}
+	{% do clear_session_alert() %}
+	{% include 'components/dashboard/header.html.twig' with {'title': 'Réservations'} %}
+	<div class="flex-1 p-6 bg-gray-50 h-[calc(100vh-5.1rem)] w-full overflow-y-auto overflow-x-scroll">
+		{% if session.alert and session.alert.context == 'global' %}
+			<div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+				{{ session.alert.message }}
+			</div>
+		{% endif %}
+		<div class="flex flex-col gap-6 overflow-x-scroll h-full">
+			<div class="overflow-x-auto overflow-y-visible h-full">
+				<div class="inline-block min-w-full align-middle">
+					<div class="bg-white border border-gray-200 rounded-xl">
+						<div class="px-4 py-3 grid gap-4 sm:flex sm:justify-between sm:items-center border-b border-gray-200">
+							<div>
+								<h2 class="text-xl font-medium">
+									Réservations
+								</h2>
+								<p class="text-sm text-gray-500">
+									Consultez et gérez vos réservations.
+								</p>
+							</div>
+							{% if session.user.role == 'Admin' %}
+								<div>
+									<div class="inline-flex gap-x-2">
+
+										<button class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-white bg-primary hover:bg-primary/90 focus:outline-hidden focus:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none transition duration-300 open-modal" data-modal-target="create-booking">
+											Créer une réservation
+										</button>
+
+									</div>
+								</div>
+							{% endif %}
+						</div>
+						<div class="w-full">
+							<table class="w-full divide-y divide-gray-200">
+								<thead class="bg-gray-50">
+									<tr>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												ID
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												Date d'arrivée
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												Date de départ
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												Client
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-2 text-start hidden sm:table-cell">
+											<span class="text-xs font-semibold uppercase truncate">
+												Chambre
+											</span>
+										</th>
+										<th scope="col" class="px-3 py-3 text-end"></th>
+									</tr>
+								</thead>
+
+								<tbody class="divide-y divide-gray-200">
+									{% if bookings is empty %}
+										<tr class="bg-white hover:bg-gray-50">
+											<td colspan="6" class="px-3 py-3 whitespace-nowrap text-center">
+												<span class="text-sm text-gray-500 truncate block">Aucunne réservation</span>
+											</td>
+										</tr>
+									{% endif %}
+									{% for booking in bookings %}
+										<tr class="bg-white hover:bg-gray-50">
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ booking.id }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ booking.checkin|date("d/m/Y") }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ booking.checkout|date("d/m/Y") }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ booking.user ? booking.user.name : 'Client non inscrit' }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap hidden sm:table-cell">
+												<span class="text-sm text-gray-500 truncate block">{{ booking.room.name }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap text-end">
+												<div class="relative inline-flex">
+													<button type="button" class="py-1.5 px-1.5 border text-xs rounded-lg font-medium bg-gray-50 hover:bg-white focus:outline-hidden transition-all" data-dropdown-trigger data-target="booking-actions-{{ booking.id }}" aria-expanded="false">
+														<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+															<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+														</svg>
+													</button>
+													<div data-dropdown="booking-actions-{{ booking.id }}" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 opacity-0 invisible translate-y-2 transition-all duration-300 z-20">
+														<div class="p-2">
+															<a href="/dashboard/booking/{{ booking.id }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-all flex items-center gap-2">
+																<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+																	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+																	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+																</svg>
+																<span class="overflow-hidden whitespace-nowrap truncate">Voir</span>
+															</a>
+															<a href="/dashboard/bookings/edit/{{ booking.id }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-all flex items-center gap-2">
+																<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+																	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+																</svg>
+																<span class="overflow-hidden whitespace-nowrap truncate">Modifier</span>
+															</a>
+															<button class="w-full px-4 py-2 text-sm text-danger hover:bg-danger/10 rounded-lg transition-all flex items-center gap-2 open-modal" data-modal-target="delete-booking-{{ booking.id }}">
+																<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+																	<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+																</svg>
+																<span class="overflow-hidden whitespace-nowrap truncate">Supprimer</span>
+															</button>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+										<div data-modal="delete-booking-{{ booking.id }}" class="fixed inset-0 z-50 hidden modal">
+											<div class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300 modal-backdrop"></div>
+											<div class="relative z-10 h-full w-full flex items-center justify-center pointer-events-none opacity-0 transform scale-95 transition-all duration-300 modal-content">
+												<div class="max-w-5xl w-full mx-6 bg-white rounded-2xl overflow-y-scroll pointer-events-auto p-6 flex flex-col gap-6">
+													<h2 class="text-xl font-medium">
+														Supprimer la réservation
+													</h2>
+													<p class="text-sm text-gray-500">
+														Êtes-vous sûr de vouloir supprimer cette réservation ? Cette action est irréversible et supprimera toutes les données associées à cette réservation. La facture ne sera pas supprimée.
+													</p>
+													<div class="flex justify-end gap-x-2">
+														<button type="button" class="border py-2 px-4 text-sm font-medium text-gray-500 bg-white hover:bg-gray-50 focus:outline-hidden transition-all rounded-lg modal-close">Annuler</button>
+														<form action="/dashboard/bookings/delete/{{ booking.id }}" method="post">
+															<button type="submit" class="py-2 px-4 text-sm bg-danger hover:bg-danger/90 font-medium text-white focus:outline-hidden transition-all rounded-lg">Supprimer</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="px-4 py-3 grid gap-2 md:flex md:justify-between md:items-center border-t border-gray-200">
+							<div>
+								<p class="text-sm text-gray-500">
+									<span class="font-semibold">{{ bookings|length }}</span>
+									réservations
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div data-modal="create-booking" class="fixed inset-0 z-50 hidden modal">
+			<div class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300 modal-backdrop"></div>
+			<div class="relative z-10 h-full w-full flex items-center justify-center pointer-events-none opacity-0 transform scale-95 transition-all duration-300 modal-content">
+				<form action="/dashboard/bookings/add" method="post" enctype="multipart/form-data" class="max-w-7xl w-full h-[75vh] mx-6 bg-gray-50 rounded-2xl overflow-y-scroll pointer-events-auto p-6 flex flex-col gap-6">
+					<h2 class="text-xl font-medium">
+						Créer une réservation
+					</h2>
+					<div class="border-b pb-6">
+						<h2 class="text-lg font-medium mb-4">Informations principales</h2>
+						<div class="grid grid-cols-1 gap-6">
+							<div class="flex flex-col gap-2">
+								<label for="user_id" class="font-medium text-sm">Cette réservation est liée à</label>
+								<select id="user_id" name="user_id" class="block py-4 px-4 m-0 w-full rounded-xl border {% if session.form_errors is defined and session.form_errors.user_id is defined %}border-danger{% else %}border-gray-200{% endif %} border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2">
+									<option value="">Utilisateur non inscrit sur le site</option>
+									{% for user in users %}
+										<option value="{{ user.id }}" {% if session.form_data is defined and session.form_data.user_id == user.id %} selected {% endif %}>{{ user.email }}
+											-
+											{{ user.name }}</option>
+									{% endfor %}
+								</select>
+								{% if session.form_errors is defined and session.form_errors.user_id is defined %}
+									<p class="text-xs text-danger mt-1">{{ session.form_errors.user_id }}</p>
+								{% endif %}
+							</div>
+							<div class="flex flex-col gap-2">
+								<label for="room_id" class="font-medium text-sm">Chambre</label>
+								<select id="room_id" name="room_id" class="block py-4 px-4 m-0 w-full rounded-xl border {% if session.form_errors is defined and session.form_errors.room_id is defined %}border-danger{% else %}border-gray-200{% endif %} border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2">
+									<option value="">Sélectionnez une chambre</option>
+									{% for room in rooms %}
+										<option value="{{ room.id }}" {% if session.form_data is defined and session.form_data.room_id == room.id %} selected {% endif %}>{{ room.name }}</option>
+									{% endfor %}
+								</select>
+								{% if session.form_errors is defined and session.form_errors.room_id is defined %}
+									<p class="text-xs text-danger mt-1">{{ session.form_errors.room_id }}</p>
+								{% endif %}
+							</div>
+							<div class="flex flex-col gap-2">
+								<label for="invoice_id" class="font-medium text-sm">Facture (optionnel)</label>
+								<input type="text" id="invoice_id" name="invoice_id" placeholder="ID de facture" class="block py-4 px-4 m-0 w-full rounded-xl border {% if session.form_errors is defined and session.form_errors.invoice_id is defined %}border-danger{% else %}border-gray-200{% endif %} border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2" value="{{ session.form_data.invoice_id|default('') }}">
+								{% if session.form_errors is defined and session.form_errors.invoice_id is defined %}
+									<p class="text-xs text-danger mt-1">{{ session.form_errors.invoice_id }}</p>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<div class="border-b pb-6">
+						<h2 class="text-lg font-medium mb-4">Informations de séjour</h2>
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<div class="flex flex-col gap-2">
+								<label for="checkin" class="font-medium text-sm">Date d'arrivée</label>
+								<input type="date" id="checkin" name="checkin" class="block py-4 px-4 m-0 w-full rounded-xl border {% if session.form_errors is defined and session.form_errors.checkin is defined %}border-danger{% else %}border-gray-200{% endif %} border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2" value="{{ session.form_data.checkin|default('') }}">
+								{% if session.form_errors is defined and session.form_errors.checkin is defined %}
+									<p class="text-xs text-danger mt-1">{{ session.form_errors.checkin }}</p>
+								{% endif %}
+							</div>
+							<div class="flex flex-col gap-2">
+								<label for="checkout" class="font-medium text-sm">Date de départ</label>
+								<input type="date" id="checkout" name="checkout" class="block py-4 px-4 m-0 w-full rounded-xl border {% if session.form_errors is defined and session.form_errors.checkout is defined %}border-danger{% else %}border-gray-200{% endif %} border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2" value="{{ session.form_data.checkout|default('') }}">
+								{% if session.form_errors is defined and session.form_errors.checkout is defined %}
+									<p class="text-xs text-danger mt-1">{{ session.form_errors.checkout }}</p>
+								{% endif %}
+							</div>
+
+						</div>
+					</div>
+					<div class="border-b pb-6">
+						<h2 class="text-lg font-medium mb-4">Invités</h2>
+						<div class="flex flex-col gap-2 md:col-span-2">
+							<label class="font-medium text-sm">Personnes</label>
+							<div id="guests-container" class="flex flex-col gap-4">
+								{% if session.form_data is defined and session.form_data.guests is defined %}
+									{% for guest in session.form_data.guests %}
+										<div class="grid grid-cols-2 gap-4 guest-entry">
+											<div class="flex flex-col gap-2">
+												<input type="text" name="guests[{{ loop.index0 }}][name]" placeholder="Nom de l'invité" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2" value="{{ guest.name }}">
+											</div>
+											<div class="flex flex-col gap-2">
+												<select name="guests[{{ loop.index0 }}][type]" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2">
+													<option value="adult" {% if guest.type == 'adult' %} selected {% endif %}>Adulte</option>
+													<option value="child" {% if guest.type == 'child' %} selected {% endif %}>Enfant</option>
+												</select>
+											</div>
+										</div>
+									{% endfor %}
+								{% else %}
+									<div class="grid grid-cols-2 gap-4 guest-entry">
+										<div class="flex flex-col gap-2">
+											<input type="text" name="guests[0][name]" placeholder="Nom de l'invité" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2">
+										</div>
+										<div class="flex flex-col gap-2">
+											<select name="guests[0][type]" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2">
+												<option value="adult">Adulte</option>
+												<option value="child">Enfant</option>
+											</select>
+										</div>
+									</div>
+								{% endif %}
+							</div>
+							<button type="button" id="add-guest" class="mt-4 inline-flex gap-x-2 justify-center items-center py-4 px-4 w-full text-sm font-medium leading-5 text-center text-white normal-case bg-primary hover:bg-primary/90 transition duration-300 bg-none rounded-xl border border-transparent border-solid cursor-pointer bg-origin-border">
+								Ajouter un invité
+							</button>
+						</div>
+					</div>
+					<div class="border-b pb-6">
+						<h2 class="text-lg font-medium mb-4">Options</h2>
+						<div class="grid grid-cols-1 gap-6">
+							<div class="flex flex-col gap-2">
+								<label class="font-medium text-sm">Options</label>
+								<div class="flex flex-col gap-3">
+									{% for option in options %}
+										<div class="flex items-center gap-3">
+											<input type="checkbox" id="option_{{ option.id }}" name="options[{{ loop.index0 }}][id]" value="{{ option.id }}" class="h-4 w-4 text-primary border-gray-200 rounded focus:ring-primary" {% if session.form_data is defined and session.form_data.options is defined %} {% for formOption in session.form_data.options %} {% if formOption.id == option.id %} checked {% endif %} {% endfor %} {% endif %}>
+											<label for="option_{{ option.id }}" class="text-sm">
+												{{ option.name }}
+												({{ option.price }}€
+												{% if option.perAdult and option.perChild %}
+													/ personnes
+												{% elseif option.perAdult %}
+													/ adultes
+												{% elseif option.perChild %}
+													/ enfants
+												{% endif %}
+												{% if option.perNight %}
+													/ nuit
+												{% endif %}
+												{% if option.perQuantity %}
+													/
+													{{ option.quantityIdentifier ?: 'unité' }}
+												{% endif %})
+											</label>
+
+											{% if option.perQuantity %}
+												×
+												<input type="number" name="options[{{ loop.index0 }}][quantity]" min="1" max="{{ option.maxQuantity ?: 10 }}" value="{% if session.form_data is defined and session.form_data.options is defined %}{% for formOption in session.form_data.options %}{% if formOption.id == option.id %}{{ formOption.quantity }}{% endif %}{% endfor %}{% else %}1{% endif %}" class="text-center h-6 w-10 p-0 text-xs rounded-md border-gray-200 focus:border-primary focus:ring-primary">
+											{% else %}
+												<input type="hidden" name="options[{{ loop.index0 }}][quantity]" value="1">
+											{% endif %}
+										</div>
+									{% endfor %}
+								</div>
+								{% if session.form_errors is defined and session.form_errors.options is defined %}
+									<p class="text-xs text-danger mt-1">{{ session.form_errors.options }}</p>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="inline-flex gap-x-2 justify-center items-center py-4 px-4 m-0 w-full text-sm font-medium leading-5 text-center text-white normal-case bg-primary hover:bg-primary/90 transition duration-300 bg-none rounded-xl border border-transparent border-solid cursor-pointer bg-origin-border">
+						Créer une réservation
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block js %}
+	{{ parent() }}
+	<script src="{{ asset('/js/modal.js') }}?v={{ random() }}"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () { // Guest form handling
+const guestsContainer = document.getElementById('guests-container');
+const addGuestButton = document.getElementById('add-guest');
+
+addGuestButton.addEventListener('click', function () {
+const guestCount = document.querySelectorAll('.guest-entry').length;
+const guestEntry = document.createElement('div');
+guestEntry.className = 'grid grid-cols-2 gap-4 guest-entry';
+guestEntry.innerHTML = `
+          <div class="flex flex-col gap-2">
+            <input type="text" name="guests[${guestCount}][name]" placeholder="Nom de l'invité" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2">
+          </div>
+          <div class="flex flex-col gap-2">
+            <select name="guests[${guestCount}][type]" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2">
+              <option value="adult">Adulte</option>
+              <option value="child">Enfant</option>
+            </select>
+          </div>
+        `;
+guestsContainer.appendChild(guestEntry);
+});
+});
+	</script>
+{% endblock %}

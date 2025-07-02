@@ -1,0 +1,257 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Images
+{% endblock %}
+{% block content %}
+	{% do clear_session_alert() %}
+	{% include 'components/dashboard/header.html.twig' with {'title': 'Images'} %}
+	<div class="flex-1 p-6 bg-gray-50 h-[calc(100vh-5.1rem)] w-full overflow-y-auto overflow-x-scroll">
+		{% if session.alert and session.alert.context == 'global' %}
+			<div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+				{{ session.alert.message }}
+			</div>
+		{% endif %}
+		<div class="flex flex-col gap-6 overflow-x-scroll h-full">
+			<div class="overflow-x-auto overflow-y-visible h-full">
+				<div class="inline-block min-w-full align-middle">
+					<div class="bg-white border border-gray-200 rounded-xl">
+						<div class="px-4 py-3 grid gap-4 sm:flex sm:justify-between sm:items-center border-b border-gray-200">
+							<div>
+								<h2 class="text-xl font-medium">
+									Images
+								</h2>
+								<p class="text-sm text-gray-500">
+									Consultez et gérez vos images.
+								</p>
+							</div>
+
+							<div>
+								<div class="inline-flex gap-x-2">
+									<button class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg text-white bg-primary hover:bg-primary/90 focus:outline-hidden focus:bg-primary/90 disabled:opacity-50 disabled:pointer-events-none transition duration-300 open-modal" data-modal-target="upload-image">
+										Téléverser une image
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="w-full">
+							<table class="w-full divide-y divide-gray-200">
+								<thead class="bg-gray-50">
+									<tr>
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												ID
+											</span>
+										</th>
+
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												Nom
+											</span>
+										</th>
+
+										<th scope="col" class="px-3 py-2 text-start">
+											<span class="text-xs font-semibold uppercase truncate">
+												Fichier
+											</span>
+										</th>
+
+										<th scope="col" class="px-3 py-3 text-end"></th>
+									</tr>
+								</thead>
+
+								<tbody class="divide-y divide-gray-200">
+									{% if images is empty %}
+										<tr class="bg-white hover:bg-gray-50">
+											<td colspan="4" class="px-3 py-3 whitespace-nowrap text-center">
+												<span class="text-sm text-gray-500 truncate block">Aucune images.</span>
+											</td>
+										</tr>
+									{% endif %}
+									{% for image in images %}
+										<tr class="bg-white hover:bg-gray-50">
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ image.id }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ image.name }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap">
+												<span class="text-sm text-gray-500 truncate block">{{ image.fileKey }}.{{ image.extension }}</span>
+											</td>
+											<td class="px-3 py-3 whitespace-nowrap text-end">
+												<div class="relative inline-flex">
+													<button type="button" class="py-1.5 px-1.5 border text-xs rounded-lg font-medium bg-gray-50 hover:bg-white focus:outline-hidden transition-all" data-dropdown-trigger data-target="image-actions-{{ image.id }}" aria-expanded="false">
+														<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+															<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+														</svg>
+													</button>
+													<div data-dropdown="image-actions-{{ image.id }}" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 opacity-0 invisible translate-y-2 transition-all duration-300 z-20">
+														<div class="p-2">
+															<button class="w-full px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 rounded-lg transition-all flex items-center gap-2 open-modal" data-modal-target="show-image-{{ image.id }}">
+																<svg class="h-4 w-4 flex-shrink-0 fill-gray-500" width="800px" height="800px" viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+																	<path d="M416,64H96a64.07,64.07,0,0,0-64,64V384a64.07,64.07,0,0,0,64,64H416a64.07,64.07,0,0,0,64-64V128A64.07,64.07,0,0,0,416,64Zm-80,64a48,48,0,1,1-48,48A48.05,48.05,0,0,1,336,128ZM96,416a32,32,0,0,1-32-32V316.37l94.84-84.3a48.06,48.06,0,0,1,65.8,1.9l64.95,64.81L172.37,416Zm352-32a32,32,0,0,1-32,32H217.63L339.05,294.58a47.72,47.72,0,0,1,61.64-.16L448,333.84Z"/>
+																</svg>
+																<span class="overflow-hidden whitespace-nowrap truncate">Voir l'image</span>
+															</button>
+															<a href="/dashboard/images/edit/{{ image.id }}" class="px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 rounded-lg transition-all flex items-center gap-2">
+																<svg class="h-4 w-4 flex-shrink-0 fill-gray-500" height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 512 512" xml:space="preserve">
+																	<path d="M311.18,78.008L32.23,356.958L0.613,485.716c-1.771,7.209,0.355,14.818,5.604,20.067 c5.266,5.266,12.88,7.368,20.067,5.604l128.759-31.617l278.95-278.95L311.18,78.008z M40.877,471.123l10.871-44.271l33.4,33.4 L40.877,471.123z"/>
+																	<path d="M502.598,86.818L425.182,9.402c-12.536-12.536-32.86-12.536-45.396,0l-30.825,30.825l122.812,122.812l30.825-30.825 C515.134,119.679,515.134,99.354,502.598,86.818z"/>
+																</svg>
+																<span class="overflow-hidden whitespace-nowrap truncate">Modifier</span>
+															</a>
+															<a href="/dashboard/images/download/{{ image.id }}" class="px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 rounded-lg transition-all flex items-center gap-2">
+																<svg class="h-4 w-4 flex-shrink-0 fill-gray-500" height="800px" width="800px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 512 512" xml:space="preserve">
+																	<path d="M324.288,389.972c-12.581,0-22.774,10.193-22.774,22.757c0,12.564,10.193,22.758,22.774,22.758 c12.564,0,22.757-10.193,22.757-22.758C347.045,400.165,336.852,389.972,324.288,389.972z"/>
+																	<path d="M400.592,389.972c-12.58,0-22.773,10.193-22.773,22.757c0,12.564,10.194,22.758,22.773,22.758 c12.564,0,22.758-10.193,22.758-22.758C423.35,400.165,413.156,389.972,400.592,389.972z"/>
+																	<path d="M475.735,323.135l-82.965-68.11c-15.386-12.613-34.676-19.524-54.595-19.524h-26.644l-23.128,25.709 c-8.258,9.161-20.064,14.419-32.403,14.419c-12.338,0-24.144-5.258-32.402-14.419l-23.128-25.709h-26.66 c-19.902,0-39.192,6.911-54.579,19.524l-82.964,68.11C18.491,335.989,6.879,356.852,6.879,380.48v60.708 c0.016,39.12,31.693,70.804,70.804,70.812H256H434.3c39.112-0.008,70.82-31.693,70.82-70.812V380.48 C505.121,356.852,493.509,335.989,475.735,323.135z M464.654,441.188c0,8.444-3.371,15.903-8.886,21.459 c-5.548,5.516-13.016,8.879-21.468,8.887H77.683c-8.435-0.008-15.903-3.371-21.451-8.887c-5.532-5.556-8.886-13.015-8.886-21.459 V380.48c0-8.443,3.354-15.91,8.886-21.45c5.548-5.524,13.016-8.887,21.451-8.895H434.3c8.452,0.008,15.919,3.371,21.468,8.895 c5.516,5.54,8.886,13.008,8.886,21.45V441.188z"/>
+																	<path d="M242.017,244.637c3.564,3.96,8.661,6.218,13.983,6.218c5.339,0,10.42-2.258,13.984-6.218l71.53-79.489 c4.984-5.516,6.226-13.451,3.21-20.241c-3.016-6.782-9.758-11.153-17.177-11.153h-33.612V18.814C293.934,8.428,285.499,0,275.112,0 h-38.224c-10.387,0-18.806,8.428-18.806,18.814v114.94H184.47c-7.419,0-14.16,4.371-17.192,11.153 c-3.016,6.79-1.758,14.725,3.21,20.241L242.017,244.637z"/>
+																</svg>
+																<span class="overflow-hidden whitespace-nowrap truncate">Télécharger</span>
+															</a>
+															<button class="w-full px-4 py-2 text-sm text-danger hover:bg-danger/10 rounded-lg transition-all flex items-center gap-2 open-modal" data-modal-target="delete-image-{{ image.id }}">
+																<svg class="h-4 w-4 flex-shrink-0 fill-danger" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M 11.6406 14.6641 L 13.1406 48.9062 C 13.2578 51.8359 15.0156 53.4297 17.8984 53.4297 L 38.125 53.4297 C 41.0078 53.4297 42.7656 51.8359 42.8828 48.9062 L 44.3828 14.6641 L 47.0781 14.6641 C 48.0391 14.6641 48.8125 13.8672 48.8125 12.9063 C 48.8125 11.9453 48.0391 11.1250 47.0781 11.1250 L 37.4453 11.1250 L 37.4453 7.7734 C 37.4453 4.5625 35.3125 2.5703 32.2891 2.5703 L 23.6640 2.5703 C 20.6406 2.5703 18.5313 4.5625 18.5313 7.7734 L 18.5313 11.1250 L 8.9453 11.1250 C 8.0078 11.1250 7.1875 11.9453 7.1875 12.9063 C 7.1875 13.8672 8.0078 14.6641 8.9453 14.6641 Z M 21.7187 7.7734 C 21.7187 6.4375 22.7031 5.5000 24.1094 5.5000 L 31.8672 5.5000 C 33.2969 5.5000 34.2813 6.4375 34.2813 7.7734 L 34.2813 11.1250 L 21.7187 11.1250 Z M 35.6172 48.6484 C 34.7031 48.6484 34.0703 47.8516 34.0938 46.8906 L 35.0547 19.7031 C 35.1016 18.7656 35.7813 17.9922 36.625 17.9922 C 37.4922 17.9922 38.1953 18.7422 38.1719 19.7031 L 37.1172 46.9141 C 37.0938 47.9219 36.4844 48.6484 35.6172 48.6484 Z M 20.4062 48.6484 C 19.5391 48.6484 18.9297 47.9219 18.9062 46.9141 L 17.8516 19.7031 C 17.8281 18.7187 18.5313 17.9922 19.3984 17.9922 C 20.2422 17.9922 20.9453 18.7656 20.9687 19.7031 L 21.9297 46.8906 C 21.9531 47.8516 21.3203 48.6484 20.4062 48.6484 Z M 29.6172 46.8906 C 29.6172 47.8516 28.8672 48.6484 28.0234 48.6484 C 27.1797 48.6484 26.4297 47.8516 26.4297 46.8906 L 26.4297 19.7031 C 26.4297 18.7656 27.1797 17.9922 28.0234 17.9922 C 28.8672 17.9922 29.6406 18.7656 29.6406 19.7031 Z"/></svg>
+																<span class="overflow-hidden whitespace-nowrap truncate">Supprimer</span>
+															</button>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+										<div data-modal="show-image-{{ image.id }}" class="fixed inset-0 z-50 hidden modal">
+											<div class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300 modal-backdrop pointer-events-auto modal-close"></div>
+
+											<div class="h-full relative z-10 flex items-center justify-center pointer-events-none opacity-0 transform scale-95 transition-all duration-300 modal-content">
+												<img src="{{ asset('/upload/' ~ image.fileKey ~ '.' ~ image.extension) }}" alt="{{ image.name }}" class="max-h-[85vh] w-auto max-w-full mx-6 object-scale-down pointer-events-auto shadow-xl shadow-white/40 border">
+											</div>
+										</div>
+
+										<div data-modal="delete-image-{{ image.id }}" class="fixed inset-0 z-50 hidden modal">
+											<div class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300 modal-backdrop"></div>
+											<div class="relative z-10 h-full w-full flex items-center justify-center pointer-events-none opacity-0 transform scale-95 transition-all duration-300 modal-content">
+												<div class="max-h-[75vh] max-w-7xl w-full mx-6 bg-white rounded-2xl overflow-y-scroll pointer-events-auto p-6 flex flex-col gap-6">
+													<h2 class="text-xl font-medium">
+														Supprimer l'image
+														{{ image.name }}
+													</h2>
+													<p class="text-sm text-gray-500">
+														Êtes-vous sûr de vouloir supprimer cette image ? Cette action est irréversible.
+													</p>
+													<div class="flex justify-end gap-x-2">
+														<button type="button" class="border py-2 px-4 text-sm font-medium text-gray-500 bg-white hover:bg-gray-50 focus:outline-hidden transition-all rounded-lg modal-close">Annuler</button>
+														<form action="/dashboard/images/delete/{{ image.id }}" method="post">
+															<button type="submit" class="py-2 px-4 text-sm bg-danger hover:bg-danger/90 font-medium text-white focus:outline-hidden transition-all rounded-lg">Supprimer</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+
+						<div class="px-4 py-3 grid gap-2 md:flex md:justify-between md:items-center border-t border-gray-200">
+							<div>
+								<p class="text-sm text-gray-500">
+									<span class="font-medium">{{ images|length }}</span>
+									image(s)
+								</p>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div data-modal="upload-image" class="fixed inset-0 z-50 hidden modal">
+
+			<div class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300 modal-backdrop"></div>
+
+			<div class="relative z-10 h-full w-full flex items-center justify-center pointer-events-none opacity-0 transform scale-95 transition-all duration-300 modal-content">
+				<form action="/dashboard/images/add" method="post" enctype="multipart/form-data" class="group max-w-7xl w-full max-h-[75vh] mx-6 bg-gray-50 rounded-2xl overflow-y-scroll pointer-events-auto p-6 flex flex-col gap-6">
+					<h2 class="text-xl font-medium">
+						Téléverser une image
+					</h2>
+					{% if session.alert and session.alert.context == 'modal' %}
+						<div class="text-sm {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+							{{ session.alert.message }}
+						</div>
+					{% endif %}
+					<div class="grid grid-cols-1 gap-6">
+						<div class="flex flex-col gap-2" data-upload-component>
+							<label for="image" class="font-medium text-sm">Image</label>
+							<input type="file" id="image" oninput="this.classList.remove('invalid')" name="image" class="peer hidden {% if session.alert.errors.image  %} invalid {% endif %}" data-upload-input accept="image/*" data-allowed-extensions=".png,.jpg,.gif,.jpeg,.webp" data-allowed-mime-types="image/png,image/jpeg,image/gif,image/webp" data-max-filesize="{{ env.UPLOAD_MAX_FILESIZE|default(2097152) }}" capture="environment" required>
+							<label for="image" class="bg-white py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 cursor-pointer flex items-center" data-upload-label>
+								<span class="text-gray-500" data-upload-text>Veuillez sélectionner une image.</span>
+							</label>
+							<p class="text-sm text-gray-500">Formats acceptés : JPG, PNG, GIF, WEBP / Taille max :
+								{{ env.UPLOAD_MAX_FILESIZE|default(2097152) / 1024 / 1024 }}
+								MB</p>
+							<div class="gap-x-2 items-center flex">
+								<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+								</svg>
+								<p class="text-xs text-gray-500">
+									Le fichier téléversé ne doit pas porter un nom de fichier déjà existant sur le serveur. Il est donc recommandé de le renommer avant l’envoi. Par exemple, pour une image de la chambre 101, utilisez un nom descriptif comme “chambre-101.jpg”. Pensser à inclure des mots-clés pertinents afin d’optimiser le référencement.
+								</p>
+							</div>
+							{% if session.alert.errors.image %}
+								<span class="mt-2 hidden text-sm text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.image }}
+								</span>
+							{% endif %}
+						</div>
+						<div class="flex flex-col gap-2 relative">
+							<label for="name" class="font-medium text-sm">Nom</label>
+							<input minlength="10" maxlength="50" oninput="this.classList.remove('invalid')" type="text" id="name" name="name" placeholder="Nom de l'image" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.name  %} invalid {% endif %}" required>
+							<div class="gap-x-2 items-center flex">
+								<svg class="block flex-shrink-0 w-4 h-4 align-middle" width="800px" height="800px" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path id="Vector" d="M12 11V16M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21ZM12.0498 8V8.1L11.9502 8.1002V8H12.0498Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+								</svg>
+								<p class="text-xs text-gray-500">
+									Le nom d'une image n'a rien à voir avec le vrai nom de fichier. Il s'agit d'un nom qui sera utilisé pour identifier l'image. Par exemple, si vous téléversez une image de la chambre 101, vous pouvez l'appeler "Chambre 101". Cela aidera à mieux organiser vos images et à les retrouver facilement plus tard.
+								</p>
+							</div>
+							<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:hidden peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+								Le nom de l'image doit contenir au moins 10 caractères.
+							</span>
+							{% if session.alert.errors.name %}
+								<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.name }}
+								</span>
+							{% endif %}
+
+						</div>
+						<div class="flex flex-col gap-2">
+							<label for="description" class="font-medium text-sm">Description (Facultatif)</label>
+							<textarea oninput="this.classList.remove('invalid')" maxlength="180" id="description" name="description" placeholder="Description de l'image" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 {% if session.alert.errors.description %} invalid {% endif %}"></textarea>
+							{% if session.alert.errors.description %}
+								<span class="mt-2 hidden text-sm text-danger peer-[.invalid]:block">
+									{{ session.alert.errors.description }}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+					<div class="group-[&:has(input.invalid)]:cursor-not-allowed group-invalid:cursor-not-allowed flex flex-col items-center gap-2">
+						<button class="group-[&:has(input.invalid)]:pointer-events-none group-[&:has(input.invalid)]:bg-primary/50 group-invalid:pointer-events-none group-invalid:bg-primary/50 h-14 inline-flex text-sm items-center justify-center py-4 px-6 text-white font-medium font-heading rounded-xl bg-primary w-full text-center focus:ring focus:ring-primary transition duration-200 hover:bg-primary/95" type="submit">
+							Téleverser l'image
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block js %}
+	{{ parent() }}
+	<script src="{{ asset('/js/upload.js') }}?v={{ random() }}"></script>
+
+	<script src="{{ asset('/js/modal.js') }}?v={{ random() }}"></script>
+
+{% endblock %}

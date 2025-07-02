@@ -1,0 +1,35 @@
+<div class="rounded-xl border bg-white">
+	<div class="flex flex-col space-y-1.5 p-6">
+		<div class="font-semibold leading-none tracking-tight">
+			Réservations récentes du mois
+		</div>
+		<div class="text-sm text-gray-500">
+			Vous avez
+			{{ recentBookings|length }}
+			nouvelles réservations ce mois-ci.
+		</div>
+	</div>
+	<div class="p-6 pt-0">
+		<div class="space-y-8">
+			{% if recentBookings|length == 0 %}
+				<p class="text-md text-center font-medium">Aucune réservation en cours ce mois-ci.</p>
+			{% endif %}
+			{% for booking in recentBookings %}
+				<div class="flex items-center">
+					<span class="relative flex shrink-0 overflow-hidden rounded-full h-9 w-9 bg-gray-50 text-sm justify-center items-center border">
+						{{ booking.user.name|first|upper }}
+					</span>
+					<div class="ml-4 space-y-1">
+						<p class="text-sm font-medium leading-none">
+							{{ booking.user.name }}
+						</p>
+						<p class="text-xs text-gray-500">
+							{{ booking.user.email }}
+						</p>
+					</div>
+					<div class="ml-auto font-medium text-primary">+{{ booking.price }}€</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>

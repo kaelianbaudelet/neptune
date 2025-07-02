@@ -1,0 +1,20 @@
+{% extends "blank.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Page non trouvée
+{% endblock %}
+{% block content %}
+	<section class="flex items-center h-screen justify-center p-16 w-full">
+		<div class="container flex flex-col items-center justify-center px-5 mx-auto">
+			<div class="flex flex-col items-center gap-6 max-w-md text-center ">
+				<h1 class="font-semibold text-7xl text-primary">
+					Maintenance en cours
+				</h1>
+				<p class="font-medium md:text-3xl">
+					Désolé, notre site est actuellement en maintenance.
+				</p>
+				<p>Veuillez nous excuser pour le dérangement.</p>
+			</div>
+		</div>
+	</section>
+{% endblock %}

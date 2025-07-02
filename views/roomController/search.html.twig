@@ -1,0 +1,142 @@
+{% extends "base.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Rechercher une chambre
+{% endblock %}
+{% block content %}
+	<div class="px-6 w-full">
+		<div class="max-w-7xl mx-auto py-6">
+			<h1 class="text-2xl font-medium mb-6">Rechercher une chambre</h1>
+			<div class="bg-white rounded-2xl w-full mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-3 p-3 gap-3 border mb-6">
+				<div class="relative">
+					<input type="date" id="arrival-date" oninput="document.getElementById('departure-date').min = this.value; if(document.getElementById('departure-date').value < this.value) { document.getElementById('departure-date').value = this.value;}" class="peer p-4 block w-full border-gray-200 rounded-xl text-sm focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2" value="{{ arrival_date|default(('now'|date_modify('+1 days'))|date('Y-m-d', 'Europe/Paris')) }}" min="{{ arrival_date|default(('now'|date_modify('+1 days'))|date('Y-m-d', 'Europe/Paris')) }}" max="{{ ('now'|date_modify('+3 month'))|date('Y-m-d', 'Europe/Paris') }}" required>
+					<label for="arrival-date" class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent origin-[0_0] peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:translate-x-0.5 peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:translate-x-0.5 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+						Arrivée
+					</label>
+				</div>
+				<div class="relative">
+					<input type="date" id="departure-date" class="peer p-4 block w-full border-gray-200 rounded-xl text-sm focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2" value="{{ departure_date|default(('now'|date_modify('+7 days'))|date('Y-m-d', 'Europe/Paris')) }}" min="{{ arrival_date|default(('now'|date_modify('+1 days'))|date('Y-m-d', 'Europe/Paris')) }}" max="{{ 'now'|date_modify('+3 month')|date('Y-m-d', 'Europe/Paris') }}" required>
+					<label for="departure-date" class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent origin-[0_0] peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:translate-x-0.5 peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:translate-x-0.5 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+						Départ
+					</label>
+				</div>
+				<div class="relative">
+					<select id="number-of-guests" class="peer p-4 block w-full border-gray-200 rounded-xl text-sm focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2" required>
+						<option value="1" {{ (number_of_guests ?? 1) == 1 ? 'selected' : '' }}>1</option>
+						<option value="2" {{ (number_of_guests ?? 1) == 2 ? 'selected' : '' }}>2</option>
+						<option value="3" {{ (number_of_guests ?? 1) == 3 ? 'selected' : '' }}>3</option>
+						<option value="4" {{ (number_of_guests ?? 1) == 4 ? 'selected' : '' }}>4</option>
+						<option value="5" {{ (number_of_guests ?? 1) == 5 ? 'selected' : '' }}>5</option>
+						<option value="6" {{ (number_of_guests ?? 1) == 6 ? 'selected' : '' }}>6</option>
+						<option value="7" {{ (number_of_guests ?? 1) == 7 ? 'selected' : '' }}>7</option>
+						<option value="8" {{ (number_of_guests ?? 1) == 8 ? 'selected' : '' }}>8</option>
+					</select>
+					<label for="number-of-guests" class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent origin-[0_0] peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:translate-x-0.5 peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:translate-x-0.5 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+						Nombre de personnes
+					</label>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+				<div class="md:col-span-1 space-y-6">
+					<div class="bg-white p-4 rounded-xl border">
+						<h3 class="font-medium mb-4">Tri</h3>
+						<div class="flex flex-col gap-4 mb-1">
+							<div class="relative">
+								<select type="date" id="sort-by" class="peer p-4 block w-full border-gray-200 rounded-xl text-sm focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 not-placeholder-shown:pt-6 not-placeholder-shown:pb-2 autofill:pt-6 autofill:pb-2">
+									<option value="price">Prix</option>
+									<option value="capacity">Capacité</option>
+									<option value="name">Nom</option>
+								</select>
+								<label for="sort-by" class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent origin-[0_0] peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:translate-x-0.5 peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:translate-x-0.5 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+									Trier par
+								</label>
+							</div>
+
+							<div class="relative">
+								<select type="date" id="sort-order" class="peer p-4 block w-full border-gray-200 rounded-xl text-sm focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 not-placeholder-shown:pt-6 not-placeholder-shown:pb-2 autofill:pt-6 autofill:pb-2">
+									<option value="asc">Croissant</option>
+									<option value="desc">Décroissant</option>
+								</select>
+								<label for="sort-by" class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent origin-[0_0] peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:translate-x-0.5 peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:scale-90 peer-[:not(:placeholder-shown)]:translate-x-0.5 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+									Ordre
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="bg-white p-4 rounded-xl border">
+						<h3 class="font-medium mb-3">Type de chambre</h3>
+						{% for roomType in roomTypes %}
+							<div class="flex items-center mb-2">
+								<label for="type-{{ roomType.id }}" class="flex items-center w-full text-sm leading-5 rounded-lg cursor-pointer gap-2">
+									<input type="checkbox" name="type_ids[]" value="{{ roomType.id }}" class="room-type-filter focus:ring-primary checked:border-0 focus:outline-hidden inline-block flex-shrink-0 p-0 m-0 w-4 h-4 text-primary align-middle rounded border border-gray-300 border-solid appearance-none bg-origin-border focus:outline-offset-2" id="type-{{ roomType.id }}"/>
+									{{ roomType.name }}
+								</label>
+							</div>
+						{% endfor %}
+					</div>
+
+					<div class="bg-white p-4 rounded-xl border">
+						<h3 class="font-medium mb-3">Équipements</h3>
+						{% for equipment in equipments %}
+							<div class="flex items-center mb-2">
+								<label for="equipment-{{ equipment.id }}" class="flex items-center w-full text-sm leading-5 rounded-lg cursor-pointer gap-2">
+									<input type="checkbox" name="equipment_ids[]" value="{{ equipment.id }}" class="equipment-filter focus:ring-primary checked:border-0 focus:outline-hidden inline-block flex-shrink-0 p-0 m-0 w-4 h-4 text-primary align-middle rounded border border-gray-300 border-solid appearance-none bg-origin-border focus:outline-offset-2" id="equipment-{{ equipment.id }}"/>
+									{{ equipment.name }}
+								</label>
+							</div>
+						{% endfor %}
+					</div>
+
+					<div class="bg-white p-4 rounded-xl border">
+						<h3 class="font-medium mb-3">Prix</h3>
+						<div class="flex items-center gap-4 mb-2">
+
+
+							<div class="relative w-1/2">
+								<input type="number" placeholder="0" id="min-price" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="peer invalid:focus:border-danger invalid:text-danger invalid:focus:ring-danger p-4 block w-full border-gray-200 rounded-xl text-sm focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 not-focus:placeholder-transparent focus:pb-2 not-peer-placeholder-shown:pt-6 not-peer-placeholder-shown:pb-2 autofill:pt-6 autofill:pb-2" value="0" min="0" max="1900"/>
+								<label for="min-price" class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:-translate-y-1.5 peer-focus:-translate-x-0.5 not-peer-placeholder-shown:-translate-x-0.5 peer-focus:text-gray-500 not-peer-placeholder-shown:scale-90 not-peer-placeholder-shown:-translate-y-1.5 not-peer-placeholder-shown:text-gray-500">
+									Min (€)
+								</label>
+							</div>
+
+							<div class="relative w-1/2">
+								<input type="number" placeholder="1000" id="max-price" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="peer invalid:border-danger invalid:ring-1 invalid:focus:border-danger invalid:text-danger invalid:focus:ring-danger p-4 block w-full border-gray-200 rounded-xl text-sm focus:border-primary focus:ring-primary disabled:opacity-50 disabled:pointer-events-none focus:pt-6 not-focus:placeholder-transparent focus:pb-2 not-peer-placeholder-shown:pt-6 not-peer-placeholder-shown:pb-2 autofill:pt-6 autofill:pb-2" value="1000" min="0" max="1000"/>
+								<label for="max-price" class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:scale-90 peer-focus:-translate-y-1.5 peer-focus:-translate-x-0.5 not-peer-placeholder-shown:-translate-x-0.5 peer-focus:text-gray-500 not-peer-placeholder-shown:scale-90 not-peer-placeholder-shown:-translate-y-1.5 not-peer-placeholder-shown:text-gray-500">
+									Max (€)
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="md:col-span-3">
+
+
+					<div id="results-count" class="mb-4 font-medium"></div>
+					<div id="loading-indicator" class="hidden flex justify-center items-center w-full">
+
+						<div class="flex relative w-16 h-16 justify-center items-center">
+							<div class="absolute top-0 left-0 w-full h-full rounded-full border-8 border-gray-200"></div>
+							<div class="absolute top-0 left-0 w-full h-full rounded-full border-8 border-t-primary border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
+						</div>
+
+					</div>
+					<div
+						id="rooms-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"><!-- Room results will be loaded here dynamically -->
+					</div>
+
+					<div id="no-results" class="hidden text-center py-8">
+						<p class="text-lg text-gray-500">Aucune chambre ne correspond à votre recherche.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+	<script src="{{ asset('js/search.js') }}"></script>
+{% endblock %}

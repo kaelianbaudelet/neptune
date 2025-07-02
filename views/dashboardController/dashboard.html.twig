@@ -1,0 +1,66 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Dashboard
+{% endblock %}
+{% block content %}
+
+{% include 'components/dashboard/header.html.twig' with {'title': session.user.role == 'Admin' ? 'Vue d\'enssemble' : 'Mon espace'} %}
+	<div class="flex-1 space-y-6 p-6 pt-6 0 bg-gray-50 overflow-y-scroll h-[calc(100vh-5.1rem)]">
+		<div class="flex items-center justify-between space-y-2">
+			<h2 class="text-3xl font-medium tracking-tight">
+				Bienvenue
+				<span class="text-primary">{{ session.user.name }}</span>
+			</h2>
+		</div>
+    <div class="space-y-6">
+      {% if session.user.role == 'Admin' %}
+          <div class="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
+            {% for card in [
+              {
+                'title': 'Utilisateurs inscrits',
+                'value': users|default(0),
+                'description': '+' ~ monthlyUsers|length|default(0) ~ ' utilisateurs ce mois-ci',
+                'icon': '<svg class="h-6 w-6 flex-shrink-0" fill="#000000" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M 38.7232 28.5490 C 43.1399 28.5490 46.9403 24.6047 46.9403 19.4690 C 46.9403 14.3949 43.1193 10.6356 38.7232 10.6356 C 34.3271 10.6356 30.5061 14.4771 30.5061 19.5101 C 30.5061 24.6047 34.3066 28.5490 38.7232 28.5490 Z M 15.0784 29.0215 C 18.8994 29.0215 22.2274 25.5703 22.2274 21.1125 C 22.2274 16.6958 18.8789 13.4294 15.0784 13.4294 C 11.2575 13.4294 7.8885 16.7779 7.9090 21.1536 C 7.9090 25.5703 11.2370 29.0215 15.0784 29.0215 Z M 3.6155 47.5717 L 19.2281 47.5717 C 17.0917 44.4697 19.7006 38.2247 24.1173 34.8146 C 21.8371 33.2944 18.8994 32.1645 15.0579 32.1645 C 5.7931 32.1645 0 39.0053 0 44.6957 C 0 46.5445 1.0271 47.5717 3.6155 47.5717 Z M 25.8018 47.5717 L 51.6241 47.5717 C 54.8493 47.5717 56 46.6472 56 44.8395 C 56 39.5394 49.3644 32.2261 38.7026 32.2261 C 28.0616 32.2261 21.4262 39.5394 21.4262 44.8395 C 21.4262 46.6472 22.5766 47.5717 25.8018 47.5717 Z"/></svg>'
+              },
+              {
+                'title': 'Taux d\'occupation',
+                'value': occupancyRate|default(0) ~ '%',
+                'description': 'Taux d\'occupation',
+                'icon': '<svg class="h-6 w-6 flex-shrink-0" fill="#000000" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M 5.2892 21.9935 L 10.9031 21.9935 L 10.9031 18.8154 C 10.9031 16.7507 12.0630 15.6372 14.1508 15.6372 L 22.3861 15.6372 C 24.4739 15.6372 25.6338 16.7507 25.6338 18.8154 L 25.6338 21.9935 L 30.6446 21.9935 L 30.6446 18.8154 C 30.6446 16.7507 31.8045 15.6372 34.0084 15.6372 L 41.7333 15.6372 C 43.9373 15.6372 45.0970 16.7507 45.0970 18.8154 L 45.0970 21.9935 L 50.7108 21.9935 L 50.7108 15.6604 C 50.7108 11.5544 48.5305 9.4665 44.5402 9.4665 L 11.4598 9.4665 C 7.4930 9.4665 5.2892 11.5544 5.2892 15.6604 Z M 0 44.8668 C 0 46.0035 .7423 46.7226 1.9022 46.7226 L 3.2013 46.7226 C 4.3380 46.7226 5.0803 46.0035 5.0803 44.8668 L 5.0803 41.5726 C 5.3355 41.6422 6.0779 41.6886 6.6114 41.6886 L 49.4118 41.6886 C 49.9454 41.6886 50.6647 41.6422 50.9198 41.5726 L 50.9198 44.8668 C 50.9198 46.0035 51.6619 46.7226 52.7988 46.7226 L 54.1210 46.7226 C 55.2579 46.7226 56 46.0035 56 44.8668 L 56 31.6670 C 56 27.4682 53.6573 25.1716 49.4118 25.1716 L 6.5883 25.1716 C 2.3430 25.1716 0 27.4682 0 31.6670 Z"/></svg>'
+              },
+              {
+                'title': 'Réservations',
+                'value': bookings|default(0),
+                'description': '+' ~ monthlyBookings|length|default(0) ~ ' réservations ce mois-ci',
+                'icon': '<svg class="h-6 w-6 flex-shrink-0" fill="#000000" width="800px" height="800px" viewbox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M 8.5585 16.9492 L 47.4414 16.9492 C 50.0896 16.9492 51.4259 15.3789 51.4259 12.7539 L 51.4259 10.6211 C 51.4259 7.9961 50.0896 6.4258 47.4414 6.4258 L 8.5585 6.4258 C 6.0507 6.4258 4.5741 7.9961 4.5741 10.6211 L 4.5741 12.7539 C 4.5741 15.3789 5.9101 16.9492 8.5585 16.9492 Z M 15.1444 49.5742 L 40.8788 49.5742 C 45.4725 49.5742 47.9334 47.1836 47.9334 42.5899 L 47.9334 20.1602 L 8.0663 20.1602 L 8.0663 42.5899 C 8.0663 47.2070 10.5507 49.5742 15.1444 49.5742 Z M 20.2772 28.6211 C 19.2928 28.6211 18.6132 27.9414 18.6132 26.9102 L 18.6132 26.1836 C 18.6132 25.1523 19.2928 24.4961 20.2772 24.4961 L 35.7694 24.4961 C 36.7304 24.4961 37.4335 25.1523 37.4335 26.1836 L 37.4335 26.9102 C 37.4335 27.9414 36.7304 28.6211 35.7694 28.6211 Z"/></svg>'
+              }
+            ] %}
+              {% include 'components/dashboard/statsCard.html.twig' with card %}
+            {% endfor %}
+          </div>
+          {% include 'components/dashboard/recentBookingCard.html.twig' with monthlyBookings|default({}) %}
+        </div>
+      {% else %}
+        <div class="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+          <a href="/dashboard/bookings" class="rounded-xl ring-2 ring-transparent bg-white border hover:ring-primary hover:border-transparent hover:ring-2 transition duration-300">
+            <div class="text-xl font-medium p-6 flex flex-row items-center justify-between space-y-0 pb-2">
+              Vos réservations
+            </div>
+            <div class="p-6 pt-0">
+              {{bookings|default(0)}} réservations
+            </div>
+          </a>
+          <a href="/dashboard/invoices" class="rounded-xl ring-2 ring-transparent bg-white border hover:ring-primary hover:border-transparent hover:ring-2 transition duration-300">
+            <div class="text-xl font-medium p-6 flex flex-row items-center justify-between space-y-0 pb-2">
+              Vos factures
+            </div>
+            <div class="p-6 pt-0">
+              {{invoices|default(0)}} factures
+            </div>
+          </a>
+        </div>
+      {% endif %}
+  </div>
+</div>
+{% endblock %}

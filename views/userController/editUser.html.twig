@@ -1,0 +1,45 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Utilisateurs
+{% endblock %}
+{% block content %}
+{% do clear_session_alert() %}
+{% include 'components/dashboard/header.html.twig' with {'title': 'Modifier l\'utilisateur ' ~ user.name} %}
+  <div class="flex-1 p-6 bg-gray-50 h-[calc(100vh-5.1rem)] w-full overflow-y-auto overflow-x-scroll">
+    {% if session.alert and session.alert.context == 'global' %}
+      <div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+        {{ session.alert.message }}
+      </div>
+    {% endif %}
+    <form action="/dashboard/users/edit/{{ user.id }}" method="POST" class="group">
+      <h2 class="text-xl font-medium mb-6">
+        Modifier l'utilisateur
+        {{ user.name }}
+      </h2>
+      <div class="grid grid-cols-1 gap-6">
+        <div class="flex flex-col gap-2 relative">
+          <label for="name" class="font-medium text-sm">Nom</label>
+          <input minlength="1" maxlength="50" oninput="this.classList.remove('invalid')" type="text" id="name" name="name" placeholder="Nom de l'utilisateur" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.name  %} invalid {% endif %}" value="{{ user.name }}" required>
+          {% if session.alert.errors.name %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.name }}
+</span>{% endif %}</div><div class="flex flex-col gap-2 relative"><label for="email" class="font-medium text-sm">Email</label><input minlength="1" maxlength="100" oninput="this.classList.remove('invalid')" type="email" id="email" name="email" placeholder="Email de l'utilisateur" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.email  %} invalid {% endif %}" value="{{ user.email }}" required>{% if session.alert.errors.email %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.email }}
+</span>{% endif %}</div><div class="flex flex-col gap-2 relative"><label for="type" class="font-medium text-sm">Type</label><select id="type" name="type" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.type  %} invalid {% endif %}" required>
+<option value="">Sélectionner un type</option>
+<option value="company" {% if user.type == 'company' %} selected {% endif %}>Entreprise</option>
+<option value="individual" {% if user.type == 'individual' %} selected {% endif %}>Personnel</option></select>{% if session.alert.errors.type %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.type }}
+</span>{% endif %}</div><div class="flex flex-col gap-2 relative"><label for="password" class="font-medium text-sm">Mot de passe</label><input minlength="8" maxlength="100" oninput="this.classList.remove('invalid')" type="password" id="password" name="password" placeholder="Laisser vide pour ne pas modifier" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 [&:not(:placeholder-shown):not(:focus):invalid]:border-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-danger [&:not(:placeholder-shown):not(:focus):invalid]:ring-1 {% if session.alert.errors.password  %} invalid {% endif %}">{% if session.alert.errors.password %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.password }}
+</span>{% endif %}</div><div class="flex flex-col gap-2 relative"><label for="role" class="font-medium text-sm">Rôle</label><select id="role" name="role" class="peer block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 [.invalid]:border-danger [.invalid]:ring-danger [.invalid]:ring-1 {% if session.alert.errors.role  %} invalid {% endif %}" required>
+<option value="">Sélectionner un rôle</option>
+<option value="user" {% if user.role|lower == 'user' %} selected {% endif %}>Utilisateur</option>
+<option value="admin" {% if user.role|lower == 'admin' %} selected {% endif %}>Administrateur</option></select>{% if session.alert.errors.role %}
+<span class="mt-2 hidden text-xs text-danger peer-[.invalid]:block">
+	{{ session.alert.errors.role }}
+</span>{% endif %}</div><button class="group-[&:has(input.invalid)]:pointer-events-none group-[&:has(input.invalid)]:bg-primary/50 group-invalid:pointer-events-none group-invalid:bg-primary/50 h-14 inline-flex text-sm items-center justify-center py-4 px-6 text-white font-medium font-heading rounded-xl bg-primary w-full text-center focus:ring focus:ring-primary transition duration-200 hover:bg-primary/95" type="submit">Mettre à jour l'utilisateur</button></div></form></div>{% endblock %}

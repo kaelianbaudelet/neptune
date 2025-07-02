@@ -1,0 +1,266 @@
+{% extends "blank.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Facture
+	{{ invoice.id }}
+{% endblock %}
+{% block content %}
+	{% do clear_session_alert() %}
+	<div class="container mx-auto p-4 print:p-0">
+		{% if session.alert is defined and session.alert.status == 'error' %}
+			<div class="text-sm text-danger">
+				{{ session.alert.message }}
+			</div>
+		{% endif %}
+		<div class="max-w-4xl mx-auto bg-white shadow-lg print:shadow-none overflow-hidden">
+			<div class="p-6 md:p-8 print:p-0">
+
+				<div class="flex flex-col md:flex-row justify-between items-start mb-8">
+					<div class="flex gap-6 mb-4 md:mb-0 md:w-1/2">
+						<img src="/assets/images/logo.svg" alt="Logo de l'Hôtel" class="p-4 h-28 w-28 border">
+						<div>
+							<h1 class="text-lg font-bold">{{ env.NAME }}</h1>
+							<p class="text-gray-500 text-sm">{{ env.ADDRESS }}</p>
+							<p class="text-gray-500 text-sm">{{ env.ZIP_CODE }}
+								{{ env.CITY }}</p>
+							<p class="text-gray-500 text-sm">{{ env.PHONE }}</p>
+							<p class="text-gray-500 text-sm">{{ env.SIREN }}
+								—
+								{{ env.RCS }}</p>
+
+						</div>
+					</div>
+					<div class="bg-gray-50 p-4 rounded-lg md:w-1/2 w-full">
+						<h2 class="text-sm font-semibold mb-2 uppercase">Facture #{{ invoice.id }}</h2>
+						<div class="px-2 py-1 rounded-md text-sm inline-block font-semibold mb-2 {% if invoice.status == 'paid' %} bg-success text-white {% elseif invoice.status == 'pending_payment' or invoice.status == 'pending_refund' %} bg-warning text-white {% elseif invoice.status == 'refunded' %} bg-danger text-white {% endif %}">
+							{% if invoice.status == 'paid' %}
+								PAYÉ
+							{% elseif invoice.status == 'pending_payment' %}
+								EN ATTENTE DE PAIEMENT
+							{% elseif invoice.status == 'pending_refund' %}
+								EN ATTENTE DE REMBOURSEMENT
+							{% elseif invoice.status == 'refunded' %}
+								REMBOURSÉ
+							{% endif %}
+						</div>
+						<p class="text-gray-500 text-sm">
+							Ref Paiement:
+							{{ invoice.paymentId }}
+						</p>
+						<p class="text-gray-500 text-sm">
+							Date:
+							{{ invoice.createdAt|date("d/m/y H:i") }}
+						</p>
+					</div>
+				</div>
+
+				<div class="mb-8">
+					<h3 class="text-md font-semibold mb-4 uppercase">Informations</h3>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div>
+							<p class="text-gray-500 text-sm">
+								<span class="font-medium">Nom du Client :</span>
+								{{ invoice.billingName }}</p>
+							<p class="text-gray-500 text-sm">
+								<span class="font-medium">Email :</span>
+								{{ invoice.billingEmail }}</p>
+							<p class="text-gray-500 text-sm">
+								<span class="font-medium">Téléphone :</span>
+								{{ invoice.billingPhone }}</p>
+						</div>
+						<div>
+							<p class="text-gray-500 text-sm">
+								<span class="font-medium">Check-in :</span>
+								{{ invoice.checkin|date("d/m/y H:i") }}</p>
+							<p class="text-gray-500 text-sm">
+								<span class="font-medium">Check-out :</span>
+								{{ invoice.checkout|date("d/m/y H:i") }}</p>
+							<p class="text-gray-500 text-sm">
+								<span class="font-medium">Durée du Séjour :</span>
+								{{ ((invoice.checkout|date("U") - invoice.checkin|date("U")) / 86400)|round(0, 'floor') }}
+								nuits</p>
+
+							<p class="text-gray-500 text-sm">
+								<span class="font-medium">Invités :</span>
+								{{ invoice.adults }}
+								Adultes,
+								{{ invoice.children }}
+								Enfants</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-8">
+					<h3 class="text-md font-semibold mb-4 uppercase">Détails de la Réservation</h3>
+					<table class="w-full">
+						<thead>
+							<tr class="border-b py-2 text-left">
+								<th class="py-2 text-left font-semibold text-sm uppercase w-1/4">
+									Chambre
+								</th>
+								<th class="py-2 text-right font-medium text-xs uppercase w-1/4">
+									Prix Unit HT
+								</th>
+								<th class="py-2 text-right font-medium text-xs uppercase w-1/4">
+									Montant TVA
+								</th>
+								<th class="py-2 text-right font-medium text-xs uppercase w-1/4">
+									Prix Unit TTC
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="py-3 text-sm">
+									{{ invoice.roomName }}
+								</td>
+								<td class="py-3 text-right text-sm">
+									{% if invoice.discount > 0 %}
+										<span class="line-through">{{ invoice.roomPrice|round(2) }}{{ env.CURRENCY }}</span>
+										{{ (invoice.roomPrice * (1 - invoice.discount / 100))|round(2) }}{{ env.CURRENCY }}
+										/nuits
+										<p class="text-xs">Une remise de
+											<span class="font-semibold">{{ invoice.discount }}%</span>
+											a été appliquée</p>
+									{% else %}
+										{{ invoice.roomPrice }}{{ env.CURRENCY }}
+										/nuits
+									{% endif %}
+
+								</td>
+								<td class="py-3 text-right text-sm">
+									{{ invoice.tva }}%
+								</td>
+								<td class="py-3 text-right text-sm">
+									{{ ((invoice.roomPrice * (1 - invoice.discount / 100)) * (1 + invoice.tva / 100))|round(2) }}{{ env.CURRENCY }}
+									/nuits
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<table class="w-full mt-8">
+						<thead>
+							<tr class="border-b py-2 text-left text-sm">
+								<th class="py-2 text-left font-semibold text-sm uppercase w-1/4">
+									Options
+								</th>
+								<th class="py-2 text-right font-medium text-xs uppercase w-1/4">
+									Prix Unit HT
+								</th>
+								<th class="py-2 text-right font-medium text-xs uppercase w-1/4">
+									Montant TVA
+								</th>
+								<th class="py-2 text-right font-medium text-xs uppercase w-1/4">
+									Prix Unit TTC
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for option in invoice.options %}
+								<tr class="border-b">
+									<td class="py-3 text-sm">
+										{{ option.optionName }}
+									</td>
+									<td class="py-3 text-right text-sm">
+										{{ option.optionPrice }}{{ env.CURRENCY }}
+										{% if option.perAdult and option.perChild %}
+											/personnes
+										{% else %}
+											{% if option.perAdult %}
+												/adultes
+											{% endif %}
+											{% if option.perChild %}
+												/enfants
+											{% endif %}
+										{% endif %}
+										{% if option.perNight %}
+											/nuits
+										{% endif %}
+										{% if option.perQuantity %}
+											×
+											{{ option.quantity }}
+										{% endif %}
+									</td>
+									<td class="py-3 text-right text-sm">
+										{{ option.optionTva }}%
+									</td>
+									<td class="py-3 text-right text-sm">
+										{{ (option.optionPrice * (1 + option.optionTva / 100))|round(2) }}{{ env.CURRENCY }}
+										{% if option.perAdult and option.perChild %}
+											/personnes
+										{% else %}
+											{% if option.perAdult %}
+												/adultes
+											{% endif %}
+											{% if option.perChild %}
+												/enfants
+											{% endif %}
+										{% endif %}
+										{% if option.perNight %}
+											/nuits
+										{% endif %}
+										{% if option.perQuantity %}
+											×
+											{{ option.quantity }}
+										{% endif %}
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+				<div>
+					<div class="w-full md:w-1/2 ml-auto">
+						{% if invoice.couponDiscount > 0 %}
+							<div class="flex pb-4 flex-col gap-4">
+								<div class="flex justify-between">
+									<span class="text-md font-semibold uppercase">Réduction</span>
+									<span class="font-medium text-md">-{{ invoice.couponDiscount }}% (-{{ (invoice.totalHt * invoice.couponDiscount / 100)|round(2) }}{{ env.CURRENCY }})</span>
+								</div>
+								<span class="text-sm">
+									Réduction de
+									<span class="font-semibold">{{ invoice.couponDiscount }}%</span>
+									appliquée à l'enssemble de la réservation suite à l'utilisation d'un coupon de réduction :
+									<span class="font-semibold">{{ invoice.couponCode }}
+									</p>
+								</span>
+							</span>
+						</div>
+					{% endif %}
+					<div class="flex justify-between pt-4 border-t border-gray-200">
+						<span class="text-md font-semibold uppercase">Total HT</span>
+						<span class="text-md font-semibold">{{ invoice.totalHt|round(2) }}{{ env.CURRENCY }}</span>
+					</div>
+					<div class="flex justify-between pt-4 pb-2">
+						<span class="text-gray-500 text-sm">Montant TVA</span>
+						<span class="font-medium text-sm">{{ invoice.totalTva|round(2) }}{{ env.CURRENCY }}</span>
+					</div>
+					<div class="flex justify-between py-2">
+						<span class="text-gray-500 text-sm">Taxe de séjour</span>
+						<span class="font-medium text-sm">
+							{{ (invoice.touristTax * ((invoice.checkout|date("U") - invoice.checkin|date("U")) / 86400) * (invoice.adults + invoice.children))|round(2) }}{{ env.CURRENCY }}
+						</span>
+					</div>
+
+					<div class="flex justify-between pt-4 pb-2 border-t border-gray-200 mt-2">
+						<span class="text-md font-semibold uppercase">Total TTC</span>
+						<span class="text-md font-semibold">{{ invoice.totalTtc|round(2) }}{{ env.CURRENCY }}</span>
+					</div>
+				</div>
+			</div>
+			<div class="mt-8 pt-8 border-t border-gray-200">
+				<div class="flex flex-col md:flex-row justify-between items-center">
+					<div class="text-gray-500 mb-4 md:mb-0 gap-4 text-xs flex flex-col">
+						<p>Conditions d'Annulation : En cas d'annulation jusqu'à 48 heures avant la date d'arrivée, aucun frais ne sera appliqué. Passé ce délai le montant de remboursement sera de 50% du montant total de la réservation.</p>
+						<p>Merci d'avoir choisi l'Hôtel Neptune. Nous espérons que votre séjour sera des plus agréables. Pour toute question relative à cette facture ou pour toute demande de remboursement, veuillez contacter notre service dédié au
+							{{ env.PHONE }}
+							(appel non surtaxé, coût d’un appel local) ou par mail à l'adresse
+							{{ env.EMAIL }}.</p>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div></div>{% endblock %}

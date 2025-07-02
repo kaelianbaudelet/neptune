@@ -1,0 +1,93 @@
+# --------------------------------------------------------------------
+# Règles qui précise le répertoire racine du site
+# --------------------------------------------------------------------
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/assets/(static/(css|js|fonts|images)/.*)$
+
+# --------------------------------------------------------------------
+# Règles de réécriture pour les URLs "propres"
+# --------------------------------------------------------------------
+
+# Activer la réécriture d'URL
+
+# Si le fichier ou dossier existe, ne pas réécrire l'URL
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# Réécriture vers index.php
+RewriteRule ^(.*)$ index.php?page=$1 [QSA,L]
+
+# --------------------------------------------------------------------
+# Sécurité de base
+# --------------------------------------------------------------------
+
+# Désactiver la liste des répertoires
+# Options -Indexes
+
+# Empêcher l'accès direct à des fichiers sensibles
+<FilesMatch "\.(env|ini|log|sh|bak|sql|swp)$">
+    Require all denied
+</FilesMatch>
+
+# --------------------------------------------------------------------
+# Gestion des erreurs
+# --------------------------------------------------------------------
+
+# Page personnalisée pour les erreurs 404
+# ErrorDocument 404 /404.php
+
+# Page personnalisée pour les erreurs 403 (accès interdit)
+# ErrorDocument 403 /403.php
+
+# --------------------------------------------------------------------
+# Performances et Cache
+# --------------------------------------------------------------------
+
+# Activer le cache pour les fichiers statiques
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType text/javascript "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType application/x-shockwave-flash "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresDefault "access plus 1 week"
+</IfModule>
+
+# GZIP compression pour accélérer le chargement des pages
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# --------------------------------------------------------------------
+# Limites de taille des fichiers et des POST
+# --------------------------------------------------------------------
+<IfModule mod_php.c>
+    php_value upload_max_filesize 2048M
+    php_value post_max_size 2048M
+    php_value memory_limit 2560M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
+# --------------------------------------------------------------------
+# Protection contre les injections et XSS
+# --------------------------------------------------------------------
+
+<IfModule mod_headers.c>
+    # Désactiver l'exécution de contenu dans des iframes exterieur au site
+    HHeader set X-Frame-Options "SAMEORIGIN"
+
+    # Protection contre les attaques XSS
+    Header set X-XSS-Protection "1; mode=block"
+
+    # Protection contre les attaques MIME sniffing
+    Header set X-Content-Type-Options nosniff
+
+    # HSTS
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>

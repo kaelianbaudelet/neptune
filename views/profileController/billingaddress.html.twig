@@ -1,0 +1,117 @@
+{% extends "dashboard.html.twig" %}
+{% block title %}
+	{{ parent() }}
+	Adresse de facturation
+{% endblock %}
+{% block content %}
+{% do clear_session_alert() %}
+{% include 'components/dashboard/header.html.twig' with {'title': 'Vue d\'enssemble'} %}
+<div class="flex-1 space-y-6 p-6 pt-6 0 bg-gray-50 overflow-y-scroll h-[calc(100vh-5.1rem)]">
+    <div class="flex lg:flex-row flex-col">
+        {% include 'components/dashboard/profileSidebar.html.twig' %}
+        <div class="w-full lg:pt-0 mt-6 lg:mt-0 pt-6 lg:border-t-0 border-t">
+            <div>
+                <h3 class="text-xl font-medium">Adresses de facturation</h3>
+                <p class="text-gray-500">
+                    Ajoutez, visualisez ou supprimez vos adresses de facturation.
+                </p>
+            </div>
+
+            {# Tableau des adresses de facturation #}
+            <div class="mt-6">
+                <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-3 py-2 text-xs font-semibold uppercase text-start">Nom</th>
+                                <th class="px-3 py-2 text-xs font-semibold uppercase text-start">Adresse</th>
+                                <th class="px-3 py-2 text-xs font-semibold uppercase text-start">Ville</th>
+                                <th class="px-3 py-2 text-xs font-semibold uppercase text-start">Code postal</th>
+                                <th class="px-3 py-2 text-xs font-semibold uppercase text-start">Pays</th>
+                                <th class="px-3 py-2 text-xs font-semibold uppercase text-start">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+    {% if billing_addresses is not defined or billing_addresses|length == 0 %}
+        <tr>
+            <td colspan="6" class="px-3 py-3 text-center text-sm text-gray-500">Aucune adresse de facturation</td>
+        </tr>
+    {% else %}
+        {% for address in billing_addresses %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-900">{{ address.name }}</td>
+                <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-900">
+                    {{ address.address }}
+                    {% if address.address2 %}
+                        <br><span class="text-xs text-gray-500">{{ address.address2 }}</span>
+                    {% endif %}
+                </td>
+                <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-900">{{ address.city }}</td>
+                <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-900">{{ address.postalCode }}</td>
+                <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-900">{{ address.country|capitalize }}</td>
+                <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-900">
+                    <form method="POST" action="/profile/billingaddress/delete/{{ address.id }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette adresse de facturation ?');" style="display:inline;">
+                        <button type="submit" class="text-danger hover:underline text-xs font-medium" title="Supprimer cette adresse">
+                            Supprimer
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+</tbody>
+                    </table>
+                </div>
+            </div>
+
+
+	{# Formulaire d'ajout d'adresse de facturation #}
+	<form class="space-y-6 pt-6 border-t mt-6" method="POST" action="">
+		{% if session.alert %}
+			<div class="text-sm mb-6 {% if session.alert.status == 'error' %}text-danger{% else %}text-success{% endif %}">
+				{{ session.alert.message }}
+			</div>
+		{% endif %}
+		<div class="gap-6 flex flex-col">
+			<div class="flex flex-col gap-2">
+				<label for="address_recipient" class="font-medium text-sm">
+					Nom complet
+				</label>
+				<input id="address_recipient" name="address_recipient" type="text" value="{{ old.address_recipient|default('') }}" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 {% if session.alert.errors and session.alert.errors.address_recipient %}border-danger{% endif %}" placeholder="George Martin" autocomplete="off" autocorrect="off" autocapitalize="off">
+				{% if session.alert.errors and session.alert.errors.address_recipient %}
+					<div class="text-danger text-xs mt-1">{{ session.alert.errors.address_recipient }}</div>
+				{% endif %}
+			</div>
+			<div class="flex flex-col gap-2">
+				<label for="country" class="font-medium text-sm">Pays</label>
+				<select id="country" name="country" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 {% if session.alert.errors and session.alert.errors.country %}border-danger{% endif %}">
+					{% set selected_country = old.country|default('france') %}
+					<option value="france" {% if selected_country == 'france' %} selected {% endif %}>France</option>
+					<option value="belgique" {% if selected_country == 'belgique' %} selected {% endif %}>Belgique</option>
+					<option value="suisse" {% if selected_country == 'suisse' %} selected {% endif %}>Suisse</option>
+					<option value="canada" {% if selected_country == 'canada' %} selected {% endif %}>Canada</option>
+					{# ... autres pays ... #}
+				</select>
+				{% if session.alert.errors and session.alert.errors.country %}
+					<div class="text-danger text-xs mt-1">{{ session.alert.errors.country }}</div>
+				{% endif %}
+			</div>
+			<div class="flex flex-col gap-2">
+				<label for="address_line_1" class="font-medium text-sm">Ligne d'adresse 1</label>
+				<input id="address_line_1" name="address_line_1" type="text" value="{{ old.address_line_1|default('') }}" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 {% if session.alert.errors and session.alert.errors.address_line_1 %}border-danger{% endif %}" placeholder="16 rue de la paix">
+				{% if session.alert.errors and session.alert.errors.address_line_1 %}
+<div class="text-danger text-xs mt-1">{{ session.alert.errors.address_line_1 }}</div>{% endif %}</div><div class="flex flex-col gap-2"><label for="address_line_2" class="font-medium text-sm">Ligne d'adresse 2 (optionnel)</label><input id="address_line_2" name="address_line_2" type="text" value="{{ old.address_line_2|default('') }}" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 {% if session.alert.errors and session.alert.errors.address_line_2 %}border-danger{% endif %}" placeholder="">{% if session.alert.errors and session.alert.errors.address_line_2 %}
+<div class="text-danger text-xs mt-1">{{ session.alert.errors.address_line_2 }}</div>{% endif %}</div><div class="flex flex-col gap-2"><label for="city" class="font-medium text-sm">Ville</label><input id="city" name="city" type="text" value="{{ old.city|default('') }}" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 {% if session.alert.errors and session.alert.errors.city %}border-danger{% endif %}" placeholder="Arras">{% if session.alert.errors and session.alert.errors.city %}
+<div class="text-danger text-xs mt-1">{{ session.alert.errors.city }}</div>{% endif %}</div><div class="grid grid-cols-2 gap-x-5"><div class="flex flex-col gap-2">
+<label for="state" class="font-medium text-sm">Province/Région</label>
+<input id="state" name="state" type="text" value="{{ old.state|default('') }}" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 {% if session.alert.errors and session.alert.errors.state %}border-danger{% endif %}" placeholder="Hauts-de-France" maxlength="28">
+{% if session.alert.errors and session.alert.errors.state %}
+	<div class="text-danger text-xs mt-1">{{ session.alert.errors.state }}</div>
+{% endif %}</div><div class="flex flex-col gap-2">
+<label for="postal_code" class="font-medium text-sm">Code postal</label>
+<div class="relative">
+	<input id="postal_code" name="postal_code" type="text" value="{{ old.postal_code|default('') }}" class="block py-4 px-4 m-0 w-full rounded-xl border border-gray-200 border-solid appearance-none text-sm sm:leading-5 focus:border-primary focus:ring-primary focus:outline-offset-2 {% if session.alert.errors and session.alert.errors.postal_code %}border-danger{% endif %}" placeholder="62000">
+</div>
+{% if session.alert.errors and session.alert.errors.postal_code %}
+	<div class="text-danger text-xs mt-1">{{ session.alert.errors.postal_code }}</div>
+{% endif %}</div></div></div><button type="submit" class="inline-flex gap-x-2 justify-center items-center py-4 px-4 m-0 w-full text-sm font-medium leading-5 text-center text-white normal-case bg-primary hover:bg-primary/90 transition duration-300 bg-none rounded-xl border border-transparent border-solid cursor-pointer bg-origin-border">Ajouter l'adresse de facturation</button></form></div></div></div>{% endblock %}
