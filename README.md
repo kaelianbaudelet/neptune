@@ -6,9 +6,7 @@ Ce projet a pour objectif de concevoir un site web fictif pour un hôtel dans le
 
 ## Note importante
 
-Certaines fonctionnalités sont temporairement limitées dans cette version du projet en raison de contraintes de temps pour le rendu final. Nous avons donc choisi de mettre à disposition une version entièrement finalisée et maintenue sur GitHub.
-
-Github: [https://github.com/kaelianbaudelet/neptune](Github)
+Ce projet a été initialement développé dans le cadre d’un projet étudiant à l’EPSI, et continue d’être maintenu activement. Je le développe seul avec pour objectif d’aboutir à une solution complète, utilisable en conditions réelles par des établissements hôteliers.
 
 ## Fonctionnalités
 
