@@ -1,8 +1,5 @@
-# Projet Transversal Web — EPSI SN1 — Hôtel Neptune
-
-> [!NOTE]
-> Testez une démo en ligne de ce projet directement sur [neptune.kaelian.dev](https://neptune.kaelian.fr).  
-> **Attention :** Cette version de démonstration est réinitialisée tous les jours.
+# Projet Transversal TPWR107 — EPSI SN1 — Concevoir et exploiter une base de
+données dans un environnement web
 
 ## Description du projet
 
@@ -168,6 +165,3 @@ Ce projet est sous licence **[MIT](LICENSE)**.
 ## Contributeurs
 
 - Kaëlian BAUDELET
-- Annalia PRIEUR
-- Florian GUILBERT
-- Thibault ROYER
