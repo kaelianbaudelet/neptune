@@ -1,5 +1,4 @@
-# Projet Transversal TPWR107 — EPSI SN1 — Concevoir et exploiter une base de
-données dans un environnement web
+# Projet Transversal TPWR107 — EPSI SN1 — Concevoir et exploiter une base de données dans un environnement web
 
 ## Description du projet
 
