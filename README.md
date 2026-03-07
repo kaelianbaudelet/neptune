@@ -1,4 +1,8 @@
-# Projet Transversal TPWR107 — EPSI SN1 — Concevoir et exploiter une base de données dans un environnement web
+# Hotel Neptune — Projet Transversal TPWR107 EPSI SN1 — Concevoir et exploiter une base de données dans un environnement web
+
+<p align="center"><img width="263" alt="logo" src="https://github.com/user-attachments/assets/ddd5d5a3-7746-4bb6-b1be-bad287784988" /></p>
+<img width="7320" height="7203" alt="banner" src="https://github.com/user-attachments/assets/5749a61a-e927-4cec-8e42-b13808433a90" />
+
 
 ## Description du projet
 
