@@ -1,64 +1,82 @@
 {% if env('APP_DEMO') == 'true' or env('APP_DEMO') == true %}
 <div id="demo-modal" class="fixed inset-0 z-[9999] flex items-center justify-center hidden">
-    <!-- Overlay -->
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <!-- Overlay with deeper blur -->
+    <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-md transition-opacity duration-500"></div>
     
     <!-- Modal Content -->
-    <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden transform transition-all scale-95 opacity-0 duration-300" id="demo-modal-content">
-        <div class="p-8">
-            <div class="flex items-center justify-center w-16 h-16 mx-auto mb-6 bg-blue-100 rounded-full dark:bg-blue-900/30">
-                <i data-lucide="info" class="w-8 h-8 text-blue-600 dark:text-blue-400"></i>
+    <div class="relative bg-white dark:bg-gray-900 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] max-w-lg w-full mx-4 overflow-hidden transform transition-all duration-500 scale-95 opacity-0 border border-white/20 dark:border-gray-800" id="demo-modal-content">
+        <!-- Accent bar at the top -->
+        <div class="h-2 w-full bg-primary"></div>
+
+        <div class="p-10">
+            <div class="flex items-center justify-center w-20 h-20 mx-auto mb-8 bg-primary/10 rounded-3xl rotate-3 transform transition-transform hover:rotate-0">
+                <i data-lucide="sparkles" class="w-10 h-10 text-primary"></i>
             </div>
             
-            <h3 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-2">
-                Site de Démonstration
+            <h3 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-3 tracking-tight">
+                Mode Démonstration
             </h3>
-            <p class="text-center text-gray-600 dark:text-gray-400 mb-8">
-                Bienvenue sur l'Hôtel Neptune. Vous êtes actuellement sur une version de démonstration conçue pour explorer les fonctionnalités du site.
+            <p class="text-center text-gray-500 dark:text-gray-400 mb-10 text-lg leading-relaxed">
+                Bienvenue sur <span class="text-primary font-semibold">l'Hôtel Neptune</span>. Explorez toutes les fonctionnalités avec nos comptes de test pré-configurés.
             </p>
             
-            <div class="space-y-4">
+            <div class="space-y-5">
                 <!-- Admin Account -->
-                <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
-                    <div class="flex items-center mb-2">
-                        <i data-lucide="shield-check" class="w-5 h-5 text-indigo-500 mr-2"></i>
-                        <span class="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Compte Administrateur</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-xs text-gray-500 dark:text-gray-500 uppercase font-medium">Email</p>
-                            <p class="text-sm font-mono text-gray-700 dark:text-gray-300">admin@demo.fr</p>
+                <div class="group p-5 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/50 hover:border-primary/30 transition-colors">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center mr-3">
+                                <i data-lucide="shield" class="w-4 h-4 text-primary"></i>
+                            </div>
+                            <span class="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-widest">Accès Administrateur</span>
                         </div>
-                        <div>
-                            <p class="text-xs text-gray-500 dark:text-gray-500 uppercase font-medium">Mot de passe</p>
-                            <p class="text-sm font-mono text-gray-700 dark:text-gray-300">admin</p>
+                        <span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-md uppercase">Complet</span>
+                    </div>
+                    <div class="flex flex-col space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-400 font-medium">Identifiant</span>
+                            <span class="text-sm font-mono text-gray-700 dark:text-gray-300 select-all cursor-pointer hover:text-primary transition-colors">admin@demo.fr</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-400 font-medium">Mot de passe</span>
+                            <span class="text-sm font-mono text-gray-700 dark:text-gray-300 select-all cursor-pointer hover:text-primary transition-colors">admin</span>
                         </div>
                     </div>
                 </div>
                 
                 <!-- User Account -->
-                <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
-                    <div class="flex items-center mb-2">
-                        <i data-lucide="user" class="w-5 h-5 text-emerald-500 mr-2"></i>
-                        <span class="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Compte Utilisateur</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-xs text-gray-500 dark:text-gray-500 uppercase font-medium">Email</p>
-                            <p class="text-sm font-mono text-gray-700 dark:text-gray-300">jean.dupont@demo.fr</p>
+                <div class="group p-5 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/50 hover:border-primary/30 transition-colors">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center mr-3">
+                                <i data-lucide="user" class="w-4 h-4 text-gray-500"></i>
+                            </div>
+                            <span class="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-widest">Accès Client</span>
                         </div>
-                        <div>
-                            <p class="text-xs text-gray-500 dark:text-gray-500 uppercase font-medium">Mot de passe</p>
-                            <p class="text-sm font-mono text-gray-700 dark:text-gray-300">jean.dupont</p>
+                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-500 text-[10px] font-bold rounded-md uppercase">Limité</span>
+                    </div>
+                    <div class="flex flex-col space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-400 font-medium">Identifiant</span>
+                            <span class="text-sm font-mono text-gray-700 dark:text-gray-300 select-all cursor-pointer hover:text-primary transition-colors">jean.dupont@demo.fr</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-400 font-medium">Mot de passe</span>
+                            <span class="text-sm font-mono text-gray-700 dark:text-gray-300 select-all cursor-pointer hover:text-primary transition-colors">jean.dupont</span>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="mt-10">
-                <button id="close-demo-modal" class="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/30 transform active:scale-95">
-                    Compris, j'essaie !
+            <div class="mt-12">
+                <button id="close-demo-modal" class="group relative w-full overflow-hidden rounded-2xl bg-primary py-5 px-8 font-bold text-white transition-all hover:shadow-[0_0_30px_rgba(22,199,205,0.4)] active:scale-[0.98]">
+                    <div class="absolute inset-0 bg-white/20 translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
+                    <span class="relative flex items-center justify-center text-lg">
+                        Accéder à la démo
+                        <i data-lucide="arrow-right" class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </span>
                 </button>
+                <p class="text-center text-[10px] text-gray-400 mt-4 uppercase tracking-tighter">Cette fenêtre ne s'affichera plus pendant 30 jours</p>
             </div>
         </div>
     </div>
@@ -72,5 +90,11 @@
     transform: scale(1);
     opacity: 1;
 }
+.text-primary { color: var(--color-primary); }
+.bg-primary { background-color: var(--color-primary); }
+.border-primary\/30 { border-color: rgba(22, 199, 205, 0.3); }
+.bg-primary\/10 { background-color: rgba(22, 199, 205, 0.1); }
+.bg-primary\/20 { background-color: rgba(22, 199, 205, 0.2); }
 </style>
 {% endif %}
+
