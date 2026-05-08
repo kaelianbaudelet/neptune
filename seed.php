@@ -57,8 +57,9 @@ if (!function_exists('db_seed')) {
                 $extension = 'jpg';
 
                 if (strpos($urlOrFile, 'http') === 0) {
-                    // C'est une URL Unsplash
-                    $fileKey = 'option_' . strtolower(str_replace(' ', '_', $name));
+                    // C'est une URL Unsplash - Générer un nom propre sans caractères spéciaux
+                    $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '_', $name)));
+                    $fileKey = 'option_' . $slug;
                     $fileName = $fileKey . '.jpg';
                     $destPath = $uploadDir . $fileName;
 
@@ -73,6 +74,9 @@ if (!function_exists('db_seed')) {
                     $fileKey = pathinfo($urlOrFile, PATHINFO_FILENAME);
                     $extension = pathinfo($urlOrFile, PATHINFO_EXTENSION);
                 }
+
+                // Supprimer l'ancienne entrée erronée si elle existe (avec caractères spéciaux)
+                $pdo->exec("DELETE FROM Image WHERE file_key = 'option_accès_spa_&_bien-être'");
 
                 // Créer l'entrée Image si elle n'existe pas
                 $stmt = $pdo->prepare("INSERT IGNORE INTO Image (file_key, name, extension) VALUES (?, ?, ?)");

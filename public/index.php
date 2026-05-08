@@ -70,8 +70,10 @@ $requiredEnvVars = [
     'DATABASE_PASSWORD'
 ];
 
-foreach ($requiredEnvVars as $var) {
-    if (!isset($_ENV[$var]) && !getenv($var)) {
+$varsToSync = array_merge($requiredEnvVars, ['CURRENCY', 'TVA_RATE', 'TOURIST_TAX']);
+
+foreach ($varsToSync as $var) {
+    if (in_array($var, $requiredEnvVars) && !isset($_ENV[$var]) && !getenv($var)) {
         die("La variable d'environnement {$var} doit être définie (dans .env ou via Docker)");
     }
     // S'assurer que $_ENV est peuplé si la variable est dans getenv() mais pas $_ENV
@@ -79,6 +81,11 @@ foreach ($requiredEnvVars as $var) {
         $_ENV[$var] = getenv($var);
     }
 }
+
+// Valeurs par défaut pour les variables optionnelles si non définies
+$_ENV['CURRENCY'] = $_ENV['CURRENCY'] ?? '€';
+$_ENV['TVA_RATE'] = $_ENV['TVA_RATE'] ?? '20%';
+$_ENV['TOURIST_TAX'] = $_ENV['TOURIST_TAX'] ?? '0.80';
 
 if ($_ENV['APP_ENV'] === 'dev') {
     ini_set('display_errors', '1');
