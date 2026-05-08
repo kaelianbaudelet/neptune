@@ -108,6 +108,17 @@ if (!function_exists('db_seed')) {
                 $stmt->execute([$u[0], $u[1], $password, $u[2]]);
             }
 
+            // --- Nouveaux comptes DEMO ---
+            $demoUsers = [
+                ['Admin Demo', 'admin@demo.fr', 'Admin', password_hash('admin', PASSWORD_DEFAULT)],
+                ['Jean Dupont', 'jean.dupont@demo.fr', 'User', password_hash('jean.dupont', PASSWORD_DEFAULT)]
+            ];
+
+            foreach ($demoUsers as $u) {
+                $stmt = $pdo->prepare("INSERT IGNORE INTO User (name, email, role, password, is_active) VALUES (?, ?, ?, ?, 1)");
+                $stmt->execute([$u[0], $u[1], $u[2], $u[3]]);
+            }
+
             // 5. Employés
             $employees = [
                 ['Alice Bernard', 'alice@neptune.fr', '0102030405', 'Réceptionniste', 1800, '1995-05-15'],
@@ -223,6 +234,43 @@ if (!function_exists('db_seed')) {
                 $uid = $userIdsForReviews[array_rand($userIdsForReviews)];
                 $stmt = $pdo->prepare("INSERT INTO Review (room_id, user_id, comment, rating) VALUES (?, ?, ?, ?)");
                 $stmt->execute([$rid, $uid, $rev[0], $rev[1]]);
+            }
+
+            // 11. Réservation fictive pour Jean Dupont Demo
+            $jeanId = $pdo->query("SELECT id FROM User WHERE email = 'jean.dupont@demo.fr'")->fetchColumn();
+            $roomId = $pdo->query("SELECT id FROM Room WHERE name = 'Chambre 101'")->fetchColumn();
+
+            if ($jeanId && $roomId) {
+                // Créer une facture
+                $invoiceId = bin2hex(random_bytes(16)); // On génère un ID manuellement pour pouvoir le lier
+                // Format UUID v4 approximatif ou juste un hash de 36 chars.
+                // Le type est char(36).
+                $invoiceId = sprintf('%08s-%04s-%04x-%04x-%12s',
+                    bin2hex(random_bytes(4)),
+                    bin2hex(random_bytes(2)),
+                    hexdec(bin2hex(random_bytes(2))) & 0x0fff | 0x4000,
+                    hexdec(bin2hex(random_bytes(2))) & 0x3fff | 0x8000,
+                    bin2hex(random_bytes(6))
+                );
+
+                $stmt = $pdo->prepare("INSERT INTO Invoice (
+                    id, type, status, user_id, total_ttc, total_ht, total_tva, tva, 
+                    checkin, checkout, adults, children, room_name, room_price, 
+                    tourist_tax, billing_address, billing_city, billing_postal_code, 
+                    billing_country, billing_phone, billing_email, billing_name, payment_method
+                ) VALUES (
+                    ?, 'invoice', 'paid', ?, 102.0, 85.0, 17.0, 20.0,
+                    '2026-06-01', '2026-06-05', 2, 0, 'Chambre 101', 85.0,
+                    2.0, '123 Rue de la Paix', 'Paris', '75001', 'France', '0102030405', 
+                    'jean.dupont@demo.fr', 'Jean Dupont', 'credit_card'
+                )");
+                $stmt->execute([$invoiceId, $jeanId]);
+
+                // Créer la réservation
+                $stmt = $pdo->prepare("INSERT INTO Booking (
+                    user_id, room_id, invoice_id, checkin, checkout, adults, children
+                ) VALUES (?, ?, ?, '2026-06-01', '2026-06-05', 2, 0)");
+                $stmt->execute([$jeanId, $roomId, $invoiceId]);
             }
 
         } catch (PDOException $e) {
