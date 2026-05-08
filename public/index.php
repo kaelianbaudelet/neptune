@@ -70,7 +70,7 @@ $requiredEnvVars = [
     'DATABASE_PASSWORD'
 ];
 
-$varsToSync = array_merge($requiredEnvVars, ['CURRENCY', 'TVA_RATE', 'TOURIST_TAX']);
+$varsToSync = array_merge($requiredEnvVars, ['CURRENCY', 'TVA_RATE', 'TOURIST_TAX', 'APP_DEMO']);
 
 foreach ($varsToSync as $var) {
     if (in_array($var, $requiredEnvVars) && !isset($_ENV[$var]) && !getenv($var)) {
