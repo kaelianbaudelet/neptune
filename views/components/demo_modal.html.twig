@@ -1,82 +1,81 @@
 {% if env('APP_DEMO') == 'true' or env('APP_DEMO') == true %}
-<div id="demo-modal" class="fixed inset-0 z-[9999] items-center justify-center hidden">
-    <!-- Overlay with deeper blur -->
-    <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-md transition-opacity duration-500"></div>
+<div id="demo-modal" class="fixed inset-0 z-[9999] items-center justify-center hidden overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+    <!-- Overlay with elegant blur -->
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500"></div>
     
     <!-- Modal Content -->
-    <div class="relative bg-white dark:bg-gray-900 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] max-w-lg w-full mx-4 overflow-hidden transform transition-all duration-500 scale-95 opacity-0 border border-white/20 dark:border-gray-800" id="demo-modal-content">
-        <!-- Accent bar at the top -->
-        <div class="h-2 w-full bg-primary"></div>
+    <div class="relative bg-white rounded-[2.5rem] shadow-[0_30px_60px_-12px_rgba(0,0,0,0.25)] max-w-lg w-full mx-4 overflow-hidden transform transition-all duration-500 scale-95 opacity-0 border border-gray-100" id="demo-modal-content">
+        <!-- Premium Accent bar -->
+        <div class="h-1.5 w-full bg-primary"></div>
 
-        <div class="p-10">
-            <div class="flex items-center justify-center w-20 h-20 mx-auto mb-8 bg-primary/10 rounded-3xl rotate-3 transform transition-transform hover:rotate-0">
-                <i data-lucide="sparkles" class="w-10 h-10 text-primary"></i>
+        <div class="p-8 sm:p-12">
+            <!-- Icon Header -->
+            <div class="flex items-center justify-center w-20 h-20 mx-auto mb-8 bg-primary/10 rounded-3xl transform transition-transform hover:scale-110 duration-300">
+                <i class="icon-sparkles text-4xl text-primary"></i>
             </div>
             
-            <h3 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-3 tracking-tight">
+            <h3 class="text-3xl font-bold text-center text-gray-900 mb-3 tracking-tight">
                 Mode Démonstration
             </h3>
-            <p class="text-center text-gray-500 dark:text-gray-400 mb-10 text-lg leading-relaxed">
-                Bienvenue sur <span class="text-primary font-semibold">l'Hôtel Neptune</span>. Explorez toutes les fonctionnalités avec nos comptes de test pré-configurés.
+            <p class="text-center text-gray-500 mb-10 text-lg leading-relaxed max-w-sm mx-auto">
+                Bienvenue sur <span class="text-primary font-bold">l'Hôtel Neptune</span>. Explorez notre plateforme avec ces comptes de test.
             </p>
             
-            <div class="space-y-5">
+            <div class="space-y-4">
                 <!-- Admin Account -->
-                <div class="group p-5 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/50 hover:border-primary/30 transition-colors">
+                <div class="group p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-primary/20 transition-all duration-300">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center">
-                            <div class="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center mr-3">
-                                <i data-lucide="shield" class="w-4 h-4 text-primary"></i>
+                            <div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center mr-4">
+                                <i class="icon-shield-check text-xl text-primary"></i>
                             </div>
-                            <span class="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-widest">Accès Administrateur</span>
+                            <span class="font-bold text-gray-900 text-sm uppercase tracking-widest">Administrateur</span>
                         </div>
-                        <span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-md uppercase">Complet</span>
+                        <span class="px-2.5 py-1 bg-primary text-white text-[10px] font-black rounded-lg uppercase tracking-wider">Full Access</span>
                     </div>
-                    <div class="flex flex-col space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs text-gray-400 font-medium">Identifiant</span>
-                            <span class="text-sm font-mono text-gray-700 dark:text-gray-300 select-all cursor-pointer hover:text-primary transition-colors">admin@demo.fr</span>
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="flex justify-between items-center p-2 rounded-lg hover:bg-white transition-colors">
+                            <span class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Email</span>
+                            <span class="text-sm font-medium text-gray-700 select-all cursor-copy">admin@demo.fr</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs text-gray-400 font-medium">Mot de passe</span>
-                            <span class="text-sm font-mono text-gray-700 dark:text-gray-300 select-all cursor-pointer hover:text-primary transition-colors">admin</span>
+                        <div class="flex justify-between items-center p-2 rounded-lg hover:bg-white transition-colors">
+                            <span class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Password</span>
+                            <span class="text-sm font-medium text-gray-700 select-all cursor-copy">admin</span>
                         </div>
                     </div>
                 </div>
                 
                 <!-- User Account -->
-                <div class="group p-5 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/50 hover:border-primary/30 transition-colors">
+                <div class="group p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-gray-200 transition-all duration-300">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center">
-                            <div class="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center mr-3">
-                                <i data-lucide="user" class="w-4 h-4 text-gray-500"></i>
+                            <div class="w-10 h-10 bg-gray-200 rounded-xl flex items-center justify-center mr-4">
+                                <i class="icon-user text-xl text-gray-600"></i>
                             </div>
-                            <span class="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-widest">Accès Client</span>
+                            <span class="font-bold text-gray-900 text-sm uppercase tracking-widest">Client Démo</span>
                         </div>
-                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-500 text-[10px] font-bold rounded-md uppercase">Limité</span>
+                        <span class="px-2.5 py-1 bg-gray-200 text-gray-600 text-[10px] font-black rounded-lg uppercase tracking-wider">Guest</span>
                     </div>
-                    <div class="flex flex-col space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs text-gray-400 font-medium">Identifiant</span>
-                            <span class="text-sm font-mono text-gray-700 dark:text-gray-300 select-all cursor-pointer hover:text-primary transition-colors">jean.dupont@demo.fr</span>
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="flex justify-between items-center p-2 rounded-lg hover:bg-white transition-colors">
+                            <span class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Email</span>
+                            <span class="text-sm font-medium text-gray-700 select-all cursor-copy">jean.dupont@demo.fr</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs text-gray-400 font-medium">Mot de passe</span>
-                            <span class="text-sm font-mono text-gray-700 dark:text-gray-300 select-all cursor-pointer hover:text-primary transition-colors">jean.dupont</span>
+                        <div class="flex justify-between items-center p-2 rounded-lg hover:bg-white transition-colors">
+                            <span class="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Password</span>
+                            <span class="text-sm font-medium text-gray-700 select-all cursor-copy">jean.dupont</span>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="mt-12">
-                <button id="close-demo-modal" class="group relative w-full overflow-hidden rounded-2xl bg-primary py-5 px-8 font-bold text-white transition-all hover:shadow-[0_0_30px_rgba(22,199,205,0.4)] active:scale-[0.98]">
-                    <div class="absolute inset-0 bg-white/20 translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
+            <div class="mt-10">
+                <button id="close-demo-modal" class="group relative w-full overflow-hidden rounded-2xl bg-primary py-5 px-8 font-bold text-white transition-all shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-[0.98]">
                     <span class="relative flex items-center justify-center text-lg">
                         Accéder à la démo
-                        <i data-lucide="arrow-right" class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        <i class="icon-arrow-right text-xl ml-3 group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </button>
-                <p class="text-center text-[10px] text-gray-400 mt-4 uppercase tracking-tighter">Cette fenêtre ne s'affichera plus pendant 30 jours</p>
             </div>
         </div>
     </div>
@@ -87,11 +86,11 @@
     transform: scale(1);
     opacity: 1;
 }
-.text-primary { color: var(--color-primary); }
-.bg-primary { background-color: var(--color-primary); }
-.border-primary\/30 { border-color: rgba(22, 199, 205, 0.3); }
+.text-primary { color: var(--color-primary, #16C7CD); }
+.bg-primary { background-color: var(--color-primary, #16C7CD); }
 .bg-primary\/10 { background-color: rgba(22, 199, 205, 0.1); }
-.bg-primary\/20 { background-color: rgba(22, 199, 205, 0.2); }
+.hover\:border-primary\/20:hover { border-color: rgba(22, 199, 205, 0.2); }
 </style>
 {% endif %}
+
 
