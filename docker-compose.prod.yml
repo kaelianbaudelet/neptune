@@ -6,7 +6,6 @@ services:
     ports:
       - "1212:80"
     volumes:
-      - .:/var/www/html
       - ./logs:/var/log/apache2
     environment:
       PHP_DATE_TIMEZONE: ${PHP_DATE_TIMEZONE:-Europe/Paris}
