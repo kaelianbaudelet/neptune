@@ -1,22 +1,5 @@
 -- Base de données --
-
 -- ! Executer ce script uniquement avec une base de données MySQL/MariaDB, pas POSTGRESQL ou SQLITE ! --
-
-DROP TABLE IF EXISTS `Booking_Guest`;
-DROP TABLE IF EXISTS `Booking_Option`;
-DROP TABLE IF EXISTS `Booking`;
-DROP TABLE IF EXISTS `Invoice_Option`;
-DROP TABLE IF EXISTS `Invoice`;
-DROP TABLE IF EXISTS `Coupon`;
-DROP TABLE IF EXISTS `Employee`;
-DROP TABLE IF EXISTS `Room_Image`;
-DROP TABLE IF EXISTS `Room_Equipment`;
-DROP TABLE IF EXISTS `Equipment`;
-DROP TABLE IF EXISTS `Room`;
-DROP TABLE IF EXISTS `Option`;
-DROP TABLE IF EXISTS `Image`;
-DROP TABLE IF EXISTS `Type`;
-DROP TABLE IF EXISTS `User`;
 
 CREATE TABLE IF NOT EXISTS `User` (
     `id` char(36) NOT NULL DEFAULT uuid(),

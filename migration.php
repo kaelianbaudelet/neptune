@@ -7,15 +7,20 @@ use Dotenv\Dotenv;
 require 'vendor/autoload.php';
 
 $dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+$dotenv->safeLoad();
 
 echo "Migration de la base de données\n";
 
 try {
     // Connexion à la base de données
     echo "Connexion à la base de données...\n";
-    $conn = new PDO('mysql:host=' . '127.0.0.1' . ';port=' . $_ENV['DATABASE_PORT'] . ';dbname=' .
-        $_ENV['DATABASE_NAME'] . ';charset=utf8', $_ENV['DATABASE_USER'], $_ENV['DATABASE_PASSWORD']);
+    $host = $_ENV['DATABASE_HOST'] ?? '127.0.0.1';
+    $port = $_ENV['DATABASE_PORT'] ?? '3306';
+    $db   = $_ENV['DATABASE_NAME'] ?? 'neptune';
+    $user = $_ENV['DATABASE_USER'] ?? 'root';
+    $pass = $_ENV['DATABASE_PASSWORD'] ?? '';
+
+    $conn = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8", $user, $pass);
     // Configuration de la connexion à la base de données
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
