@@ -3,7 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const content = document.getElementById('demo-modal-content');
     const closeBtn = document.getElementById('close-demo-modal');
 
-    if (!modal || !content) return;
+    console.log('Demo modal script loaded. APP_DEMO is true.');
+    if (!modal || !content) {
+        console.error('Modal or content elements not found!');
+        return;
+    }
 
     // Function to get cookie
     const getCookie = (name) => {
