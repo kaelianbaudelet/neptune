@@ -77,7 +77,7 @@ Avant d'installer le projet, assurez-vous d'avoir :
 2. Naviguez jusqu'au répertoire du projet :
 
     ```bash
-    cd filesphere
+    cd neptune
     ```
 
 3. Installer les dépendances :
