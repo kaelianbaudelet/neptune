@@ -1,4 +1,4 @@
-{% if env.APP_DEMO == 'true' %}
+{% if env.APP_DEMO == 'true' or env.APP_DEMO == true %}
 <div id="demo-modal" class="fixed inset-0 z-[9999] flex items-center justify-center hidden">
     <!-- Overlay -->
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
