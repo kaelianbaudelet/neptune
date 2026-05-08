@@ -97,6 +97,10 @@ try {
         $sql = file_get_contents(__DIR__ . '/../database.sql');
         if ($sql) {
             $pdo->exec($sql);
+            
+            // Auto-seed après la création des tables
+            require_once __DIR__ . '/../seed.php';
+            db_seed($pdo);
         }
     }
 } catch (PDOException $e) {
