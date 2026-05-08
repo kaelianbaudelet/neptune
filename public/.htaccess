@@ -90,7 +90,7 @@ RewriteRule ^(.*)$ index.php?page=$1 [QSA,L]
 
 <IfModule mod_headers.c>
     # Désactiver l'exécution de contenu dans des iframes exterieur au site
-    HHeader set X-Frame-Options "SAMEORIGIN"
+    Header set X-Frame-Options "SAMEORIGIN"
 
     # Protection contre les attaques XSS
     Header set X-XSS-Protection "1; mode=block"
