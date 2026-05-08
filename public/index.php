@@ -57,19 +57,27 @@ use Symfony\Component\ErrorHandler\DebugClassLoader;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../', '.env');
-$dotenv->load();
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->safeLoad();
 
-if (!file_exists(__DIR__ . '/../.env')) {
-    die('Le fichier .env est manquant');
-}
+$requiredEnvVars = [
+    'APP_MAINTENANCE',
+    'APP_ENV',
+    'DATABASE_HOST',
+    'DATABASE_PORT',
+    'DATABASE_NAME',
+    'DATABASE_USER',
+    'DATABASE_PASSWORD'
+];
 
-if (!isset($_ENV['APP_MAINTENANCE'])) {
-    die('La variable APP_MAINTENANCE doit être définie dans le fichier .env');
-}
-
-if (!isset($_ENV['APP_ENV'])) {
-    die('La variable APP_ENV doit être définie dans le fichier .env');
+foreach ($requiredEnvVars as $var) {
+    if (!isset($_ENV[$var]) && !getenv($var)) {
+        die("La variable d'environnement {$var} doit être définie (dans .env ou via Docker)");
+    }
+    // S'assurer que $_ENV est peuplé si la variable est dans getenv() mais pas $_ENV
+    if (!isset($_ENV[$var]) && getenv($var)) {
+        $_ENV[$var] = getenv($var);
+    }
 }
 
 if ($_ENV['APP_ENV'] === 'dev') {

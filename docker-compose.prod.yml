@@ -12,6 +12,20 @@ services:
       PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT:-2G}
       PHP_UPLOAD_MAX_FILESIZE: ${PHP_UPLOAD_MAX_FILESIZE:-2G}
       PHP_POST_MAX_SIZE: ${PHP_POST_MAX_SIZE:-2G}
+      APP_NAME: ${APP_NAME:-Hôtel Neptune}
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_MAINTENANCE: ${APP_MAINTENANCE:-false}
+      APP_URL: ${APP_URL:-https://neptune.kaelian.dev}
+      DATABASE_HOST: db
+      DATABASE_PORT: 3306
+      DATABASE_NAME: ${DATABASE_NAME:-projetphp_neptune_epsi_bdd}
+      DATABASE_USER: ${DATABASE_USER:-projetphp_neptune_epsi}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
     depends_on:
       - db
     restart: always
