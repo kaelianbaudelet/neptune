@@ -8597,3 +8597,25 @@
     }
   }
 }
+
+/* Demo Banner Styles */
+.demo-banner {
+    background-color: #FEF3C7; /* Amber 100 */
+    border-bottom: 1px solid #FDE68A; /* Amber 200 */
+    padding: 0.5rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.demo-banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    max-width: 1280px;
+    margin: 0 auto;
+    color: #92400E; /* Amber 800 */
+    font-size: 0.875rem;
+    font-weight: 500;
+}
