@@ -114,7 +114,41 @@ if (!function_exists('db_seed')) {
                 }
             }
 
-            // 7. Coupons
+            // 7. Images (Arrizul)
+            $imageNames = [
+                ['arrizul_congress_gallery_suite_011-580x380', 'Suite Gallery 1', 'jpg'],
+                ['arrizul_congress_gallery_suite_021-580x380', 'Suite Gallery 2', 'jpg'],
+                ['arrizul_hotel_congress_gallery_suite_01-580x380', 'Hôtel Congress Suite 1', 'jpg'],
+                ['arrizul_hotel_congress_gallery_suite_02-580x380', 'Hôtel Congress Suite 2', 'jpg'],
+                ['arrizul_hotel_congress_gallery_suite_03-580x380', 'Hôtel Congress Suite 3', 'jpg']
+            ];
+
+            foreach ($imageNames as $img) {
+                $stmt = $pdo->prepare("INSERT IGNORE INTO Image (file_key, name, extension) VALUES (?, ?, ?)");
+                $stmt->execute($img);
+            }
+
+            // 8. Associer les images à toutes les chambres
+            $roomIds = $pdo->query("SELECT id FROM Room")->fetchAll(PDO::FETCH_COLUMN);
+            $imageIds = $pdo->query("SELECT id FROM Image WHERE file_key LIKE 'arrizul%'")->fetchAll(PDO::FETCH_COLUMN);
+
+            if (!empty($roomIds) && !empty($imageIds)) {
+                foreach ($roomIds as $roomId) {
+                    // Chaque chambre aura au moins 2 images Arrizul
+                    $selectedImages = array_rand(array_flip($imageIds), 2);
+                    foreach ($selectedImages as $imageId) {
+                        $pdo->prepare("INSERT IGNORE INTO Room_Image (room_id, image_id) VALUES (?, ?)")->execute([$roomId, $imageId]);
+                    }
+                }
+            }
+
+            // 9. Associer des images aux options
+            $spaImgId = $pdo->query("SELECT id FROM Image WHERE file_key = 'arrizul_hotel_congress_gallery_suite_03-580x380'")->fetchColumn();
+            if ($spaImgId) {
+                $pdo->prepare("UPDATE Option SET image_id = ? WHERE name LIKE '%Spa%'")->execute([$spaImgId]);
+            }
+
+            // 10. Coupons
             $coupons = [
                 ['NEPTUNE20', 20, 10, 100],
                 ['WELCOME', 15, 5, 50],
@@ -125,7 +159,7 @@ if (!function_exists('db_seed')) {
                 $stmt->execute($c);
             }
 
-            // 8. Avis (Reviews)
+            // 11. Avis (Reviews)
             $reviewCount = $pdo->query("SELECT COUNT(*) FROM Review")->fetchColumn();
             if ($reviewCount == 0) {
                 $roomIds = $pdo->query("SELECT id FROM Room LIMIT 5")->fetchAll(PDO::FETCH_COLUMN);
