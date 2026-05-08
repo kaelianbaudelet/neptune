@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('demo-modal');
     const content = document.getElementById('demo-modal-content');
+    const openBtn = document.getElementById('open-demo-modal');
     const closeBtn = document.getElementById('close-demo-modal');
 
     if (!modal || !content || !closeBtn) return;
@@ -19,14 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.cookie = `${name}=${value}; ${expires}; path=/`;
     };
 
+    const openModal = () => {
+        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+            content.classList.add('show');
+        }, 10);
+    };
+
     // Show modal if not seen yet
     if (!getCookie('demo_modal_seen')) {
         setTimeout(() => {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => {
-                content.classList.add('show');
-            }, 10);
+            openModal();
         }, 500);
     }
 
@@ -35,12 +41,17 @@ document.addEventListener('DOMContentLoaded', () => {
         content.classList.remove('show');
         setTimeout(() => {
             modal.classList.replace('flex', 'hidden');
-            // Fallback for safety
             modal.style.display = 'none';
             setCookie('demo_modal_seen', 'true', 30);
         }, 300);
     };
 
+    if (openBtn) {
+        openBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal();
+        });
+    }
+
     closeBtn.addEventListener('click', closeModal);
 });
-

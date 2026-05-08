@@ -49,6 +49,14 @@ endblock %}
 				<button class="h-14 inline-flex text-sm items-center justify-center py-4 px-6 text-white font-medium font-heading rounded-xl bg-primary w-full text-center focus:ring focus:ring-primary transition duration-200 hover:bg-primary/95" type="submit">
 					Connexion
 				</button>
+				{% if env('APP_DEMO') == 'true' or env('APP_DEMO') == true %}
+					<p class="mt-4 text-center text-sm text-gray-500">
+						Vous testez la démo ? 
+						<button type="button" id="open-demo-modal" class="text-primary font-bold hover:underline transition duration-200">
+							Voir les comptes de test
+						</button>
+					</p>
+				{% endif %}
 			</form>
 		</div>
 		<div class="w-full lg:w-1/2 lg:block hidden">

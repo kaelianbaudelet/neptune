@@ -30,7 +30,13 @@
 		</title>
 	</head>
 	<body class="bg-gray-50 flex h-screen">
+		{% include 'components/demo_modal.html.twig' %}
 		<main class="flex-1 w-full h-screen"> {% block content %}{% endblock %}
 			</main>
 		</body>
+		{% block js %}
+			{% if env('APP_DEMO') == 'true' or env('APP_DEMO') == true %}
+				<script src="{{ asset('/js/demo_modal.js') }}?v={{ random() }}"></script>
+			{% endif %}
+		{% endblock %}
 	</html>
