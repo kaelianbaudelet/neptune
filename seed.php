@@ -38,9 +38,9 @@ if (!function_exists('db_seed')) {
             $optionsData = [
                 ['Petit-déjeuner Buffet', 'Un délicieux petit-déjeuner complet chaque matin.', 15.0, 10.0, 1, 1, 1, 0, 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=600&q=80'],
                 ['Parking Sécurisé', 'Place de parking dans notre garage souterrain.', 10.0, 20.0, 0, 0, 1, 0, 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=600&q=80'],
-                ['Accès Spa & Bien-être', 'Accès illimité à notre espace détente.', 25.0, 20.0, 1, 0, 1, 0, 'https://images.unsplash.com/photo-1544161515-4af6b1d46af0?w=600&q=80'],
+                ['Accès Spa & Bien-être', 'Accès illimité à notre espace détente.', 25.0, 20.0, 1, 0, 1, 0, 'csjjk2u8kktgzwqacmsp.jpg'], // Image locale demandée par l'utilisateur
                 ['Accueil Romantique', 'Bouteille de champagne et pétales de roses à l\'arrivée.', 45.0, 20.0, 0, 0, 0, 0, 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600&q=80'],
-                ['Animaux de compagnie', 'Accueil pour votre fidèle compagnon.', 20.0, 20.0, 0, 0, 1, 1, 'https://images.unsplash.com/photo-1541599540903-216a46ca1df0?w=600&q=80'],
+                ['Animaux de compagnie', 'Accueil pour votre fidèle compagnon.', 20.0, 20.0, 0, 0, 1, 1, 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=600&q=80'], // Nouvelle image pour animaux
                 ['Late Check-out', 'Gardez votre chambre jusqu\'à 16h.', 30.0, 20.0, 0, 0, 0, 0, 'https://images.unsplash.com/photo-1508962914676-134849a727f0?w=600&q=80'],
                 ['Transfert Aéroport', 'Navette privée depuis ou vers l\'aéroport.', 50.0, 10.0, 0, 0, 0, 1, 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80']
             ];
@@ -52,22 +52,32 @@ if (!function_exists('db_seed')) {
 
             foreach ($optionsData as $opt) {
                 $name = $opt[0];
-                $url = $opt[8];
-                $fileKey = 'option_' . strtolower(str_replace(' ', '_', $name));
-                $fileName = $fileKey . '.jpg';
-                $destPath = $uploadDir . $fileName;
+                $urlOrFile = $opt[8];
+                $fileKey = '';
+                $extension = 'jpg';
 
-                // Télécharger l'image si elle n'existe pas
-                if (!file_exists($destPath)) {
-                    $imgContent = @file_get_contents($url);
-                    if ($imgContent) {
-                        file_put_contents($destPath, $imgContent);
+                if (strpos($urlOrFile, 'http') === 0) {
+                    // C'est une URL Unsplash
+                    $fileKey = 'option_' . strtolower(str_replace(' ', '_', $name));
+                    $fileName = $fileKey . '.jpg';
+                    $destPath = $uploadDir . $fileName;
+
+                    if (!file_exists($destPath)) {
+                        $imgContent = @file_get_contents($urlOrFile);
+                        if ($imgContent) {
+                            file_put_contents($destPath, $imgContent);
+                        }
                     }
+                } else {
+                    // C'est un fichier local
+                    $fileKey = pathinfo($urlOrFile, PATHINFO_FILENAME);
+                    $extension = pathinfo($urlOrFile, PATHINFO_EXTENSION);
                 }
 
-                // Créer l'entrée Image
+                // Créer l'entrée Image si elle n'existe pas
                 $stmt = $pdo->prepare("INSERT IGNORE INTO Image (file_key, name, extension) VALUES (?, ?, ?)");
-                $stmt->execute([$fileKey, $name, 'jpg']);
+                $stmt->execute([$fileKey, $name, $extension]);
+                
                 $imageId = $pdo->query("SELECT id FROM Image WHERE file_key = '$fileKey'")->fetchColumn();
 
                 // Créer l'option
