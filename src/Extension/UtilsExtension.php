@@ -30,7 +30,7 @@ class UtilsExtension extends \Twig\Extension\AbstractExtension
 
     public function env($key)
     {
-        return $_ENV[$key] ?? getenv($key) ?: null;
+        return $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key) ?: null;
     }
 
     public function session($key)

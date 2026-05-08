@@ -87,6 +87,7 @@ foreach ($varsToSync as $var) {
 $_ENV['CURRENCY'] = $_ENV['CURRENCY'] ?? '€';
 $_ENV['TVA_RATE'] = $_ENV['TVA_RATE'] ?? '20%';
 $_ENV['TOURIST_TAX'] = $_ENV['TOURIST_TAX'] ?? '0.80';
+$_ENV['APP_DEMO'] = $_ENV['APP_DEMO'] ?? 'false';
 
 if ($_ENV['APP_ENV'] === 'dev') {
     ini_set('display_errors', '1');
