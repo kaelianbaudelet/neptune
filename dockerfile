@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     cron \
+    netcat-openbsd \
     && docker-php-ext-configure zip \
     && docker-php-ext-install pdo pdo_mysql zip gd mbstring opcache \
     && docker-php-ext-enable opcache
@@ -57,5 +58,8 @@ RUN echo "date.timezone=Europe/Paris" > /usr/local/etc/php/conf.d/timezone.ini
 # Exposer le port 80
 EXPOSE 80
 
+# Script d'entrée
+RUN chmod +x docker-entrypoint.sh
+
 # Commande par défaut
-CMD ["apache2-foreground"]
+CMD ["./docker-entrypoint.sh"]

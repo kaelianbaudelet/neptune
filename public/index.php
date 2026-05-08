@@ -80,34 +80,6 @@ foreach ($requiredEnvVars as $var) {
     }
 }
 
-// Auto-migration
-try {
-    $host = $_ENV['DATABASE_HOST'];
-    $port = $_ENV['DATABASE_PORT'];
-    $db   = $_ENV['DATABASE_NAME'];
-    $user = $_ENV['DATABASE_USER'];
-    $pass = $_ENV['DATABASE_PASSWORD'];
-
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Vérifier si la table Equipment existe
-    $query = $pdo->query("SHOW TABLES LIKE 'Equipment'");
-    if ($query->rowCount() === 0) {
-        $sql = file_get_contents(__DIR__ . '/../database.sql');
-        if ($sql) {
-            $pdo->exec($sql);
-            
-            // Auto-seed après la création des tables
-            require_once __DIR__ . '/../seed.php';
-            db_seed($pdo);
-        }
-    }
-} catch (PDOException $e) {
-    // On ne bloque pas l'application si la migration échoue ici, 
-    // sauf si c'est une erreur critique de connexion
-}
-
 if ($_ENV['APP_ENV'] === 'dev') {
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
