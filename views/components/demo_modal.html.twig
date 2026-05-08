@@ -1,0 +1,76 @@
+{% if env.APP_DEMO == 'true' %}
+<div id="demo-modal" class="fixed inset-0 z-[9999] flex items-center justify-center hidden">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    
+    <!-- Modal Content -->
+    <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden transform transition-all scale-95 opacity-0 duration-300" id="demo-modal-content">
+        <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 mx-auto mb-6 bg-blue-100 rounded-full dark:bg-blue-900/30">
+                <i data-lucide="info" class="w-8 h-8 text-blue-600 dark:text-blue-400"></i>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-2">
+                Site de Démonstration
+            </h3>
+            <p class="text-center text-gray-600 dark:text-gray-400 mb-8">
+                Bienvenue sur l'Hôtel Neptune. Vous êtes actuellement sur une version de démonstration conçue pour explorer les fonctionnalités du site.
+            </p>
+            
+            <div class="space-y-4">
+                <!-- Admin Account -->
+                <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <div class="flex items-center mb-2">
+                        <i data-lucide="shield-check" class="w-5 h-5 text-indigo-500 mr-2"></i>
+                        <span class="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Compte Administrateur</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 uppercase font-medium">Email</p>
+                            <p class="text-sm font-mono text-gray-700 dark:text-gray-300">admin@demo.fr</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 uppercase font-medium">Mot de passe</p>
+                            <p class="text-sm font-mono text-gray-700 dark:text-gray-300">admin</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Account -->
+                <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <div class="flex items-center mb-2">
+                        <i data-lucide="user" class="w-5 h-5 text-emerald-500 mr-2"></i>
+                        <span class="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Compte Utilisateur</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 uppercase font-medium">Email</p>
+                            <p class="text-sm font-mono text-gray-700 dark:text-gray-300">jean.dupont@demo.fr</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 uppercase font-medium">Mot de passe</p>
+                            <p class="text-sm font-mono text-gray-700 dark:text-gray-300">jean.dupont</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-10">
+                <button id="close-demo-modal" class="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/30 transform active:scale-95">
+                    Compris, j'essaie !
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+#demo-modal.flex {
+    display: flex !important;
+}
+#demo-modal-content.show {
+    transform: scale(1);
+    opacity: 1;
+}
+</style>
+{% endif %}

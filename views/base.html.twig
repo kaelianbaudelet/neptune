@@ -27,6 +27,7 @@
 		</title>
 	</head>
 	<body class="bg-gray-50">
+		{% include 'components/demo_modal.html.twig' %}
 		{% include 'components/loader.html.twig' %}
 		{% include 'components/header.html.twig' %}
 		<main class="w-full"> {% block content %}{% endblock %}
@@ -35,6 +36,7 @@
 		</body>
 		{% block js %}
 			<script src="{{ asset('/js/loader.js') }}?v={{ random() }}"></script>
+			<script src="{{ asset('/js/demo_modal.js') }}?v={{ random() }}"></script>
 			<script src="{{ asset('/js/modal.js') }}?v={{ random() }}"></script>
 			<script src="{{ asset('/js/dropdown.js') }}?v={{ random() }}"></script>
 		{% endblock %}
