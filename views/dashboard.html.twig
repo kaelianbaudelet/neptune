@@ -30,14 +30,23 @@
 			{% block title %}{% endblock %}
 		</title>
 	</head>
-	<body class="relative bg-gray-50 flex h-screen maw-w-full w-full">
-		{% if env.APP_ENV == 'demo' %}
-			{% include 'components/demoBanner.html.twig' %}
+	<body class="relative bg-gray-50 flex flex-col h-screen maw-w-full w-full">
+		{% if env('APP_DEMO') == 'true' or env('APP_DEMO') == true %}
+			<div class="demo-banner">
+				<div class="demo-banner-content">
+					<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M12 16.99V17M12 7V14M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#92400E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+					</svg>
+					<span>Vous consultez une version de démonstration de Hotel Neptune.</span>
+				</div>
+			</div>
 		{% endif %}
 		{% include 'components/loader.html.twig' %}
-		{% include 'components/dashboard/sidebar.html.twig' %}
-		<main class="flex-1 w-full h-screen overflow-auto"> {% block content %}{% endblock %}
-			</main>
+		<div class="flex flex-1 overflow-hidden">
+			{% include 'components/dashboard/sidebar.html.twig' %}
+			<main class="flex-1 w-full overflow-auto"> {% block content %}{% endblock %}
+				</main>
+		</div>
 		</body>
 		{% block js %}
 			<script src="{{ asset('/js/loader.js') }}?v={{ random() }}"></script>
