@@ -36,7 +36,7 @@
 		</body>
 		{% block js %}
 			<script src="{{ asset('/js/loader.js') }}?v={{ random() }}"></script>
-			{% if env.APP_DEMO == 'true' %}
+			{% if env.APP_DEMO == 'true' or env.APP_DEMO == true %}
 				<script src="{{ asset('/js/demo_modal.js') }}?v={{ random() }}"></script>
 			{% endif %}
 			<script src="{{ asset('/js/modal.js') }}?v={{ random() }}"></script>
