@@ -76,9 +76,10 @@ foreach ($varsToSync as $var) {
     if (in_array($var, $requiredEnvVars) && !isset($_ENV[$var]) && !getenv($var)) {
         die("La variable d'environnement {$var} doit être définie (dans .env ou via Docker)");
     }
-    // S'assurer que $_ENV est peuplé si la variable est dans getenv() mais pas $_ENV
-    if (!isset($_ENV[$var]) && getenv($var)) {
-        $_ENV[$var] = getenv($var);
+    // S'assurer que $_ENV est peuplé avec la valeur de getenv() en priorité (Docker/Système)
+    $envVal = getenv($var);
+    if ($envVal !== false) {
+        $_ENV[$var] = trim($envVal);
     }
 }
 
