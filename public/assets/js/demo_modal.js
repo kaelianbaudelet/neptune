@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 content.classList.add('show');
             }, 10);
         }, 500);
+    } else {
+        console.log('Demo modal hidden because "demo_modal_seen" cookie is set.');
     }
 
     // Close modal and set cookie
