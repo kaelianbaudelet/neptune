@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show modal with a slight delay for better transition
         setTimeout(() => {
             modal.classList.remove('hidden');
+            modal.classList.add('flex');
             // Trigger animation
             setTimeout(() => {
                 content.classList.add('show');
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         content.classList.remove('show');
         setTimeout(() => {
             modal.classList.add('hidden');
+            modal.classList.remove('flex');
             setCookie('demo_modal_seen', 'true', 30); // Valid for 30 days
         }, 300);
     });

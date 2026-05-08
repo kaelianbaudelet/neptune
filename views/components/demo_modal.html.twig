@@ -1,5 +1,5 @@
 {% if env('APP_DEMO') == 'true' or env('APP_DEMO') == true %}
-<div id="demo-modal" class="fixed inset-0 z-[9999] flex items-center justify-center hidden">
+<div id="demo-modal" class="fixed inset-0 z-[9999] items-center justify-center hidden">
     <!-- Overlay with deeper blur -->
     <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-md transition-opacity duration-500"></div>
     
@@ -83,9 +83,6 @@
 </div>
 
 <style>
-#demo-modal.flex {
-    display: flex !important;
-}
 #demo-modal-content.show {
     transform: scale(1);
     opacity: 1;
