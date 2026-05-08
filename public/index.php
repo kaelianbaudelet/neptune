@@ -108,9 +108,9 @@ $twig->addGlobal('env', $_ENV);
 $twig->addExtension(new SessionExtension());
 $twig->addExtension(new UtilsExtension());
 
-if ($_ENV['APP_MAINTENANCE'] === 'true') {
+if (isset($_ENV['APP_MAINTENANCE']) && $_ENV['APP_MAINTENANCE'] === 'true') {
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-    if (!preg_match('#^/dashboard(/.*)?$#', $path) && $path !== '/login' && $path !== '/resetpassword' && $path !== '/logout') {
+    if (!str_starts_with($path, '/assets/') && !preg_match('#^/dashboard(/.*)?$#', $path) && $path !== '/login' && $path !== '/resetpassword' && $path !== '/logout') {
         echo $twig->render('maintenance.html.twig');
         exit;
     }
