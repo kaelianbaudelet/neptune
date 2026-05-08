@@ -6,11 +6,11 @@ WORKDIR /var/www/html
 # Copier les fichiers du projet dans le conteneur
 COPY . .
 # Activer mod_rewrite et appliquer la configuration
-RUN a2enmod rewrite && service apache2 restart
+RUN a2enmod rewrite
 
 
 COPY neptune-vhost.conf /etc/apache2/sites-available/neptune-vhost.conf
-RUN a2ensite neptune-vhost.conf && a2dissite 000-default && service apache2 restart
+RUN a2ensite neptune-vhost.conf && a2dissite 000-default
 
 # Mise à jour des packages système et installation des dépendances
 RUN apt-get update && apt-get install -y \
