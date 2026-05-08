@@ -31,18 +31,6 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
-  adminer:
-    image: adminer:latest
-    container_name: projetphp_neptune_epsi_adminer
-    restart: always
-    environment:
-      MARIADB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
-      ADMINER_DEFAULT_DB_DRIVER: mysql
-      ADMINER_DEFAULT_DB_HOST: db
-      ADMINER_DEFAULT_DB_NAME: ${DATABASE_NAME:-projetphp_epsi_bdd}
-    ports:
-      - "9999:8080"
-
 volumes:
   db_data:
     driver: local
