@@ -134,9 +134,8 @@ if (!function_exists('db_seed')) {
 
             if (!empty($roomIds) && !empty($imageIds)) {
                 foreach ($roomIds as $roomId) {
-                    // Chaque chambre aura au moins 2 images Arrizul
-                    $selectedImages = array_rand(array_flip($imageIds), 2);
-                    foreach ($selectedImages as $imageId) {
+                    // Chaque chambre aura TOUTES les 5 images Arrizul
+                    foreach ($imageIds as $imageId) {
                         $pdo->prepare("INSERT IGNORE INTO Room_Image (room_id, image_id) VALUES (?, ?)")->execute([$roomId, $imageId]);
                     }
                 }
