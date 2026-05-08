@@ -2,7 +2,17 @@
 # Règles qui précise le répertoire racine du site
 # --------------------------------------------------------------------
 RewriteEngine On
-RewriteCond %{REQUEST_URI} !^/assets/(static/(css|js|fonts|images)/.*)$
+
+# Assurer les bons types MIME pour les polices et JS
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType application/x-javascript .js
+    AddType text/javascript .js
+    AddType font/ttf .ttf
+    AddType font/otf .otf
+    AddType font/woff .woff
+    AddType font/woff2 .woff2
+</IfModule>
 
 # --------------------------------------------------------------------
 # Règles de réécriture pour les URLs "propres"
